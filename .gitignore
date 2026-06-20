@@ -1,0 +1,12 @@
+bin/
+obj/
+.vs/
+.vscode/
+
+*.db
+*.db-shm
+*.db-wal
+
+DataProtectionKeys/
+
+appsettings.Development.json
