@@ -1282,7 +1282,7 @@
             const discountBadgeHtml = hasDiscount ? `<span style="background: var(--color-danger); color: white; padding: 2px 4px; border-radius: 4px; font-size: 9px; font-weight: bold; margin-left: 6px;">-${Math.round(((p.price - p.discountPrice) / p.price) * 100)}%</span>` : '';
 
             return `
-                <div class="card">
+                <div class="card" onclick="viewDetails(${p.id})" style="cursor: pointer;">
                     <div class="card-img" style="background-image: url('${p.imageUrl || '/images/placeholder.png'}')">
                         ${p.sellerVerified ? '<span class="card-badge">✓ Verified Seller</span>' : ''}
                     </div>
@@ -1294,7 +1294,7 @@
                             <div>
                                 <div class="price-tag">${priceText}${originalPriceHtml}${discountBadgeHtml}</div>
                             </div>
-                            <button onclick="viewDetails(${p.id})" class="btn btn-secondary" style="padding: 6px 12px; font-size:12px;">View Details</button>
+                            <button onclick="event.stopPropagation(); viewDetails(${p.id})" class="btn btn-secondary" style="padding: 6px 12px; font-size:12px;">View Details</button>
                         </div>
                     </div>
                 </div>

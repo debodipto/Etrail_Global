@@ -42,4 +42,15 @@ public class Order
     // JSON-serialized string of purchased item details to keep it simpler
     // e.g. [{"Name": "Product Name", "Qty": 2, "Price": 5.50, "ImageUrl": "url"}]
     public string ItemDetailsJson { get; set; } = "[]";
+
+    public bool IsPaid { get; set; } = false;
+
+    [MaxLength(200)]
+    public string PickupPoint { get; set; } = string.Empty;
+
+    [MaxLength(50)]
+    public string OrderType { get; set; } = "InHouse"; // InHouse or Seller
+
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal CommissionEarned { get; set; } = 0.0m;
 }

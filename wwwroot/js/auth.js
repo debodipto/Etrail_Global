@@ -61,9 +61,13 @@ async function handleLoginSubmit(e) {
             updateNavigation();
             closeModal('loginModal');
             
-            // Redirect after successful login to dashboard
+            // Redirect after successful login to dashboard or admin panel
             setTimeout(() => {
-                window.location.href = '/dashboard.html';
+                if (data.role === 'Admin') {
+                    window.location.href = '/admin.html';
+                } else {
+                    window.location.href = '/dashboard.html';
+                }
             }, 1000);
         } else {
             showToast(data.message || "Login failed", true);

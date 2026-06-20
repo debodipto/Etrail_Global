@@ -42,6 +42,13 @@ public class Product
     public bool IsApproved { get; set; } = false;
     public string SpecificationsJson { get; set; } = "{}";
 
+    public bool IsDigital { get; set; } = false;
+    public string DigitalFileUrl { get; set; } = string.Empty;
+    public string Brand { get; set; } = string.Empty;
+    public string CustomLabel { get; set; } = string.Empty;
+    public string AttributesJson { get; set; } = "[]";
+    public string ColorsJson { get; set; } = "[]";
+
     [Required]
     public int SellerId { get; set; }
     

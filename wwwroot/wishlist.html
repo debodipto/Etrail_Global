@@ -210,7 +210,7 @@
                     : `<span style="color:var(--color-success); font-size:12px; font-weight:600;">✓ In Stock (${item.stock})</span>`;
 
                 return `
-                    <div class="wish-card">
+                    <div class="wish-card" onclick="window.location.href='/product.html?id=${item.productId}'" style="cursor: pointer;">
                         <div class="wish-img" style="background-image:url('${item.imageUrl || '/images/placeholder.png'}')"></div>
                         <div class="wish-body">
                             <span style="font-size:11px; text-transform:uppercase; color:var(--color-secondary); font-weight:700;">${item.category}</span>
@@ -226,10 +226,10 @@
                             </div>
 
                             <div style="display:grid; grid-template-columns: 2fr 1fr; gap:8px; margin-top:16px;">
-                                <button onclick="addToCartFromWishlist(${item.productId}, 1)" class="btn btn-primary" style="justify-content:center; padding:10px; font-size:12px; font-weight:700;" ${item.stock <= 0 ? 'disabled style="opacity:0.5; pointer-events:none;"' : ''}>
+                                <button onclick="event.stopPropagation(); addToCartFromWishlist(${item.productId}, 1)" class="btn btn-primary" style="justify-content:center; padding:10px; font-size:12px; font-weight:700;" ${item.stock <= 0 ? 'disabled style="opacity:0.5; pointer-events:none;"' : ''}>
                                     🛒 Sourced Cart
                                 </button>
-                                <button onclick="removeWishlistItem(${item.productId})" class="btn btn-danger" style="background:#fff; color:var(--color-danger); border:1px solid var(--color-danger); justify-content:center; padding:10px; font-size:12px; font-weight:600; cursor:pointer;">
+                                <button onclick="event.stopPropagation(); removeWishlistItem(${item.productId})" class="btn btn-danger" style="background:#fff; color:var(--color-danger); border:1px solid var(--color-danger); justify-content:center; padding:10px; font-size:12px; font-weight:600; cursor:pointer;">
                                     Delete
                                 </button>
                             </div>

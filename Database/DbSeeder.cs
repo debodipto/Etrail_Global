@@ -476,6 +476,210 @@ public static class DbSeeder
         );
 
         context.SaveChanges();
+
+        // 11. Seed Brands
+        var bBrand1 = new Brand { Name = "Walton", LogoUrl = "/uploads/walton_logo.png" };
+        var bBrand2 = new Brand { Name = "Apex", LogoUrl = "/uploads/apex_logo.png" };
+        var bBrand3 = new Brand { Name = "NexusTech", LogoUrl = "/uploads/nexus_logo.png" };
+        var bBrand4 = new Brand { Name = "EtrailApparel", LogoUrl = "/uploads/etrail_logo.png" };
+        context.Brands.AddRange(bBrand1, bBrand2, bBrand3, bBrand4);
+
+        // 12. Seed Categories
+        var cat1 = new Category { Name = "Electronics", DiscountPercentage = 5.0, BannerUrl = "/uploads/electronics_banner.png" };
+        var cat2 = new Category { Name = "Textiles & Apparel", DiscountPercentage = 10.0, BannerUrl = "/uploads/textiles_banner.png" };
+        var cat3 = new Category { Name = "Agriculture & Food", DiscountPercentage = 0.0, BannerUrl = "/uploads/agri_banner.png" };
+        var cat4 = new Category { Name = "Machinery & Tools", DiscountPercentage = 2.0, BannerUrl = "/uploads/machinery_banner.png" };
+        var cat5 = new Category { Name = "Digital Services", DiscountPercentage = 15.0, BannerUrl = "/uploads/digital_banner.png" };
+        context.Categories.AddRange(cat1, cat2, cat3, cat4, cat5);
+
+        // 13. Seed Colors
+        var col1 = new Color { Name = "Navy Blue", Code = "#000080" };
+        var col2 = new Color { Name = "Charcoal Black", Code = "#36454F" };
+        var col3 = new Color { Name = "Crimson Red", Code = "#DC143C" };
+        var col4 = new Color { Name = "Emerald Green", Code = "#50C878" };
+        context.Colors.AddRange(col1, col2, col3, col4);
+
+        // 14. Seed ProductAttributes
+        var att1 = new ProductAttribute { Name = "Size", ValuesJson = "[\"S\", \"M\", \"L\", \"XL\"]" };
+        var att2 = new ProductAttribute { Name = "RAM", ValuesJson = "[\"4GB\", \"8GB\", \"16GB\"]" };
+        var att3 = new ProductAttribute { Name = "Storage", ValuesJson = "[\"128GB\", \"256GB\", \"512GB\"]" };
+        context.ProductAttributes.AddRange(att1, att2, att3);
+
+        // 15. Seed SmartBarSettings
+        context.SmartBarSettings.Add(new SmartBarSetting 
+        { 
+            AnnouncementText = "🎉 Eid Special Discount: Get up to 15% discount on Electronics and Textiles!", 
+            BgColor = "#146c43", 
+            TextColor = "#ffffff", 
+            Link = "/flash-deals.html", 
+            IsActive = true 
+        });
+
+        // 16. Seed UserSearches
+        context.UserSearches.AddRange(
+            new UserSearch { Query = "IoT Gateway", SearchCount = 42, LastSearchedAt = DateTime.UtcNow.AddHours(-1) },
+            new UserSearch { Query = "Cotton T-Shirts", SearchCount = 98, LastSearchedAt = DateTime.UtcNow.AddHours(-3) },
+            new UserSearch { Query = "Miniket Rice", SearchCount = 57, LastSearchedAt = DateTime.UtcNow.AddHours(-4) },
+            new UserSearch { Query = "Laser Cutting Machine", SearchCount = 15, LastSearchedAt = DateTime.UtcNow.AddHours(-8) }
+        );
+
+        // 17. Seed WalletRecharges
+        context.WalletRecharges.AddRange(
+            new WalletRecharge { UserId = buyer.Id, Amount = 5000.00m, PaymentMethod = "bKash", Status = "Success", CreatedAt = DateTime.UtcNow.AddDays(-10) },
+            new WalletRecharge { UserId = buyer.Id, Amount = 15000.00m, PaymentMethod = "Nagad", Status = "Success", CreatedAt = DateTime.UtcNow.AddDays(-5) },
+            new WalletRecharge { UserId = buyer.Id, Amount = 2000.00m, PaymentMethod = "Rocket", Status = "Pending", CreatedAt = DateTime.UtcNow.AddHours(-2) }
+        );
+
+        // Update buyer wallet balance
+        buyer.WalletBalance = 20000.00m;
+        context.Users.Update(buyer);
+
+        // 18. Seed PayoutRequests
+        context.PayoutRequests.AddRange(
+            new PayoutRequest { SellerId = seller1.Id, Amount = 15000.00m, Status = "Approved", Note = "Monthly settlement payout.", CreatedAt = DateTime.UtcNow.AddDays(-12) },
+            new PayoutRequest { SellerId = seller1.Id, Amount = 8500.00m, Status = "Pending", Note = "Request for urgent cashflow.", CreatedAt = DateTime.UtcNow.AddDays(-1) },
+            new PayoutRequest { SellerId = seller2.Id, Amount = 35000.00m, Status = "Pending", Note = "Standard payout request.", CreatedAt = DateTime.UtcNow.AddHours(-5) }
+        );
+
+        // 19. Seed Category & Seller commission rules
+        context.CategoryCommissionRules.AddRange(
+            new CategoryCommissionRule { CategoryName = "Electronics", CommissionPercentage = 8.0 },
+            new CategoryCommissionRule { CategoryName = "Textiles & Apparel", CommissionPercentage = 5.0 }
+        );
+
+        seller1.CommissionRate = 7.5; // Custom seller-specific commission rate override (7.5%)
+        context.Users.Update(seller1);
+
+        // 20. Add In-house product and Digital product
+        var inHouseProd = new Product
+        {
+            Name = "Etrail Premium Tea Leaves (In-house Spec)",
+            Description = "Directly sourced premium tea leaves from Sylhet gardens. Packed and distributed by Etrail Global.",
+            Category = "Agriculture & Food",
+            Price = 350.00,
+            DiscountPrice = 320.00,
+            MinOrderQuantity = 5,
+            Stock = 800,
+            LeadTimeDays = 2,
+            ImageUrl = "https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&w=600&q=80",
+            SellerId = admin.Id, // Admin is the seller (In-house)
+            IsFeatured = true,
+            IsApproved = true,
+            Brand = "Etrail",
+            CustomLabel = "In House Best",
+            SpecificationsJson = "{\"Origin\":\"Sylhet\",\"Organic\":\"Yes\",\"Grade\":\"FTGFOP\"}"
+        };
+
+        var digitalProd = new Product
+        {
+            Name = "Etrail Global Logistics Guide & Matrix (Digital)",
+            Description = "A complete downloadable guide detailing logistics pathways, carrier rates, and customs guidelines in Bangladesh.",
+            Category = "Digital Services",
+            Price = 2500.00,
+            DiscountPrice = 1900.00,
+            MinOrderQuantity = 1,
+            Stock = 99999, // digital has unlimited stock
+            LeadTimeDays = 0,
+            ImageUrl = "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
+            SellerId = admin.Id, // In-house digital product
+            IsApproved = true,
+            IsDigital = true,
+            DigitalFileUrl = "/uploads/Etrail_Logistics_Guide_2026.pdf",
+            Brand = "Etrail",
+            CustomLabel = "Digital Ebook",
+            SpecificationsJson = "{\"Pages\":\"148\",\"Format\":\"PDF\",\"Published\":\"2026\"}"
+        };
+
+        var sellerDigitalProd = new Product
+        {
+            Name = "Nexus IoT Gateway Firmware v4.0 (Seller Digital)",
+            Description = "Upgrade package for Nexus IoT gateway devices containing advanced cellular fallback configuration and OTA capability.",
+            Category = "Digital Services",
+            Price = 7500.00,
+            DiscountPrice = 6500.00,
+            MinOrderQuantity = 1,
+            Stock = 999,
+            LeadTimeDays = 0,
+            ImageUrl = "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80",
+            SellerId = seller1.Id,
+            IsApproved = true,
+            IsDigital = true,
+            DigitalFileUrl = "/uploads/nexus_fw_v4.bin",
+            Brand = "NexusTech",
+            CustomLabel = "Firmware Update",
+            SpecificationsJson = "{\"Version\":\"v4.0\",\"Target\":\"GW-300\",\"Size\":\"14MB\"}"
+        };
+
+        context.Products.AddRange(inHouseProd, digitalProd, sellerDigitalProd);
+
+        // Update existing products with Brand & Colors
+        p1.Brand = "NexusTech";
+        p1.ColorsJson = "[\"Charcoal Black\"]";
+        p1.AttributesJson = "[\"RAM\",\"Storage\"]";
+
+        p2.Brand = "NexusTech";
+        p2.ColorsJson = "[\"Charcoal Black\"]";
+        p2.AttributesJson = "[\"RAM\",\"Storage\"]";
+
+        p3.Brand = "EtrailApparel";
+        p3.ColorsJson = "[\"Navy Blue\",\"Charcoal Black\",\"Crimson Red\"]";
+        p3.AttributesJson = "[\"Size\"]";
+
+        p4.Brand = "EtrailApparel";
+        p4.ColorsJson = "[\"Emerald Green\"]";
+
+        p5.Brand = "AgriPure";
+        
+        p6.Brand = "NexusTech";
+
+        context.Products.UpdateRange(p1, p2, p3, p4, p5, p6);
+        context.SaveChanges();
+
+        // 21. Update and Seed Orders with detailed flags
+        var ordersList = context.Orders.ToList();
+        if (ordersList.Count >= 2)
+        {
+            // First order: Delivered, Paid, InHouse
+            ordersList[0].IsPaid = true;
+            ordersList[0].OrderType = "Seller"; // from NexusElectronics
+            ordersList[0].CommissionEarned = 3600.00m; // 7.5% of 48000
+            ordersList[0].PickupPoint = "";
+
+            // Second order: Shipped, Bank Transfer, Seller, Pickup point
+            ordersList[1].IsPaid = true;
+            ordersList[1].OrderType = "Seller";
+            ordersList[1].CommissionEarned = 1725.00m; // 5% of 34500
+            ordersList[1].PickupPoint = "Uttara Sector 7 Pickup Point";
+
+            context.Orders.UpdateRange(ordersList);
+
+            // Add commission histories
+            context.CommissionHistories.AddRange(
+                new CommissionHistory { OrderId = ordersList[0].Id, SellerId = seller1.Id, Amount = 48000.00m, CommissionAmount = 3600.00m, CreatedAt = DateTime.UtcNow.AddDays(-19) },
+                new CommissionHistory { OrderId = ordersList[1].Id, SellerId = seller2.Id, Amount = 34500.00m, CommissionAmount = 1725.00m, CreatedAt = DateTime.UtcNow.AddDays(-10) }
+            );
+        }
+
+        // Add an unpaid, in-house order
+        var unpaidOrder = new Order
+        {
+            UserId = buyer.Id,
+            OrderNumber = "ET-91102",
+            OrderDate = DateTime.UtcNow.AddDays(-1),
+            TotalAmount = 640.00m,
+            Status = "Pending",
+            PaymentMethod = "Cash on Delivery",
+            BillingAddress = "Holding 12, Road 4, Sector 3, Uttara, Dhaka-1230, Bangladesh",
+            ShippingAddress = "Holding 12, Road 4, Sector 3, Uttara, Dhaka-1230, Bangladesh",
+            ItemDetailsJson = "[{\"Name\": \"Etrail Premium Tea Leaves (In-house Spec)\", \"Qty\": 2, \"Price\": 320.00, \"ImageUrl\": \"https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&w=600&q=80\"}]",
+            IsPaid = false,
+            OrderType = "InHouse",
+            PickupPoint = "",
+            CommissionEarned = 0.0m // InHouse has no commission
+        };
+        context.Orders.Add(unpaidOrder);
+
+        context.SaveChanges();
     }
 
     private static string HashPassword(string password)

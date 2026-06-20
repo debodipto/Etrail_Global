@@ -26,6 +26,16 @@ public class AppDbContext : DbContext
     public DbSet<SupportTicket> SupportTickets { get; set; }
     public DbSet<SellerReview> SellerReviews { get; set; }
     public DbSet<ProductReview> ProductReviews { get; set; }
+    public DbSet<Brand> Brands { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<ProductAttribute> ProductAttributes { get; set; }
+    public DbSet<Color> Colors { get; set; }
+    public DbSet<PayoutRequest> PayoutRequests { get; set; }
+    public DbSet<CategoryCommissionRule> CategoryCommissionRules { get; set; }
+    public DbSet<SmartBarSetting> SmartBarSettings { get; set; }
+    public DbSet<UserSearch> UserSearches { get; set; }
+    public DbSet<WalletRecharge> WalletRecharges { get; set; }
+    public DbSet<CommissionHistory> CommissionHistories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -143,5 +153,29 @@ public class AppDbContext : DbContext
             .WithMany()
             .HasForeignKey(pr => pr.ProductId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<PayoutRequest>()
+            .HasOne(pr => pr.Seller)
+            .WithMany()
+            .HasForeignKey(pr => pr.SellerId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<WalletRecharge>()
+            .HasOne(w => w.User)
+            .WithMany()
+            .HasForeignKey(w => w.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<CommissionHistory>()
+            .HasOne(ch => ch.Order)
+            .WithMany()
+            .HasForeignKey(ch => ch.OrderId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<CommissionHistory>()
+            .HasOne(ch => ch.Seller)
+            .WithMany()
+            .HasForeignKey(ch => ch.SellerId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

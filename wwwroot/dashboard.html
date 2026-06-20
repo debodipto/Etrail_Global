@@ -297,6 +297,8 @@
                 if (!window.currentUser) {
                     showToast("Please log in to access the dashboard", true);
                     window.location.href = '/index.html';
+                } else if (window.currentUser.role === 'Admin') {
+                    window.location.href = '/admin.html';
                 } else {
                     initializeDashboard();
                 }

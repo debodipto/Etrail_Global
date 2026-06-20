@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EtrailGlobal.Database.Models;
 
@@ -64,4 +65,9 @@ public class User
     public string ShippingAddress { get; set; } = string.Empty;
     
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    [Column(TypeName = "decimal(18,2)")]
+    public decimal WalletBalance { get; set; } = 0.0m;
+
+    public double CommissionRate { get; set; } = 0.0;
 }

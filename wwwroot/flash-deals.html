@@ -433,7 +433,7 @@
             const claimSeed = (p.id * 17) % 35 + 50; // Claim rate between 50% and 85%
 
             return `
-                <div class="card flash-card">
+                <div class="card flash-card" onclick="viewDetails(${p.id})" style="cursor: pointer;">
                     <div class="flash-badge">⚡ Deal -${discountPercent}%</div>
                     <div class="card-img" style="background-image: url('${p.imageUrl || '/images/placeholder.png'}')">
                         ${p.sellerVerified ? '<span class="card-badge">✓ Verified Seller</span>' : ''}
@@ -458,7 +458,7 @@
                             <div>
                                 <div class="price-tag">${priceText}${originalPriceHtml}${discountBadgeHtml}</div>
                             </div>
-                            <button onclick="viewDetails(${p.id})" class="btn btn-primary" style="padding: 6px 12px; font-size:12px; font-weight: 700; background-color: var(--color-danger); border-color: var(--color-danger);">Buy Now</button>
+                            <button onclick="event.stopPropagation(); viewDetails(${p.id})" class="btn btn-primary" style="padding: 6px 12px; font-size:12px; font-weight: 700; background-color: var(--color-danger); border-color: var(--color-danger);">Buy Now</button>
                         </div>
                     </div>
                 </div>

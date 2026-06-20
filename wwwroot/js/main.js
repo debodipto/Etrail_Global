@@ -45,16 +45,17 @@ function updateNavigation() {
             `;
         }
 
-        authNav.innerHTML = `
-            <span style="color: var(--text-secondary); font-size: 14px; margin-right: 12px; display: inline-flex; align-items: center; vertical-align: middle;">
-                Hello, <strong style="color: var(--color-primary); margin-left: 4px; margin-right: 4px;">${window.currentUser.username}</strong> 
-                (${window.currentUser.role === 'Buyer' ? 'Customer' : window.currentUser.role})
-                ${window.currentUser.role === 'Seller' && window.currentUser.isVerified ? '<span class="badge badge-verified" style="padding: 2px 6px; font-size: 10px; margin-left: 5px;">✓ Verified</span>' : ''}
-            </span>
-            ${customerButtons}
-            <a href="/dashboard.html" class="btn btn-secondary">Dashboard</a>
-            <button onclick="handleLogout()" class="btn btn-danger">Logout</button>
-        `;
+            const dashboardUrl = window.currentUser.role === 'Admin' ? '/admin.html' : '/dashboard.html';
+            authNav.innerHTML = `
+                <span style="color: var(--text-secondary); font-size: 14px; margin-right: 12px; display: inline-flex; align-items: center; vertical-align: middle;">
+                    Hello, <strong style="color: var(--color-primary); margin-left: 4px; margin-right: 4px;">${window.currentUser.username}</strong> 
+                    (${window.currentUser.role === 'Buyer' ? 'Customer' : window.currentUser.role})
+                    ${window.currentUser.role === 'Seller' && window.currentUser.isVerified ? '<span class="badge badge-verified" style="padding: 2px 6px; font-size: 10px; margin-left: 5px;">✓ Verified</span>' : ''}
+                </span>
+                ${customerButtons}
+                <a href="${dashboardUrl}" class="btn btn-secondary">Dashboard</a>
+                <button onclick="handleLogout()" class="btn btn-danger">Logout</button>
+            `;
         if (isBuyer) {
             fetchHeaderStats();
         }
