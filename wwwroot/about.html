@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | EtrailGlobal Wholesale Marketplace</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <meta name="description" content="Learn more about EtrailGlobal B2B wholesale marketplace, our core mission, verified local suppliers, and direct factory dispatch networks.">
+    <style>
+        .about-hero {
+            padding: 80px 0;
+            background: linear-gradient(135deg, rgba(21, 128, 61, 0.08), rgba(22, 163, 74, 0.02));
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+        }
+        .about-hero h1 {
+            font-size: 42px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+        .about-hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 24px auto;
+            line-height: 1.6;
+        }
+        .about-content {
+            padding: 60px 0;
+        }
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+            margin-bottom: 60px;
+        }
+        .about-text h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 20px;
+        }
+        .about-text p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+        .about-image {
+            border-radius: var(--radius-md);
+            height: 350px;
+            background-size: cover;
+            background-position: center;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+        }
+        .stats-banner {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 40px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 60px;
+        }
+        .stat-item h3 {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--color-primary);
+            margin-bottom: 8px;
+        }
+        .stat-item p {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .values-section {
+            text-align: center;
+        }
+        .values-section h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 40px;
+            color: var(--text-primary);
+        }
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+        .value-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 32px;
+            box-shadow: var(--shadow-sm);
+            transition: transform var(--transition-fast);
+        }
+        .value-card:hover {
+            transform: translateY(-5px);
+        }
+        .value-icon {
+            font-size: 36px;
+            margin-bottom: 16px;
+        }
+        .value-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--color-primary);
+        }
+        .value-card p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        @media (max-width: 768px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-banner {
+                grid-template-columns: 1fr 1fr;
+            }
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="market-home">
+
+    <!-- Header -->
+    <header class="market-header">
+        <div class="container market-topbar">
+            <a href="index.html" class="logo market-logo">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                EtrailGlobal
+            </a>
+
+            <div class="market-search">
+                <select id="heroCategorySelect" aria-label="Category">
+                    <option value="All">All categories</option>
+                    <option value="Home">Home</option>
+                    <option value="Women's World">Women's World</option>
+                    <option value="Men's Collection">Men's Collection</option>
+                    <option value="Accessories">Accessories</option>
+                    <option value="Mobiles & Tabs">Mobiles & Tabs</option>
+                    <option value="Alarm">Alarm</option>
+                    <option value="Sinks and kitchen taps">Sinks and kitchen taps</option>
+                    <option value="Paper & Plastic">Paper & Plastic</option>
+                    <option value="Men Clothing & Fashion">Men Clothing & Fashion</option>
+                    <option value="Eco-Friendly Products">Eco-Friendly Products</option>
+                    <option value="Eco-Friendly Home Decor & Accessories">Eco-Friendly Home Decor & Accessories</option>
+                    <option value="Bamboo Based Product">Bamboo Based Product</option>
+                </select>
+                <input type="text" id="heroSearchInput" placeholder="Search products, suppliers, or categories">
+                <button onclick="triggerHeroSearch()" class="btn btn-primary">Search</button>
+            </div>
+
+            <div class="auth-nav" id="authNav">
+                <button class="btn btn-secondary" style="opacity: 0.5;">Loading...</button>
+            </div>
+        </div>
+
+        <div class="container market-nav-row">
+            <nav class="market-links">
+                <a href="index.html">Home</a>
+                <a href="product.html">All Products</a>
+                <a href="product.html?isTodayDeal=true">Flash Deals</a>
+                <a href="product.html?isBestSeller=true">Best Sellers</a>
+            </nav>
+            <button class="seller-cta" onclick="openModal('sellerRegisterModal')">Become a Seller</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <section class="about-hero">
+            <div class="container">
+                <h1>Connecting Local Trade Globally</h1>
+                <p>EtrailGlobal is Bangladesh's premium B2B wholesale marketplace, empowering manufacturers and suppliers to connect, bargain, and trade securely in bulk.</p>
+                <a href="product.html" class="btn btn-primary" style="padding:12px 24px; font-weight:700;">Explore Wholesale Listings</a>
+            </div>
+        </section>
+
+        <section class="container about-content">
+            <div class="about-grid">
+                <div class="about-text">
+                    <h2>Our Journey & Vision</h2>
+                    <p>Established with the vision to simplify local industrial and commercial sourcing, EtrailGlobal bridges the gap between large-scale Bangladeshi manufacturers and business buyers. We provide the structural tools needed to negotiate MOQ levels, request quotations dynamically, and coordinate local shipping safely.</p>
+                    <p>Whether you represent a ready-made garments factory, an eco-friendly bamboo goods manufacturer, or a consumer electronics distributor, our marketplace caters specifically to your bulk volume and supply-chain logistics needs.</p>
+                </div>
+                <div class="about-image" style="background-image: url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80')"></div>
+            </div>
+
+            <div class="stats-banner">
+                <div class="stat-item">
+                    <h3>150+</h3>
+                    <p>Verified Factories</p>
+                </div>
+                <div class="stat-item">
+                    <h3>10k+</h3>
+                    <p>Wholesale Items</p>
+                </div>
+                <div class="stat-item">
+                    <h3>৳50M+</h3>
+                    <p>Monthly Trade Volume</p>
+                </div>
+                <div class="stat-item">
+                    <h3>24h</h3>
+                    <p>Support Response</p>
+                </div>
+            </div>
+
+            <div class="values-section">
+                <h2>Our Core Values</h2>
+                <div class="values-grid">
+                    <div class="value-card">
+                        <div class="value-icon">🛡️</div>
+                        <h3>Verified Suppliers</h3>
+                        <p>We perform onsite audits and BIN status verification before labeling factories as verified manufacturers.</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon">⚡</div>
+                        <h3>Direct Dispatch</h3>
+                        <p>Sellers coordinate shipping directly with buyers, removing middleman markups for optimal B2B pricing.</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon">🤝</div>
+                        <h3>Secure Escrow</h3>
+                        <p>Orders are backed by transparent tracking, ensuring buyers receive quality goods and sellers get paid on time.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="market-footer">
+        <div class="container footer-grid">
+            <div>
+                <div class="logo" style="margin-bottom:12px;">EtrailGlobal</div>
+                <p>Green and white wholesale sourcing marketplace for products, suppliers, and direct B2B conversations.</p>
+                <p class="footer-contact">
+                    <span id="footerAddress">Gulshan-2, Dhaka, Bangladesh</span>
+                    <span id="footerPhone">+880-9612-ETRAIL</span>
+                    <span id="footerEmail">support@etrail.com.bd</span>
+                </p>
+            </div>
+            <div>
+                <h4>Marketplace</h4>
+                <a href="product.html">All Products</a>
+                <a href="about.html" style="font-weight:bold; color:var(--color-primary);">About Us</a>
+                <a href="contact.html">Contact Us</a>
+                <a href="dashboard.html">Dashboard</a>
+            </div>
+            <div>
+                <h4>Seller Zone</h4>
+                <button onclick="openModal('sellerRegisterModal')" class="btn btn-primary">Apply Now</button>
+                <button onclick="openModal('sellerLoginModal')" class="btn btn-secondary">Seller Login</button>
+            </div>
+        </div>
+        <div class="container" style="border-top:1px solid var(--border-color); padding-top:24px; margin-top:32px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+            <p style="font-size:13px; color:var(--text-muted);">© 2026 EtrailGlobal. All rights reserved.</p>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-size:12px; color:var(--text-muted); font-weight:600;">We Accept:</span>
+                <span style="font-size:12px; font-weight:700; background:#fff; border:1px solid var(--border-color); padding:4px 8px; border-radius:4px; color:#1a1f71;">VISA</span>
+                <span style="font-size:12px; font-weight:700; background:#fff; border:1px solid var(--border-color); padding:4px 8px; border-radius:4px; color:#eb001b;">Mastercard</span>
+                <span style="font-size:12px; font-weight:700; background:#e2125d; color:#fff; padding:4px 8px; border-radius:4px;">bKash</span>
+                <span style="font-size:12px; font-weight:700; background:#ff6b00; color:#fff; padding:4px 8px; border-radius:4px;">Nagad</span>
+                <span style="font-size:12px; font-weight:700; background:#8c3494; color:#fff; padding:4px 8px; border-radius:4px;">Rocket</span>
+                <span style="font-size:12px; font-weight:700; background:#005c2d; color:#fff; padding:4px 8px; border-radius:4px;">DBBL</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Policy Modal -->
+    <div class="modal-overlay" id="policyModal">
+        <div class="modal" style="max-width: 600px;">
+            <span class="modal-close" onclick="closeModal('policyModal')">&times;</span>
+            <h2 class="modal-title" id="policyModalTitle">Company Policy</h2>
+            <div style="max-height: 400px; overflow-y: auto; font-size: 14px; color: var(--text-secondary); line-height: 1.6;" id="policyModalContent"></div>
+            <button onclick="closeModal('policyModal')" class="btn btn-primary" style="margin-top:24px; width:100%; justify-content:center;">Close Policy Document</button>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <span class="modal-close" onclick="closeModal('loginModal')">&times;</span>
+            <h2 class="modal-title">Sign In to EtrailGlobal</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="customer@etrailglobal.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="Customer123" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Sign In</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Don't have an account? <a href="javascript:void(0)" onclick="closeModal('loginModal'); openModal('registerModal');" style="color: var(--color-primary); font-weight:600;">Register Here</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal-overlay" id="registerModal">
+        <div class="modal" style="max-width: 600px;">
+            <span class="modal-close" onclick="closeModal('registerModal')">&times;</span>
+            <h2 class="modal-title">Create Customer Account</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label class="form-label" for="regUsername">Username</label>
+                    <input type="text" id="regUsername" class="form-control" placeholder="e.g. janesmith" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="regEmail">Email Address</label>
+                    <input type="email" id="regEmail" class="form-control" placeholder="name@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="regPassword">Password</label>
+                    <input type="password" id="regPassword" class="form-control" placeholder="Minimum 6 characters" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="regContactInfo">Phone / Contact Number</label>
+                    <input type="text" id="regContactInfo" class="form-control" placeholder="+880-1xxxxxxxxx" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Complete Registration</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Already registered? <a href="javascript:void(0)" onclick="closeModal('registerModal'); openModal('loginModal');" style="color: var(--color-primary); font-weight:600;">Sign In</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Seller Login Modal -->
+    <div class="modal-overlay" id="sellerLoginModal">
+        <div class="modal">
+            <span class="modal-close" onclick="closeModal('sellerLoginModal')">&times;</span>
+            <h2 class="modal-title">Sign In - Seller Portal</h2>
+            <form id="sellerLoginForm">
+                <div class="form-group">
+                    <label class="form-label" for="sellerLoginEmail">Email Address</label>
+                    <input type="email" id="sellerLoginEmail" class="form-control" placeholder="seller@etrailglobal.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerLoginPassword">Password</label>
+                    <input type="password" id="sellerLoginPassword" class="form-control" placeholder="Seller123" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Login to Seller Panel</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Apply for a supplier account? <a href="javascript:void(0)" onclick="closeModal('sellerLoginModal'); openModal('sellerRegisterModal');" style="color: var(--color-primary); font-weight:600;">Apply Now</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Seller Register Modal -->
+    <div class="modal-overlay" id="sellerRegisterModal">
+        <div class="modal" style="max-width: 600px;">
+            <span class="modal-close" onclick="closeModal('sellerRegisterModal')">&times;</span>
+            <h2 class="modal-title">Become a Seller / Supplier Application</h2>
+            <form id="sellerRegisterForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegUsername">Username *</label>
+                        <input type="text" id="sellerRegUsername" class="form-control" placeholder="e.g. factoryrep" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegEmail">Business Email *</label>
+                        <input type="email" id="sellerRegEmail" class="form-control" placeholder="sales@factory.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerRegPassword">Password *</label>
+                    <input type="password" id="sellerRegPassword" class="form-control" placeholder="Minimum 6 characters" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegCompanyName">Company Registered Name *</label>
+                        <input type="text" id="sellerRegCompanyName" class="form-control" placeholder="e.g. Apex Tech Textiles Ltd" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegYearEstablished">Established Year</label>
+                        <input type="text" id="sellerRegYearEstablished" class="form-control" placeholder="e.g. 2015">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegContactInfo">Business Phone *</label>
+                        <input type="text" id="sellerRegContactInfo" class="form-control" placeholder="e.g. +880-1xxxxxxxxx" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegWhatsApp">WhatsApp Number *</label>
+                        <input type="text" id="sellerRegWhatsApp" class="form-control" placeholder="e.g. +880-1xxxxxxxxx" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegGmail">Alternate Email (Gmail)</label>
+                        <input type="email" id="sellerRegGmail" class="form-control" placeholder="e.g. alternate@gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegTax">Tax / BIN Number</label>
+                        <input type="text" id="sellerRegTax" class="form-control" placeholder="e.g. 123456789">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerRegCompanyAddress">Company Address / Factory Location *</label>
+                    <input type="text" id="sellerRegCompanyAddress" class="form-control" placeholder="e.g. Plot 12, Gazipur Industrial Zone" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerRegWebsite">Company Website</label>
+                    <input type="text" id="sellerRegWebsite" class="form-control" placeholder="e.g. https://apextech.com">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Submit Seller Application</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Already have a seller account? <a href="javascript:void(0)" onclick="closeModal('sellerRegisterModal'); openModal('sellerLoginModal');" style="color: var(--color-primary); font-weight:600;">Sign In</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        function triggerHeroSearch() {
+            const keyword = document.getElementById('heroSearchInput').value;
+            const category = document.getElementById('heroCategorySelect').value;
+            window.location.href = `/product.html?search=${encodeURIComponent(keyword)}&category=${encodeURIComponent(category)}`;
+        }
+    </script>
+</body>
+</html>

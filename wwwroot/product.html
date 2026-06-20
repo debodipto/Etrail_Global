@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wholesale Catalog & Product Details | EtrailGlobal</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-primary)"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                EtrailGlobal
+            </a>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="product.html" class="nav-link active">Products</a>
+            </nav>
+            <div class="auth-nav" id="authNav">
+                <button class="btn btn-secondary" style="opacity: 0.5;">Loading...</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container" style="margin-top: 40px; min-height: 600px;">
+        
+        <!-- SECTION 1: CATALOG VIEW (visible when NO product ID query param exists) -->
+        <div id="catalogSection">
+            <div class="section-title">
+                <h2>Wholesale Product Catalog</h2>
+                <button id="addNewProductBtn" class="btn btn-primary" onclick="openModal('addProductModal')" style="display:none;">
+                    + Post Product Listing
+                </button>
+            </div>
+
+            <!-- Filters Row -->
+            <div class="search-bar" style="margin-bottom: 32px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-muted); margin-left: 12px;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" id="catalogSearchInput" class="search-input" placeholder="Search catalog items...">
+                <select id="catalogCategorySelect" class="search-select">
+                    <option value="All">All categories</option>
+                    <option value="Home">Home</option>
+                    <option value="Women's World">Women's World</option>
+                    <option value="Men's Collection">Men's Collection</option>
+                    <option value="Accessories">Accessories</option>
+                    <option value="Mobiles & Tabs">Mobiles & Tabs</option>
+                    <option value="Alarm">Alarm</option>
+                    <option value="Sinks and kitchen taps">Sinks and kitchen taps</option>
+                    <option value="Paper & Plastic">Paper & Plastic</option>
+                    <option value="Men Clothing & Fashion">Men Clothing & Fashion</option>
+                    <option value="Eco-Friendly Products">Eco-Friendly Products</option>
+                    <option value="Eco-Friendly Home Decor & Accessories">Eco-Friendly Home Decor & Accessories</option>
+                    <option value="Bamboo Based Product">Bamboo Based Product</option>
+                </select>
+                <button onclick="applyFilters()" class="btn btn-primary">Filter</button>
+            </div>
+
+            <!-- Grid container -->
+            <div class="grid" id="catalogGrid">
+                <!-- Dynamically filled -->
+                <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary);">
+                    Loading wholesale catalog...
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: PRODUCT DETAIL VIEW (visible when product ID query param is active) -->
+        <div id="detailSection" style="display: none;">
+            <div style="margin-bottom: 24px;">
+                <a href="javascript:void(0)" onclick="goBackToCatalog()" style="color: var(--color-secondary); font-weight:500; display:inline-flex; align-items:center; gap:8px;">
+                    &larr; Back to Wholesale Catalog
+                </a>
+            </div>
+
+            <div class="product-detail-layout">
+                <!-- Left Column: Gallery -->
+                <div class="product-gallery" id="detailGallery">
+                    <!-- Image inserted here -->
+                </div>
+
+                <!-- Right Column: Info Panel -->
+                <div class="product-info-panel">
+                    <div>
+                        <span id="detailCategory" class="badge badge-success" style="margin-bottom: 12px;">Category</span>
+                        <h1 class="product-title" id="detailTitle">Product Title</h1>
+                        
+                        <div style="display:flex; align-items:center; gap:12px; margin-top:12px;" id="detailSellerMeta">
+                            <!-- Supplier metadata -->
+                        </div>
+                    </div>
+
+                    <div style="border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 20px 0;">
+                        <h3 style="font-size:16px; font-weight:700; margin-bottom:12px;">Pricing & Availability</h3>
+                        <div id="detailPriceTiers" style="margin-bottom: 16px;">
+                            <!-- Dynamic single price and discount info -->
+                        </div>
+                        <div style="margin-top: 12px; font-size:13px; color:var(--text-muted); display:flex; flex-direction:column; gap:8px;">
+                            <div>
+                                <span>Minimum Order Quantity (MOQ): </span>
+                                <strong id="detailMOQ" style="color:var(--text-primary)">1</strong> units
+                            </div>
+                            <div>
+                                <span>Stock Status: </span>
+                                <strong id="detailStock" style="color:var(--text-primary)">Loading stock...</strong>
+                            </div>
+                            <div>
+                                <span>Shipping Lead Time: </span>
+                                <strong id="detailLeadTime" style="color:var(--text-primary)">Loading lead time...</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 style="font-size:16px; font-weight:700; margin-bottom:8px;">Specifications & Description</h3>
+                        
+                        <!-- Specifications Table -->
+                        <div id="detailSpecsTableContainer" style="display:none; margin-bottom: 16px; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; font-size:13px;">
+                            <table style="width: 100%; border-collapse: collapse; background-color: rgba(0,0,0,0.01);">
+                                <tbody id="detailSpecsTableBody">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p id="detailDescription" style="color:var(--text-secondary); font-size:14px; white-space: pre-line;">Product long description goes here.</p>
+                    </div>
+
+                    <div style="margin-top:auto; padding-top:20px; display:flex; flex-direction:column; gap:16px;" id="detailActionPanel">
+                        <!-- Populated dynamically based on login status -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Supplier Card & Ratings Section -->
+            <div style="margin-top: 40px; border-top: 1px solid var(--border-color); padding-top: 40px; display: grid; grid-template-columns: 1fr 2fr; gap: 40px;" id="sellerFeedbackSection">
+                
+                <!-- Seller Store Information Card -->
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 24px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 16px; height: fit-content;">
+                    <div style="display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+                        <div style="font-size: 32px;">🏢</div>
+                        <div>
+                            <h3 id="sellerCardName" style="font-size: 18px; font-weight: 700; color: var(--text-primary); margin: 0;">Loading Supplier...</h3>
+                            <span id="sellerCardVerified" class="badge badge-verified" style="margin-top: 4px; font-size:11px; display:none;">Verified Seller</span>
+                        </div>
+                    </div>
+                    
+                    <div style="font-size: 14px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 8px;">
+                        <div>👥 <strong id="sellerCardFollowers">0</strong> Followers</div>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <span style="color:#d97706; font-size:18px;" id="sellerCardStars">★★★★★</span>
+                            <span id="sellerCardRatingText" style="font-weight: 600; color: var(--text-primary);">(0.0)</span>
+                        </div>
+                        <div id="sellerCardEstablished">📅 Established: -</div>
+                        <div id="sellerCardAddress">📍 Address: -</div>
+                        <div id="sellerCardWebsite" style="display:none;">🌐 Website: <a href="#" target="_blank" id="sellerCardLink" style="color:var(--color-primary); font-weight:600; text-decoration:underline;">Visit Store</a></div>
+                    </div>
+                    
+                    <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 12px;">
+                        <button id="btnFollowSeller" onclick="handleFollowSellerClick()" class="btn" style="width:100%; justify-content:center; padding: 10px; font-size: 13px; font-weight: 600; border: 1px solid var(--color-primary); background: transparent; color: var(--color-primary); cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                            ➕ Follow Seller
+                        </button>
+                        <button onclick="contactSupplier()" class="btn btn-primary" style="width:100%; justify-content:center; padding: 10px; font-size: 13px; font-weight: 600;">
+                            💬 Send Message
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Ratings & Customer Reviews Panel -->
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 28px; box-shadow: var(--shadow-sm);">
+                    <h3 style="font-size: 20px; font-weight: 700; margin-top:0; margin-bottom: 20px; color: var(--text-primary);">Customer Feedback & Reviews</h3>
+                    
+                    <!-- Write a Review Form -->
+                    <div id="writeReviewContainer" style="display: none; border-bottom: 1px solid var(--border-color); padding-bottom: 24px; margin-bottom: 24px;">
+                        <h4 style="margin-top: 0; margin-bottom: 12px; font-size: 15px; font-weight: 700;">Share Your Experience</h4>
+                        <form id="submitReviewForm" onsubmit="handleReviewSubmit(event)">
+                            <div class="form-group" style="margin-bottom:12px;">
+                                <label class="form-label" style="margin-bottom:6px;">Your Rating</label>
+                                <div style="display: flex; gap: 8px; font-size: 24px; color: #cbd5e1; cursor: pointer;" id="starRatingSelector">
+                                    <span data-star="1" onclick="setStarRating(1)" style="transition: color 0.15s;">★</span>
+                                    <span data-star="2" onclick="setStarRating(2)" style="transition: color 0.15s;">★</span>
+                                    <span data-star="3" onclick="setStarRating(3)" style="transition: color 0.15s;">★</span>
+                                    <span data-star="4" onclick="setStarRating(4)" style="transition: color 0.15s;">★</span>
+                                    <span data-star="5" onclick="setStarRating(5)" style="transition: color 0.15s;">★</span>
+                                </div>
+                                <input type="hidden" id="selectedStarValue" value="5" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom:12px;">
+                                <label class="form-label" for="reviewComment">Comment / Feedback</label>
+                                <textarea id="reviewComment" class="form-control" rows="3" placeholder="Describe the quality of goods, shipping, communication..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="padding: 10px 20px;">Submit Store Review</button>
+                        </form>
+                    </div>
+
+                    <!-- Reviews List -->
+                    <div id="productReviewsList" style="display: flex; flex-direction: column; gap: 16px; max-height: 400px; overflow-y: auto; padding-right: 8px;">
+                        <p style="text-align: center; color: var(--text-muted); padding: 24px;">Loading feedback reviews...</p>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Post Product Modal (For Sellers) -->
+    <div class="modal-overlay" id="addProductModal">
+        <div class="modal" style="max-width: 600px;">
+            <span class="modal-close" onclick="closeModal('addProductModal')">&times;</span>
+            <h2 class="modal-title">Create Wholesale Listing</h2>
+            <form id="addProductForm">
+                <div class="form-group">
+                    <label class="form-label" for="prodName">Product Name</label>
+                    <input type="text" id="prodName" class="form-control" placeholder="e.g. 100% Cotton Crewneck T-Shirts" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="prodCategory">Category</label>
+                        <select id="prodCategory" class="form-control" style="background-color: var(--bg-main)">
+                            <option value="Home">Home</option>
+                            <option value="Women's World">Women's World</option>
+                            <option value="Men's Collection">Men's Collection</option>
+                            <option value="Accessories">Accessories</option>
+                            <option value="Mobiles & Tabs">Mobiles & Tabs</option>
+                            <option value="Alarm">Alarm</option>
+                            <option value="Sinks and kitchen taps">Sinks and kitchen taps</option>
+                            <option value="Paper & Plastic">Paper & Plastic</option>
+                            <option value="Men Clothing & Fashion">Men Clothing & Fashion</option>
+                            <option value="Eco-Friendly Products">Eco-Friendly Products</option>
+                            <option value="Eco-Friendly Home Decor & Accessories">Eco-Friendly Home Decor & Accessories</option>
+                            <option value="Bamboo Based Product">Bamboo Based Product</option>
+                            <option value="Bikes & Vehicles">Bikes & Vehicles</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="prodMOQ">Minimum Order Quantity (MOQ)</label>
+                        <input type="number" id="prodMOQ" class="form-control" value="100" min="1" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="prodPrice">Price (BDT)</label>
+                        <input type="number" id="prodPrice" class="form-control" placeholder="e.g. 500.00" step="0.01" min="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="prodDiscountPrice">Discounted Price (Optional)</label>
+                        <input type="number" id="prodDiscountPrice" class="form-control" placeholder="e.g. 450.00" step="0.01" min="0">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="prodStock">Available Stock</label>
+                        <input type="number" id="prodStock" class="form-control" value="100" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="prodLeadTime">Lead Time (Days to Ship)</label>
+                        <input type="number" id="prodLeadTime" class="form-control" value="3" min="1" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="prodImagesInput">Product Pictures (Upload Multiple)</label>
+                    <input type="file" id="prodImagesInput" class="form-control" accept="image/*" multiple style="background-color: var(--bg-main)">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="prodVideoInput">Product Video (Upload Single)</label>
+                    <input type="file" id="prodVideoInput" class="form-control" accept="video/*" style="background-color: var(--bg-main)">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Media Previews</label>
+                    <div class="upload-previews" id="prodMediaPreviews">
+                        <div class="upload-placeholder-text">Selected product pictures and videos will be previewed here.</div>
+                    </div>
+                </div>
+
+                <!-- Dynamic Category Specifications Container -->
+                <div class="form-group" id="prodSpecsContainer" style="display: none; border: 1px solid var(--border-color); padding: 16px; border-radius: 8px; margin-bottom: 16px; background-color: rgba(0,0,0,0.02)">
+                    <h4 style="margin-top: 0; margin-bottom: 12px; font-size: 14px; font-weight: 700; color: var(--color-primary);">Category Specifications</h4>
+                    <div id="prodSpecsFields" style="display: flex; flex-direction: column; gap: 12px;"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="prodDescription">Product Description / Specifications</label>
+                    <textarea id="prodDescription" class="form-control" rows="4" placeholder="Enter materials, sizing details, lead times, trade certifications..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 8px; padding: 12px;">Publish Wholesale Listing</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SECTION 8: FOOTER SECTION -->
+    <footer class="market-footer" style="border-top: 1px solid var(--border-color); padding: 48px 0; background: #ffffff; color: var(--text-secondary); font-size: 14px; margin-top: 64px;">
+        <div class="container footer-grid">
+            <div>
+                <div class="logo" style="margin-bottom:12px;">EtrailGlobal</div>
+                <p>Green and white wholesale sourcing marketplace for products, suppliers, and direct B2B conversations.</p>
+                <p class="footer-contact">
+                    <span id="footerAddress">Gulshan-2, Dhaka, Bangladesh</span>
+                    <span id="footerPhone">+880-9612-ETRAIL</span>
+                    <span id="footerEmail">support@etrail.com.bd</span>
+                </p>
+            </div>
+            <div>
+                <h4>Marketplace</h4>
+                <a href="product.html">All Products</a>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact Us</a>
+                <a href="dashboard.html">Dashboard</a>
+            </div>
+            <div>
+                <h4>Seller Zone</h4>
+                <button onclick="openModal('sellerRegisterModal')" class="btn btn-primary">Apply Now</button>
+                <button onclick="openModal('sellerLoginModal')" class="btn btn-secondary">Seller Login</button>
+            </div>
+        </div>
+        <div class="container" style="border-top:1px solid var(--border-color); padding-top:24px; margin-top:32px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+            <p style="font-size:13px; color:var(--text-muted); margin:0;">© 2026 EtrailGlobal. All rights reserved.</p>
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                <span style="font-size:12px; color:var(--text-muted); font-weight:600;">We Accept:</span>
+                <span style="font-size:11px; font-weight:700; background:#fff; border:1px solid var(--border-color); padding:4px 8px; border-radius:4px; color:#1a1f71; display:inline-block;">VISA</span>
+                <span style="font-size:11px; font-weight:700; background:#fff; border:1px solid var(--border-color); padding:4px 8px; border-radius:4px; color:#eb001b; display:inline-block;">Mastercard</span>
+                <span style="font-size:11px; font-weight:700; background:#e2125d; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">bKash</span>
+                <span style="font-size:11px; font-weight:700; background:#ff6b00; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">Nagad</span>
+                <span style="font-size:11px; font-weight:700; background:#8c3494; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">Rocket</span>
+                <span style="font-size:11px; font-weight:700; background:#005c2d; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">DBBL</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Customer Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+         <div class="modal">
+             <span class="modal-close" onclick="closeModal('loginModal')">&times;</span>
+             <h2 class="modal-title">Sign In to Etrail Bangladesh</h2>
+             <form id="loginForm">
+                 <div class="form-group">
+                     <label class="form-label" for="loginEmail">Email Address</label>
+                     <input type="email" id="loginEmail" class="form-control" placeholder="enter customer@etrailglobal.com" required>
+                 </div>
+                 <div class="form-group">
+                     <label class="form-label" for="loginPassword">Password</label>
+                     <input type="password" id="loginPassword" class="form-control" placeholder="enter Customer123" required>
+                 </div>
+                 <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Sign In</button>
+             </form>
+             <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                 Don't have an account? <a href="javascript:void(0)" onclick="closeModal('loginModal'); openModal('registerModal');" style="color: var(--color-primary); font-weight:600;">Register Here</a>
+             </p>
+         </div>
+     </div>
+
+     <!-- Customer Register Modal -->
+     <div class="modal-overlay" id="registerModal">
+         <div class="modal" style="max-width: 600px;">
+             <span class="modal-close" onclick="closeModal('registerModal')">&times;</span>
+             <h2 class="modal-title">Create Customer Account</h2>
+             <form id="registerForm">
+                 <div class="form-group">
+                     <label class="form-label" for="regUsername">Username</label>
+                     <input type="text" id="regUsername" class="form-control" placeholder="e.g. companyrep" required>
+                 </div>
+                 <div class="form-group">
+                     <label class="form-label" for="regEmail">Email Address</label>
+                     <input type="email" id="regEmail" class="form-control" placeholder="name@example.com" required>
+                 </div>
+                 <div class="form-group">
+                     <label class="form-label" for="regPassword">Password</label>
+                     <input type="password" id="regPassword" class="form-control" placeholder="Minimum 6 characters" required>
+                 </div>
+                 <div class="form-group">
+                     <label class="form-label" for="regContactInfo">Phone / Contact Number</label>
+                     <input type="text" id="regContactInfo" class="form-control" placeholder="e.g. +880-1xxxxxxxxx" required>
+                 </div>
+                 <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Complete Registration</button>
+             </form>
+             <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                 Already registered? <a href="javascript:void(0)" onclick="closeModal('registerModal'); openModal('loginModal');" style="color: var(--color-primary); font-weight:600;">Sign In</a>
+             </p>
+         </div>
+     </div>
+
+    <!-- Seller Login Modal -->
+    <div class="modal-overlay" id="sellerLoginModal">
+        <div class="modal">
+            <span class="modal-close" onclick="closeModal('sellerLoginModal')">&times;</span>
+            <h2 class="modal-title">Sign In - Seller Portal</h2>
+            <form id="sellerLoginForm">
+                <div class="form-group">
+                    <label class="form-label" for="sellerLoginEmail">Email Address</label>
+                    <input type="email" id="sellerLoginEmail" class="form-control" placeholder="enter seller@etrailglobal.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerLoginPassword">Password</label>
+                    <input type="password" id="sellerLoginPassword" class="form-control" placeholder="enter Seller123" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Login to Seller Panel</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Apply for a supplier account? <a href="javascript:void(0)" onclick="closeModal('sellerLoginModal'); openModal('sellerRegisterModal');" style="color: var(--color-primary); font-weight:600;">Apply Now</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Seller Register Modal -->
+    <div class="modal-overlay" id="sellerRegisterModal">
+        <div class="modal" style="max-width: 600px;">
+            <span class="modal-close" onclick="closeModal('sellerRegisterModal')">&times;</span>
+            <h2 class="modal-title">Become a Seller / Supplier Application</h2>
+            <form id="sellerRegisterForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegUsername">Username *</label>
+                        <input type="text" id="sellerRegUsername" class="form-control" placeholder="e.g. factoryrep" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegEmail">Business Email *</label>
+                        <input type="email" id="sellerRegEmail" class="form-control" placeholder="sales@factory.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerRegPassword">Password *</label>
+                    <input type="password" id="sellerRegPassword" class="form-control" placeholder="Minimum 6 characters" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegCompanyName">Company Registered Name *</label>
+                        <input type="text" id="sellerRegCompanyName" class="form-control" placeholder="e.g. Apex Tech Textiles Ltd" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegYearEstablished">Established Year</label>
+                        <input type="text" id="sellerRegYearEstablished" class="form-control" placeholder="e.g. 2015">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegContactInfo">Business Phone *</label>
+                        <input type="text" id="sellerRegContactInfo" class="form-control" placeholder="e.g. +880-1xxxxxxxxx" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegWhatsApp">WhatsApp Number *</label>
+                        <input type="text" id="sellerRegWhatsApp" class="form-control" placeholder="e.g. +880-1xxxxxxxxx" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegGmail">Alternate Email (Gmail)</label>
+                        <input type="email" id="sellerRegGmail" class="form-control" placeholder="e.g. alternate@gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegTax">Tax / BIN Number</label>
+                        <input type="text" id="sellerRegTax" class="form-control" placeholder="e.g. 123456789">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerRegCompanyAddress">Company Address / Factory Location *</label>
+                    <input type="text" id="sellerRegCompanyAddress" class="form-control" placeholder="e.g. Plot 12, Gazipur Industrial Zone" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerRegWebsite">Company Website</label>
+                    <input type="text" id="sellerRegWebsite" class="form-control" placeholder="e.g. https://apextech.com">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Submit Seller Application</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Already have a seller account? <a href="javascript:void(0)" onclick="closeModal('sellerRegisterModal'); openModal('sellerLoginModal');" style="color: var(--color-primary); font-weight:600;">Sign In</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        let currentDetailProduct = null;
+
+        // Custom router for this page
+        window.addEventListener('DOMContentLoaded', async () => {
+            // Wait for auth to complete in main.js
+            setTimeout(() => {
+                showAddProductButtonIfSeller();
+            }, 300);
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+            const searchKeyword = urlParams.get('search');
+            const categorySelect = urlParams.get('category');
+
+            if (productId) {
+                renderProductDetail(productId);
+            } else {
+                if (searchKeyword) document.getElementById('catalogSearchInput').value = searchKeyword;
+                if (categorySelect) document.getElementById('catalogCategorySelect').value = categorySelect;
+                renderCatalog();
+            }
+
+            // Bind add listing form
+            const form = document.getElementById('addProductForm');
+            if (form) {
+                form.addEventListener('submit', handleAddProductSubmit);
+            }
+
+            const catInput = document.getElementById('prodCategory');
+            if (catInput) {
+                catInput.addEventListener('change', renderDynamicSpecs);
+                renderDynamicSpecs();
+            }
+
+            // Bind media inputs to handle previews
+            const imgInput = document.getElementById('prodImagesInput');
+            if (imgInput) imgInput.addEventListener('change', handleProductMediaChange);
+            
+            const vidInput = document.getElementById('prodVideoInput');
+            if (vidInput) vidInput.addEventListener('change', handleProductMediaChange);
+        });
+
+        function showAddProductButtonIfSeller() {
+            const btn = document.getElementById('addNewProductBtn');
+            if (window.currentUser && (window.currentUser.role === 'Seller' || window.currentUser.role === 'Admin')) {
+                btn.style.display = 'block';
+            }
+        }
+
+        async function renderCatalog() {
+            document.getElementById('catalogSection').style.display = 'block';
+            document.getElementById('detailSection').style.display = 'none';
+
+            const keyword = document.getElementById('catalogSearchInput').value;
+            const category = document.getElementById('catalogCategorySelect').value;
+
+            const grid = document.getElementById('catalogGrid');
+            try {
+                let url = '/api/product';
+                const params = [];
+                if (keyword) params.push(`search=${encodeURIComponent(keyword)}`);
+                if (category && category !== 'All') params.push(`category=${encodeURIComponent(category)}`);
+                
+                if (params.length > 0) {
+                    url += '?' + params.join('&');
+                }
+
+                const response = await fetch(url);
+                if (response.ok) {
+                    const products = await response.json();
+                    if (products.length === 0) {
+                        grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);">No products found matching filters.</div>`;
+                        return;
+                    }
+
+                    grid.innerHTML = products.map(p => {
+                        const sym = window.siteSettings.currency_symbol || "৳";
+                        const hasDiscount = p.discountPrice && p.discountPrice > 0 && p.discountPrice < p.price;
+                        const activePrice = hasDiscount ? p.discountPrice : p.price;
+                        const priceText = `${sym}${activePrice.toFixed(2)}`;
+                        const originalPriceHtml = hasDiscount ? `<span style="text-decoration: line-through; color: var(--text-muted); font-size: 12px; font-weight: normal; margin-left: 6px;">${sym}${p.price.toFixed(2)}</span>` : '';
+                        const discountBadgeHtml = hasDiscount ? `<span style="background: var(--color-danger); color: white; padding: 2px 4px; border-radius: 4px; font-size: 9px; font-weight: bold; margin-left: 6px;">-${Math.round(((p.price - p.discountPrice) / p.price) * 100)}%</span>` : '';
+
+                        return `
+                            <div class="card">
+                                <div class="card-img" style="background-image: url('${p.imageUrl || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=600&q=80'}')">
+                                    ${p.sellerVerified ? '<span class="card-badge">✓ Audited</span>' : ''}
+                                </div>
+                                <div class="card-body">
+                                    <span style="font-size:11px; font-weight:600; color:var(--color-secondary); text-transform:uppercase; margin-bottom:4px;">${p.category}</span>
+                                    <h3 class="card-title">${p.name}</h3>
+                                    <p class="card-desc">${p.description}</p>
+                                    <div class="card-meta">
+                                        <div>
+                                            <div class="price-tag">${priceText}${originalPriceHtml}${discountBadgeHtml}</div>
+                                            <div class="moq-tag">MOQ: ${p.minOrderQuantity} units</div>
+                                        </div>
+                                        <button onclick="viewDetails(${p.id})" class="btn btn-secondary" style="padding: 6px 12px; font-size:12px;">View Details</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            } catch (err) {
+                console.error(err);
+                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:var(--color-danger);">Failed to load catalog.</div>`;
+            }
+        }
+
+        function viewDetails(productId) {
+            // Push history state to make URLs shareable
+            history.pushState(null, '', `?id=${productId}`);
+            renderProductDetail(productId);
+        }
+
+        function goBackToCatalog() {
+            history.pushState(null, '', 'product.html');
+            document.getElementById('catalogSearchInput').value = '';
+            document.getElementById('catalogCategorySelect').value = 'All';
+            renderCatalog();
+        }
+
+        async function renderProductDetail(productId) {
+            document.getElementById('catalogSection').style.display = 'none';
+            document.getElementById('detailSection').style.display = 'block';
+
+            try {
+                const response = await fetch(`/api/product/${productId}`);
+                if (!response.ok) {
+                    showToast("Product not found", true);
+                    goBackToCatalog();
+                    return;
+                }
+
+                const data = await response.json();
+                currentDetailProduct = data;
+
+                // Title, Desc, Category, MOQ
+                document.getElementById('detailTitle').textContent = data.name;
+                document.getElementById('detailDescription').textContent = data.description;
+                document.getElementById('detailCategory').textContent = data.category;
+                document.getElementById('detailMOQ').textContent = data.minOrderQuantity;
+
+                // Image & Video Gallery (Alibaba & Daraz Hybrid style)
+                let mainMediaHtml = '';
+                let thumbnailsHtml = '';
+                
+                let mediaList = [];
+                try {
+                    if (data.mediaJson) {
+                        mediaList = JSON.parse(data.mediaJson);
+                    }
+                } catch(e) {
+                    console.error("Failed to parse mediaJson", e);
+                }
+
+                if (mediaList.length === 0) {
+                    mediaList.push({ url: data.imageUrl || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=600&q=80', type: 'image' });
+                }
+
+                const firstMedia = mediaList[0];
+                if (firstMedia.type === 'video') {
+                    mainMediaHtml = `<video id="mainGalleryMedia" src="${firstMedia.url}" controls autoplay muted></video>`;
+                } else {
+                    mainMediaHtml = `<img id="mainGalleryMedia" src="${firstMedia.url}" alt="${data.name}">`;
+                }
+
+                if (mediaList.length > 1 || (mediaList.length === 1 && mediaList[0].type === 'video')) {
+                    thumbnailsHtml = `
+                        <div class="gallery-thumbnails">
+                            ${mediaList.map((m, index) => {
+                                const activeClass = index === 0 ? 'active' : '';
+                                if (m.type === 'video') {
+                                    return `
+                                        <div class="gallery-thumb gallery-thumb-video ${activeClass}" 
+                                             onclick="setMainGalleryMedia('${m.url}', 'video', this)">
+                                        </div>
+                                    `;
+                                } else {
+                                    return `
+                                        <div class="gallery-thumb ${activeClass}" 
+                                             style="background-image: url('${m.url}')" 
+                                             onclick="setMainGalleryMedia('${m.url}', 'image', this)">
+                                        </div>
+                                    `;
+                                }
+                            }).join('')}
+                        </div>
+                    `;
+                }
+
+                document.getElementById('detailGallery').innerHTML = `
+                    <div class="gallery-container">
+                        <div class="gallery-main-view">
+                            ${mainMediaHtml}
+                        </div>
+                        ${thumbnailsHtml}
+                    </div>
+                `;
+
+                // Seller info
+                document.getElementById('detailSellerMeta').innerHTML = `
+                    <span style="font-size:14px; font-weight:600; color:var(--text-primary)">
+                        Supplier: ${data.sellerCompany} (${data.sellerName})
+                    </span>
+                    ${data.sellerVerified ? '<span class="badge badge-verified">✓ Audited Manufacturer</span>' : '<span class="badge badge-pending">Verification Pending</span>'}
+                `;
+
+                // Pricing & Availability Rendering
+                const sym = window.siteSettings.currency_symbol || "৳";
+                const hasDiscount = data.discountPrice && data.discountPrice > 0 && data.discountPrice < data.price;
+                const activePrice = hasDiscount ? data.discountPrice : data.price;
+                
+                let pricingHtml = `
+                    <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;">
+                        <span style="font-size: 28px; font-weight: 800; color: var(--color-primary);">${sym}${activePrice.toFixed(2)}</span>
+                `;
+                if (hasDiscount) {
+                    pricingHtml += `
+                        <span style="text-decoration: line-through; color: var(--text-muted); font-size: 16px;">${sym}${data.price.toFixed(2)}</span>
+                        <span style="background: var(--color-danger); color: white; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 700;">SAVE ${Math.round(((data.price - data.discountPrice) / data.price) * 100)}%</span>
+                    `;
+                }
+                pricingHtml += `</div>`;
+                
+                document.getElementById('detailPriceTiers').innerHTML = pricingHtml;
+
+                // Update stock status
+                const stockEl = document.getElementById('detailStock');
+                if (stockEl) {
+                    if (data.stock <= 0) {
+                        stockEl.innerHTML = `<span style="color: var(--color-danger); font-weight: 700;">⚠️ Out of Stock</span>`;
+                        // Disable the inquire button if stock is 0
+                        const inquireBtn = document.querySelector('button[onclick="contactSupplier()"]');
+                        if (inquireBtn) {
+                            inquireBtn.disabled = true;
+                            inquireBtn.innerHTML = "Out of Stock";
+                            inquireBtn.style.opacity = 0.5;
+                        }
+                    } else {
+                        stockEl.innerHTML = `<span style="color: var(--color-success); font-weight: 700;">✓ In Stock (${data.stock} units available)</span>`;
+                        // Re-enable inquire button
+                        const inquireBtn = document.querySelector('button[onclick="contactSupplier()"]');
+                        if (inquireBtn) {
+                            inquireBtn.disabled = false;
+                            inquireBtn.innerHTML = `💬 Contact Supplier / Inquire Now`;
+                            inquireBtn.style.opacity = 1;
+                        }
+                    }
+                }
+
+                // Update lead time days
+                const leadEl = document.getElementById('detailLeadTime');
+                if (leadEl) {
+                    leadEl.textContent = `${data.leadTimeDays || 3} days (standard ship)`;
+                }
+
+                // Render Specifications table
+                const specsContainer = document.getElementById('detailSpecsTableContainer');
+                const specsTableBody = document.getElementById('detailSpecsTableBody');
+                if (specsContainer && specsTableBody) {
+                    specsTableBody.innerHTML = '';
+                    let hasSpecs = false;
+                    try {
+                        if (data.specificationsJson) {
+                            const specsObj = JSON.parse(data.specificationsJson);
+                            const keys = Object.keys(specsObj);
+                            if (keys.length > 0) {
+                                hasSpecs = true;
+                                specsTableBody.innerHTML = keys.map(k => `
+                                    <tr style="border-bottom: 1px solid var(--border-color);">
+                                        <td style="padding: 10px 16px; font-weight: 600; color: var(--text-secondary); width: 40%; background-color: rgba(0,0,0,0.015); border-right: 1px solid var(--border-color);">${escapeHtml(k)}</td>
+                                        <td style="padding: 10px 16px; color: var(--text-primary);">${escapeHtml(specsObj[k])}</td>
+                                    </tr>
+                                `).join('');
+                            }
+                        }
+                    } catch (e) {
+                        console.error("Failed to parse specificationsJson", e);
+                    }
+                    specsContainer.style.display = hasSpecs ? 'block' : 'none';
+                }
+
+                // Render Seller Profile Card
+                document.getElementById('sellerCardName').textContent = data.sellerCompany || data.sellerName || "Supplier";
+                document.getElementById('sellerCardAddress').innerHTML = `📍 Address: ${data.sellerAddress || 'Dhaka, Bangladesh'}`;
+                document.getElementById('sellerCardEstablished').innerHTML = `📅 Established: ${data.sellerYearEstablished || '2018'}`;
+                
+                const webContainer = document.getElementById('sellerCardWebsite');
+                const webLink = document.getElementById('sellerCardLink');
+                if (webContainer && webLink && data.sellerWebsiteUrl) {
+                    webLink.href = data.sellerWebsiteUrl.startsWith('http') ? data.sellerWebsiteUrl : `https://${data.sellerWebsiteUrl}`;
+                    webContainer.style.display = 'block';
+                } else if (webContainer) {
+                    webContainer.style.display = 'none';
+                }
+
+                const verifiedBadge = document.getElementById('sellerCardVerified');
+                if (verifiedBadge) {
+                    verifiedBadge.style.display = data.sellerVerified ? 'inline-block' : 'none';
+                }
+
+                // Load reviews, rating stats, and follow state
+                await loadSellerCardDetailsAndReviews(data.sellerId);
+
+                // Update dynamic action panel based on login status
+                const actionPanel = document.getElementById('detailActionPanel');
+                if (actionPanel) {
+                    if (window.currentUser) {
+                        // User is logged in! Hide Send Message in seller card, show Cart/Wishlist/Compare panel.
+                        setTimeout(() => {
+                            const sendMsgBtnInCard = document.querySelector('button[onclick="contactSupplier()"]');
+                            if (sendMsgBtnInCard) {
+                                sendMsgBtnInCard.style.display = 'none';
+                            }
+                        }, 200);
+                        
+                        actionPanel.innerHTML = `
+                            <div style="display:flex; flex-direction:column; gap:12px; background: rgba(21, 128, 61, 0.02); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md);">
+                                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+                                    <span style="font-weight:600; font-size:14px; color:var(--text-secondary); margin-bottom: 0;">Order Quantity:</span>
+                                    <div style="display:flex; align-items:center; border:1px solid var(--border-color); border-radius: var(--radius-sm); overflow:hidden; background:#fff;">
+                                        <button type="button" onclick="adjustOrderQty(-1)" style="padding: 6px 12px; font-weight:700; background:#f8fafc; cursor:pointer; font-size: 16px; border:none; outline:none; color:var(--text-primary);">-</button>
+                                        <input type="number" id="detailOrderQtyInput" value="${data.minOrderQuantity}" min="${data.minOrderQuantity}" style="width: 70px; text-align:center; font-weight:700; padding:6px 0; border:none; outline:none; color:var(--text-primary);" />
+                                        <button type="button" onclick="adjustOrderQty(1)" style="padding: 6px 12px; font-weight:700; background:#f8fafc; cursor:pointer; font-size: 16px; border:none; outline:none; color:var(--text-primary);">+</button>
+                                    </div>
+                                </div>
+                                <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:10px;">
+                                    <button type="button" onclick="addToCartFromDetail(${data.id})" class="btn btn-primary" style="justify-content:center; padding:12px 16px; font-size:13px; font-weight:700;">
+                                        🛒 Add to Cart
+                                    </button>
+                                    <button type="button" onclick="addToWishlistFromDetail(${data.id})" class="btn btn-secondary" style="justify-content:center; padding:12px 8px; font-size:13px; font-weight:600; border: 1px solid var(--border-color); background:transparent; color: var(--color-danger);">
+                                        ❤️ Save
+                                    </button>
+                                    <button type="button" onclick="addToCompareFromDetail(${data.id})" class="btn btn-secondary" style="justify-content:center; padding:12px 8px; font-size:13px; font-weight:600; border: 1px solid var(--border-color); background:transparent; color: var(--color-primary);">
+                                        🔄 Compare
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        // User is NOT logged in! Show "Contact Supplier / Inquire Now" button.
+                        actionPanel.innerHTML = `
+                            <button onclick="contactSupplier()" class="btn btn-primary" style="width:100%; justify-content:center; padding: 14px; font-weight: 700;">
+                                💬 Contact Supplier / Inquire Now
+                            </button>
+                        `;
+                    }
+                }
+
+            } catch (err) {
+                console.error(err);
+                showToast("Error loading product details", true);
+                goBackToCatalog();
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        let isFollowingSeller = false;
+        let selectedReviewStars = 5;
+
+        function setStarRating(stars) {
+            selectedReviewStars = stars;
+            document.getElementById('selectedStarValue').value = stars;
+            const starSpans = document.querySelectorAll('#starRatingSelector span');
+            starSpans.forEach((span, idx) => {
+                if (idx < stars) {
+                    span.style.color = '#d97706'; // gold
+                } else {
+                    span.style.color = '#cbd5e1'; // grey
+                }
+            });
+        }
+
+        async function loadSellerCardDetailsAndReviews(sellerId) {
+            // 1. Fetch ratings stats (avg rating, follower count, etc)
+            try {
+                const statsRes = await fetch(`/api/customer/reviews/stats/${sellerId}`);
+                if (statsRes.ok) {
+                    const stats = await statsRes.json();
+                    
+                    document.getElementById('sellerCardFollowers').textContent = stats.followerCount;
+                    document.getElementById('sellerCardRatingText').textContent = `(${stats.averageRating.toFixed(1)})`;
+                    
+                    let starsHtml = '';
+                    const fullStars = Math.floor(stats.averageRating);
+                    for (let i = 0; i < 5; i++) {
+                        starsHtml += i < fullStars ? '★' : '☆';
+                    }
+                    document.getElementById('sellerCardStars').textContent = starsHtml;
+                }
+            } catch (err) {
+                console.error("Error loading seller ratings stats:", err);
+            }
+
+            // 2. Load reviews list
+            try {
+                const reviewsRes = await fetch(`/api/customer/reviews/seller/${sellerId}`);
+                if (reviewsRes.ok) {
+                    const reviews = await reviewsRes.json();
+                    const listContainer = document.getElementById('productReviewsList');
+                    
+                    if (reviews.length === 0) {
+                        listContainer.innerHTML = `<div style="text-align:center; padding: 40px; color:var(--text-muted);">No reviews have been posted for this store yet.</div>`;
+                    } else {
+                        listContainer.innerHTML = reviews.map(r => {
+                            let rStars = '';
+                            for (let i = 0; i < 5; i++) {
+                                rStars += i < r.rating ? '★' : '☆';
+                            }
+                            return `
+                                <div style="border-bottom: 1px solid var(--border-color); padding-bottom:12px; margin-bottom:12px;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                                        <strong>${escapeHtml(r.buyerName)}</strong>
+                                        <span style="font-size:12px; color:var(--text-muted);">${new Date(r.createdAt).toLocaleDateString()}</span>
+                                    </div>
+                                    <div style="color:#d97706; font-size:14px; margin-bottom:4px;">${rStars}</div>
+                                    <p style="color:var(--text-secondary); margin:0; font-size:13px; line-height:1.4;">${escapeHtml(r.comment)}</p>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                }
+            } catch (err) {
+                console.error("Error loading reviews:", err);
+            }
+
+            // 3. Check follow state and display appropriate button text
+            isFollowingSeller = false;
+            const followBtn = document.getElementById('btnFollowSeller');
+            if (window.currentUser) {
+                // If logged in seller themselves, hide follow button
+                if (window.currentUser.id === sellerId || window.currentUser.role === 'Seller') {
+                    followBtn.style.display = 'none';
+                    document.getElementById('writeReviewContainer').style.display = 'none';
+                } else {
+                    followBtn.style.display = 'block';
+                    // Check if already following
+                    try {
+                        const followRes = await fetch('/api/customer/followed-sellers');
+                        if (followRes.ok) {
+                            const followed = await followRes.json();
+                            isFollowingSeller = followed.some(f => f.sellerId === sellerId);
+                            updateFollowButtonUI();
+                        }
+                    } catch (e) {
+                        console.error("Error checking follow state:", e);
+                    }
+                    
+                    // Show write review form (buyer can review)
+                    document.getElementById('writeReviewContainer').style.display = 'block';
+                    setStarRating(5); // default
+                }
+            } else {
+                // Guest user: follow triggers login
+                followBtn.style.display = 'block';
+                updateFollowButtonUI();
+                document.getElementById('writeReviewContainer').style.display = 'none';
+            }
+        }
+
+        function updateFollowButtonUI() {
+            const btn = document.getElementById('btnFollowSeller');
+            if (!btn) return;
+            
+            if (isFollowingSeller) {
+                btn.innerHTML = `✓ Following Seller`;
+                btn.style.background = 'var(--color-primary)';
+                btn.style.color = '#fff';
+            } else {
+                btn.innerHTML = `➕ Follow Seller`;
+                btn.style.background = 'transparent';
+                btn.style.color = 'var(--color-primary)';
+            }
+        }
+
+        async function handleFollowSellerClick() {
+            if (!window.currentUser) {
+                showToast("Please log in to follow sellers", true);
+                openModal('loginModal');
+                return;
+            }
+
+            const sellerId = currentDetailProduct.sellerId;
+            const followBtn = document.getElementById('btnFollowSeller');
+            followBtn.disabled = true;
+
+            try {
+                if (isFollowingSeller) {
+                    const res = await fetch(`/api/customer/followed-sellers/${sellerId}`, {
+                        method: 'DELETE'
+                    });
+                    if (res.ok) {
+                        showToast("Unfollowed seller.");
+                        isFollowingSeller = false;
+                    }
+                } else {
+                    const res = await fetch('/api/customer/followed-sellers', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ sellerId })
+                    });
+                    if (res.ok) {
+                        showToast("Following seller!");
+                        isFollowingSeller = true;
+                    }
+                }
+                updateFollowButtonUI();
+                // Reload stats (to update follower count)
+                const statsRes = await fetch(`/api/customer/reviews/stats/${sellerId}`);
+                if (statsRes.ok) {
+                    const stats = await statsRes.json();
+                    document.getElementById('sellerCardFollowers').textContent = stats.followerCount;
+                }
+            } catch (err) {
+                console.error(err);
+            } finally {
+                followBtn.disabled = false;
+            }
+        }
+
+        async function handleReviewSubmit(e) {
+            e.preventDefault();
+            if (!window.currentUser) {
+                showToast("Please log in to leave reviews", true);
+                return;
+            }
+
+            const sellerId = currentDetailProduct.sellerId;
+            const rating = selectedReviewStars;
+            const comment = document.getElementById('reviewComment').value;
+
+            try {
+                const response = await fetch('/api/customer/reviews', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sellerId, rating, comment })
+                });
+
+                if (response.ok) {
+                    showToast("Review submitted successfully!");
+                    document.getElementById('reviewComment').value = '';
+                    // Reload ratings and reviews list
+                    await loadSellerCardDetailsAndReviews(sellerId);
+                } else {
+                    const errData = await response.json();
+                    showToast(errData.message || "Failed to submit review", true);
+                }
+            } catch (err) {
+                console.error(err);
+                showToast("Error submitting review", true);
+            }
+        }
+
+        function setMainGalleryMedia(url, type, thumbEl) {
+            const mainView = document.querySelector('.gallery-main-view');
+            if (!mainView) return;
+            
+            if (type === 'video') {
+                mainView.innerHTML = `<video id="mainGalleryMedia" src="${url}" controls autoplay muted></video>`;
+            } else {
+                mainView.innerHTML = `<img id="mainGalleryMedia" src="${url}">`;
+            }
+            
+            document.querySelectorAll('.gallery-thumb').forEach(el => el.classList.remove('active'));
+            if (thumbEl) thumbEl.classList.add('active');
+        }
+
+        function handleProductMediaChange() {
+            const previewContainer = document.getElementById('prodMediaPreviews');
+            if (!previewContainer) return;
+            
+            previewContainer.innerHTML = '';
+            
+            const imageInput = document.getElementById('prodImagesInput');
+            const videoInput = document.getElementById('prodVideoInput');
+            
+            let hasMedia = false;
+            
+            if (imageInput && imageInput.files) {
+                Array.from(imageInput.files).forEach(file => {
+                    hasMedia = true;
+                    const url = URL.createObjectURL(file);
+                    const item = document.createElement('div');
+                    item.className = 'preview-item';
+                    item.style.backgroundImage = `url('${url}')`;
+                    previewContainer.appendChild(item);
+                });
+            }
+            
+            if (videoInput && videoInput.files && videoInput.files.length > 0) {
+                hasMedia = true;
+                const file = videoInput.files[0];
+                const item = document.createElement('div');
+                item.className = 'preview-item preview-item-video';
+                item.innerHTML = `
+                    <span class="play-icon">▶</span>
+                    <span>Video</span>
+                    <span style="font-size:8px; opacity:0.7; max-width:70px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${file.name}</span>
+                `;
+                previewContainer.appendChild(item);
+            }
+            
+            if (!hasMedia) {
+                previewContainer.innerHTML = `<div class="upload-placeholder-text">Selected product pictures and videos will be previewed here.</div>`;
+            }
+        }
+
+        async function handleAddProductSubmit(e) {
+            e.preventDefault();
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn ? submitBtn.innerHTML : "Publish Listing";
+            
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = "⌛ Uploading Media & Publishing...";
+            }
+            
+            const name = document.getElementById('prodName').value;
+            const category = document.getElementById('prodCategory').value;
+            const minOrderQuantity = parseInt(document.getElementById('prodMOQ').value);
+            const price = parseFloat(document.getElementById('prodPrice').value);
+            const discountPriceVal = document.getElementById('prodDiscountPrice').value;
+            const discountPrice = discountPriceVal ? parseFloat(discountPriceVal) : 0.0;
+            const stock = parseInt(document.getElementById('prodStock').value);
+            const leadTimeDays = parseInt(document.getElementById('prodLeadTime').value);
+            const description = document.getElementById('prodDescription').value;
+
+            try {
+                const imageInput = document.getElementById('prodImagesInput');
+                const videoInput = document.getElementById('prodVideoInput');
+                
+                let imageUrl = '/images/placeholder.png';
+                let mediaArray = [];
+                
+                const formData = new FormData();
+                let hasFiles = false;
+                
+                if (imageInput && imageInput.files && imageInput.files.length > 0) {
+                    Array.from(imageInput.files).forEach(file => {
+                        formData.append('files', file);
+                    });
+                    hasFiles = true;
+                }
+                
+                if (videoInput && videoInput.files && videoInput.files.length > 0) {
+                    formData.append('files', videoInput.files[0]);
+                    hasFiles = true;
+                }
+                
+                if (hasFiles) {
+                    const uploadResponse = await fetch('/api/product/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (uploadResponse.ok) {
+                        const uploadResult = await uploadResponse.json();
+                        const urls = uploadResult.urls || [];
+                        
+                        let fileIndex = 0;
+                        
+                        if (imageInput && imageInput.files && imageInput.files.length > 0) {
+                            Array.from(imageInput.files).forEach(() => {
+                                if (fileIndex < urls.length) {
+                                    const url = urls[fileIndex];
+                                    if (fileIndex === 0) {
+                                        imageUrl = url;
+                                    }
+                                    mediaArray.push({ url: url, type: 'image' });
+                                    fileIndex++;
+                                }
+                            });
+                        }
+                        
+                        if (videoInput && videoInput.files && videoInput.files.length > 0) {
+                            if (fileIndex < urls.length) {
+                                const url = urls[fileIndex];
+                                mediaArray.push({ url: url, type: 'video' });
+                                fileIndex++;
+                            }
+                        }
+                    } else {
+                        showToast("Media upload failed, saving without files.", true);
+                    }
+                }
+                
+                const mediaJson = JSON.stringify(mediaArray);
+
+                // Collect specifications
+                const specInputs = document.querySelectorAll('#prodSpecsFields [data-spec]');
+                const specs = {};
+                specInputs.forEach(input => {
+                    const key = input.getAttribute('data-spec');
+                    specs[key] = input.value;
+                });
+                const specificationsJson = JSON.stringify(specs);
+
+                const response = await fetch('/api/product', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name, category, minOrderQuantity, price, discountPrice, stock, leadTimeDays, imageUrl, mediaJson, description, specificationsJson
+                    })
+                });
+
+                if (response.ok) {
+                    showToast("Listing submitted successfully! It will go live once approved by an admin.");
+                    closeModal('addProductModal');
+                    document.getElementById('addProductForm').reset();
+                    renderDynamicSpecs();
+                    handleProductMediaChange();
+                    renderCatalog();
+                } else {
+                    const data = await response.json();
+                    showToast(data.message || "Failed to publish listing", true);
+                }
+            } catch(err) {
+                showToast("Error publishing listing", true);
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                }
+            }
+        }
+
+        function renderDynamicSpecs() {
+            const cat = document.getElementById('prodCategory').value;
+            const container = document.getElementById('prodSpecsContainer');
+            const fieldsContainer = document.getElementById('prodSpecsFields');
+            
+            if (!container || !fieldsContainer) return;
+            
+            fieldsContainer.innerHTML = '';
+            
+            let fieldsHtml = '';
+            
+            if (cat === 'Mobiles & Tabs') {
+                fieldsHtml = `
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;"><label class="form-label">Brand</label><input type="text" data-spec="Brand" class="form-control" placeholder="e.g. Apple, Samsung" required></div>
+                        <div class="form-group" style="flex:1;"><label class="form-label">Model</label><input type="text" data-spec="Model" class="form-control" placeholder="e.g. Galaxy S24" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;"><label class="form-label">RAM</label><input type="text" data-spec="RAM" class="form-control" placeholder="e.g. 8GB" required></div>
+                        <div class="form-group" style="flex:1;"><label class="form-label">Storage</label><input type="text" data-spec="Storage" class="form-control" placeholder="e.g. 128GB" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;"><label class="form-label">Battery Capacity</label><input type="text" data-spec="Battery Capacity" class="form-control" placeholder="e.g. 5000 mAh" required></div>
+                        <div class="form-group" style="flex:1;"><label class="form-label">Camera Specs</label><input type="text" data-spec="Camera Specs" class="form-control" placeholder="e.g. 50MP + 12MP" required></div>
+                    </div>
+                `;
+            } else if (cat === 'Men Clothing & Fashion' || cat === "Women's World" || cat === "Men's Collection") {
+                fieldsHtml = `
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;"><label class="form-label">Brand</label><input type="text" data-spec="Brand" class="form-control" placeholder="e.g. Fabrilife" required></div>
+                        <div class="form-group" style="flex:1;"><label class="form-label">Material / Fabric</label><input type="text" data-spec="Material" class="form-control" placeholder="e.g. 100% Organic Cotton" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;"><label class="form-label">Size Options</label><input type="text" data-spec="Size Options" class="form-control" placeholder="e.g. S, M, L, XL" required></div>
+                        <div class="form-group" style="flex:1;"><label class="form-label">Color Options</label><input type="text" data-spec="Color Options" class="form-control" placeholder="e.g. Black, Navy, White" required></div>
+                    </div>
+                    <div class="form-group"><label class="form-label">Fit Type</label><input type="text" data-spec="Fit Type" class="form-control" placeholder="e.g. Slim Fit, Regular Fit" required></div>
+                `;
+            } else if (cat === 'Bikes & Vehicles') {
+                fieldsHtml = `
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;"><label class="form-label">Brand</label><input type="text" data-spec="Brand" class="form-control" placeholder="e.g. Yamaha, Suzuki" required></div>
+                        <div class="form-group" style="flex:1;"><label class="form-label">Engine Displacement</label><input type="text" data-spec="Engine Displacement" class="form-control" placeholder="e.g. 150 cc" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;"><label class="form-label">Mileage</label><input type="text" data-spec="Mileage" class="form-control" placeholder="e.g. 45 km/l" required></div>
+                        <div class="form-group" style="flex:1;"><label class="form-label">Transmission</label><input type="text" data-spec="Transmission" class="form-control" placeholder="e.g. 5-Speed Manual" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;"><label class="form-label">Brake Type</label><input type="text" data-spec="Brake Type" class="form-control" placeholder="e.g. Double Disc, ABS" required></div>
+                        <div class="form-group" style="flex:1;"><label class="form-label">Fuel Type</label><input type="text" data-spec="Fuel Type" class="form-control" placeholder="e.g. Octane / Petrol" required></div>
+                    </div>
+                `;
+            } else if (cat === 'Eco-Friendly Products' || cat === 'Bamboo Based Product' || cat === 'Eco-Friendly Home Decor & Accessories') {
+                fieldsHtml = `
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;"><label class="form-label">Material</label><input type="text" data-spec="Material" class="form-control" placeholder="e.g. Organic Jute / Raw Bamboo" required></div>
+                        <div class="form-group" style="flex:1;"><label class="form-label">Weight</label><input type="text" data-spec="Weight" class="form-control" placeholder="e.g. 350 grams" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;">
+                            <label class="form-label">Is Biodegradable?</label>
+                            <select data-spec="Biodegradable" class="form-control" style="background-color: var(--bg-main)">
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex:1;"><label class="form-label">Country of Origin</label><input type="text" data-spec="Country of Origin" class="form-control" value="Bangladesh" required></div>
+                    </div>
+                `;
+            } else {
+                fieldsHtml = `
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;"><label class="form-label">Brand / Manufacturer</label><input type="text" data-spec="Brand" class="form-control" placeholder="e.g. Generic / Custom" required></div>
+                        <div class="form-group" style="flex:1;"><label class="form-label">Material</label><input type="text" data-spec="Material" class="form-control" placeholder="e.g. Steel, Plastic, Wood" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;"><label class="form-label">Dimensions</label><input type="text" data-spec="Dimensions" class="form-control" placeholder="e.g. 12x12x6 inches" required></div>
+                        <div class="form-group" style="flex:1;"><label class="form-label">Weight</label><input type="text" data-spec="Weight" class="form-control" placeholder="e.g. 1.2 kg" required></div>
+                    </div>
+                `;
+            }
+            
+            fieldsContainer.innerHTML = fieldsHtml;
+            container.style.display = 'block';
+        }
+
+        function adjustOrderQty(change) {
+            const input = document.getElementById('detailOrderQtyInput');
+            if (input) {
+                let val = parseInt(input.value) + change;
+                const min = parseInt(input.getAttribute('min'));
+                if (val < min) val = min;
+                input.value = val;
+            }
+        }
+
+        async function addToCartFromDetail(productId) {
+            const qtyInput = document.getElementById('detailOrderQtyInput');
+            const qty = qtyInput ? parseInt(qtyInput.value) : 1;
+            
+            try {
+                const response = await fetch('/api/customer/cart', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ productId: productId, quantity: qty })
+                });
+                
+                if (response.ok) {
+                    showToast("Product added to cart!");
+                    if (window.updateHeaderStats) {
+                        window.updateHeaderStats();
+                    }
+                } else {
+                    const err = await response.json();
+                    showToast(err.message || "Failed to add to cart", true);
+                }
+            } catch(e) {
+                showToast("Error adding to cart", true);
+            }
+        }
+
+        async function addToWishlistFromDetail(productId) {
+            try {
+                const response = await fetch('/api/customer/wishlist', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ productId: productId })
+                });
+                
+                if (response.ok) {
+                    showToast("Product saved to wishlist!");
+                    if (window.updateHeaderStats) {
+                        window.updateHeaderStats();
+                    }
+                } else {
+                    const err = await response.json();
+                    showToast(err.message || "Product already in wishlist", true);
+                }
+            } catch(e) {
+                showToast("Error adding to wishlist", true);
+            }
+        }
+
+        async function addToCompareFromDetail(productId) {
+            try {
+                const response = await fetch('/api/customer/compare', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ productId: productId })
+                });
+                
+                if (response.ok) {
+                    showToast("Product added to comparison list!");
+                    if (window.updateHeaderStats) {
+                        window.updateHeaderStats();
+                    }
+                } else {
+                    const err = await response.json();
+                    showToast(err.message || "Failed to add to comparison list", true);
+                }
+            } catch(e) {
+                showToast("Error adding to comparison list", true);
+            }
+        }
+
+        function contactSupplier() {
+            if (!window.currentUser) {
+                showToast("Please log in to contact this supplier.");
+                openModal('loginModal');
+                return;
+            }
+            if (currentDetailProduct) {
+                if (window.currentUser.id === currentDetailProduct.sellerId) {
+                    showToast("This is your own listing!", true);
+                    return;
+                }
+                // Redirect to chat with the seller
+                window.location.href = `/chat.html?userId=${currentDetailProduct.sellerId}`;
+            }
+        }
+
+        function requestCustomRfq() {
+            if (!window.currentUser) {
+                showToast("Please log in first.");
+                openModal('loginModal');
+                return;
+            }
+            if (currentDetailProduct) {
+                // Redirect to RFQ creation page pre-filled
+                window.location.href = `/rfq.html?preCategory=${encodeURIComponent(currentDetailProduct.category)}&preTitle=Need similar to ${encodeURIComponent(currentDetailProduct.name)}`;
+            }
+        }
+
+        function applyFilters() {
+            renderCatalog();
+        }
+    </script>
+</body>
+</html>

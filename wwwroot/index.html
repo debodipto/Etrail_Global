@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EtrailGlobal | Wholesale Marketplace</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <meta name="description" content="EtrailGlobal marketplace for wholesale products, verified suppliers, bulk deals, and local sourcing.">
+</head>
+<body class="market-home">
+
+    <header class="market-header">
+        <div class="container market-topbar">
+            <a href="index.html" class="logo market-logo">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                EtrailGlobal
+            </a>
+
+            <div class="market-search">
+                <select id="heroCategorySelect" aria-label="Category">
+                    <option value="All">All categories</option>
+                    <option value="Home">Home</option>
+                    <option value="Women's World">Women's World</option>
+                    <option value="Men's Collection">Men's Collection</option>
+                    <option value="Accessories">Accessories</option>
+                    <option value="Mobiles & Tabs">Mobiles & Tabs</option>
+                    <option value="Alarm">Alarm</option>
+                    <option value="Sinks and kitchen taps">Sinks and kitchen taps</option>
+                    <option value="Paper & Plastic">Paper & Plastic</option>
+                    <option value="Men Clothing & Fashion">Men Clothing & Fashion</option>
+                    <option value="Eco-Friendly Products">Eco-Friendly Products</option>
+                    <option value="Eco-Friendly Home Decor & Accessories">Eco-Friendly Home Decor & Accessories</option>
+                    <option value="Bamboo Based Product">Bamboo Based Product</option>
+                </select>
+                <input type="text" id="heroSearchInput" placeholder="Search products, suppliers, or categories">
+                <button onclick="triggerHeroSearch()" class="btn btn-primary">Search</button>
+            </div>
+
+            <div class="auth-nav" id="authNav">
+                <button class="btn btn-secondary" style="opacity: 0.5;">Loading...</button>
+            </div>
+        </div>
+
+        <div class="container market-nav-row">
+            <nav class="market-links">
+                <a href="index.html" class="active">Home</a>
+                <a href="product.html">All Products</a>
+                <a href="product.html?isTodayDeal=true">Flash Deals</a>
+                <a href="product.html?isBestSeller=true">Best Sellers</a>
+            </nav>
+            <button class="seller-cta" onclick="openModal('sellerRegisterModal')">Become a Seller</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="container market-hero">
+            <aside class="category-sidebar">
+                <div class="sidebar-title">Top Categories</div>
+                <div id="sidebarCategoryList" class="sidebar-category-list">
+                    <div style="padding:10px; text-align:center; color:var(--text-muted); font-size:12px;">Loading categories...</div>
+                </div>
+            </aside>
+
+            <section class="hero-slider" id="topBannerSection">
+                <button class="hero-control hero-control-prev" onclick="moveCarousel(-1)" aria-label="Previous banner">&#8592;</button>
+                <div class="carousel-inner" id="topCarouselInner">
+                    <a class="carousel-item market-slide" href="product.html" style="background-image: url('https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1200&q=80')">
+                        <div class="market-slide-overlay"></div>
+                        <div class="market-slide-content">
+                            <span>Wholesale Marketplace</span>
+                            <h1>Source local and global products in bulk</h1>
+                            <p>Find verified sellers, compare pricing, and start supplier conversations.</p>
+                            <strong>Explore Catalog</strong>
+                        </div>
+                    </a>
+                </div>
+                <button class="hero-control hero-control-next" onclick="moveCarousel(1)" aria-label="Next banner">&#8594;</button>
+            </section>
+
+            <aside class="hero-side-panel" id="heroSidePanel">
+                <div class="side-promo-banner" style="background-image: url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=400&q=80')">
+                    <div class="side-promo-overlay"></div>
+                    <div class="side-promo-content">
+                        <span class="mini-label">B2B Trade Guarantee</span>
+                        <h3>Secure Direct Sourcing</h3>
+                        <p>Verified supplier badge audits, safe payment escrow, and guaranteed local B2B dispatch.</p>
+                        <a href="product.html?search=verified" class="btn btn-primary" style="width: 100%; justify-content: center; font-size: 13px; padding: 8px 12px;">Browse Verified Sellers</a>
+                    </div>
+                </div>
+            </aside>
+        </section>
+
+
+        <section class="container home-section">
+            <div class="market-section-head">
+                <div>
+                    <span>Browse Faster</span>
+                    <h2>Hot Categories</h2>
+                </div>
+                <a href="product.html">View all</a>
+            </div>
+            <div class="market-category-grid" id="hotCategoriesGrid">
+                <div class="market-loading">Loading hot categories...</div>
+            </div>
+        </section>
+
+        <section class="container flash-deals-section">
+            <div class="flash-deals-header">
+                <div class="flash-deals-title">
+                    <span>⚡ FLASH DEALS</span>
+                    <div class="countdown-timer">
+                        <span class="timer-label">Ending in:</span>
+                        <div class="countdown-unit" id="timerHr">08</div>
+                        <span>:</span>
+                        <div class="countdown-unit" id="timerMin">35</div>
+                        <span>:</span>
+                        <div class="countdown-unit" id="timerSec">12</div>
+                    </div>
+                </div>
+                <a href="product.html?isTodayDeal=true" style="color:white; font-weight:800; font-size:14px; text-decoration:underline;">SHOP ALL DEALS</a>
+            </div>
+            <div class="deal-items-container" id="flashDealsContainer">
+                <div class="market-loading">Loading flash deals...</div>
+            </div>
+        </section>
+
+        <section class="container home-section">
+            <div class="market-section-head">
+                <div>
+                    <span>Browse Faster</span>
+                    <h2>Hot Categories</h2>
+                </div>
+                <a href="product.html">View all</a>
+            </div>
+            <div class="market-category-grid" id="hotCategoriesGrid">
+                <div class="market-loading">Loading hot categories...</div>
+            </div>
+        </section>
+
+        <section class="container deal-layout">
+            <div class="deal-panel">
+                <div class="market-section-head compact">
+                    <div>
+                        <span>Limited picks</span>
+                        <h2>Today's Deals</h2>
+                    </div>
+                    <a href="product.html?isTodayDeal=true">More</a>
+                </div>
+                <div class="deal-list" id="todaysDealsGrid">
+                    <div class="market-loading">Loading deals...</div>
+                </div>
+            </div>
+
+            <div class="deal-panel">
+                <div class="market-section-head compact">
+                    <div>
+                        <span>Popular orders</span>
+                        <h2>Best Selling</h2>
+                    </div>
+                    <a href="product.html?isBestSeller=true">More</a>
+                </div>
+                <div class="deal-list" id="bestSellingGrid">
+                    <div class="market-loading">Loading best sellers...</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="container home-section">
+            <div class="market-section-head">
+                <div>
+                    <span>Supplier selected</span>
+                    <h2>Featured Products</h2>
+                </div>
+                <a href="product.html">See more</a>
+            </div>
+            <div class="market-product-grid" id="featuredGrid">
+                <div class="market-loading">Loading featured listings...</div>
+            </div>
+        </section>
+
+        <section class="container market-banner" id="middleBannerSection">
+            <div class="market-banner-bg" id="middleBannerBody" style="background-image: url('https://images.unsplash.com/photo-1543087903-1ac2ec7aa8c5?auto=format&fit=crop&w=1200&q=80')">
+                <div class="market-banner-content" id="middleBannerContent">
+                    <span>Wholesale network</span>
+                    <h2>Build trusted manufacturing partnerships</h2>
+                    <p>Connect with suppliers offering audited standards and bulk pricing.</p>
+                    <a href="product.html" class="btn btn-primary">Start Sourcing</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="container home-section">
+            <div class="market-section-head">
+                <div>
+                    <span>Marketplace catalog</span>
+                    <h2>Recommended For You</h2>
+                </div>
+                <a href="product.html">Open catalog</a>
+            </div>
+            <div class="market-product-grid" id="generalProductsGrid">
+                <div class="market-loading">Loading products...</div>
+            </div>
+        </section>
+
+        <section class="container policy-section market-policy">
+            <div class="policy-btn" onclick="openPolicyModal('terms')">
+                <span class="policy-icon">T&C</span>
+                <span class="policy-title">Terms & Conditions</span>
+            </div>
+            <div class="policy-btn" onclick="openPolicyModal('return')">
+                <span class="policy-icon">RET</span>
+                <span class="policy-title">Return Policy</span>
+            </div>
+            <div class="policy-btn" onclick="openPolicyModal('support')">
+                <span class="policy-icon">SUP</span>
+                <span class="policy-title">Support Policy</span>
+            </div>
+            <div class="policy-btn" onclick="openPolicyModal('privacy')">
+                <span class="policy-icon">SEC</span>
+                <span class="policy-title">Privacy Policy</span>
+            </div>
+        </section>
+    </main>
+
+    <footer class="market-footer">
+        <div class="container footer-grid">
+            <div>
+                <div class="logo" style="margin-bottom:12px;">EtrailGlobal</div>
+                <p>Green and white wholesale sourcing marketplace for products, suppliers, and direct B2B conversations.</p>
+                <p class="footer-contact">
+                    <span id="footerAddress">Gulshan-2, Dhaka, Bangladesh</span>
+                    <span id="footerPhone">+880-9612-ETRAIL</span>
+                    <span id="footerEmail">support@etrail.com.bd</span>
+                </p>
+            </div>
+            <div>
+                <h4>Marketplace</h4>
+                <a href="product.html">All Products</a>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact Us</a>
+                <a href="dashboard.html">Dashboard</a>
+            </div>
+            <div>
+                <h4>Seller Zone</h4>
+                <button onclick="openModal('sellerRegisterModal')" class="btn btn-primary">Apply Now</button>
+                <button onclick="openModal('sellerLoginModal')" class="btn btn-secondary">Seller Login</button>
+            </div>
+        </div>
+        <div class="container" style="border-top:1px solid var(--border-color); padding-top:24px; margin-top:32px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+            <p style="font-size:13px; color:var(--text-muted); margin:0;">© 2026 EtrailGlobal. All rights reserved.</p>
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                <span style="font-size:12px; color:var(--text-muted); font-weight:600;">We Accept:</span>
+                <span style="font-size:11px; font-weight:700; background:#fff; border:1px solid var(--border-color); padding:4px 8px; border-radius:4px; color:#1a1f71; display:inline-block;">VISA</span>
+                <span style="font-size:11px; font-weight:700; background:#fff; border:1px solid var(--border-color); padding:4px 8px; border-radius:4px; color:#eb001b; display:inline-block;">Mastercard</span>
+                <span style="font-size:11px; font-weight:700; background:#e2125d; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">bKash</span>
+                <span style="font-size:11px; font-weight:700; background:#ff6b00; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">Nagad</span>
+                <span style="font-size:11px; font-weight:700; background:#8c3494; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">Rocket</span>
+                <span style="font-size:11px; font-weight:700; background:#005c2d; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">DBBL</span>
+            </div>
+        </div>
+    </footer>
+
+    <div class="modal-overlay" id="policyModal">
+        <div class="modal" style="max-width: 600px;">
+            <span class="modal-close" onclick="closeModal('policyModal')">&times;</span>
+            <h2 class="modal-title" id="policyModalTitle">Company Policy</h2>
+            <div style="max-height: 400px; overflow-y: auto; font-size: 14px; color: var(--text-secondary); line-height: 1.6;" id="policyModalContent"></div>
+            <button onclick="closeModal('policyModal')" class="btn btn-primary" style="margin-top:24px; width:100%; justify-content:center;">Close Policy Document</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <span class="modal-close" onclick="closeModal('loginModal')">&times;</span>
+            <h2 class="modal-title">Sign In to EtrailGlobal</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="customer@etrailglobal.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="Customer123" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Sign In</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Don't have an account? <a href="javascript:void(0)" onclick="closeModal('loginModal'); openModal('registerModal');" style="color: var(--color-primary); font-weight:600;">Register Here</a>
+            </p>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="registerModal">
+        <div class="modal" style="max-width: 600px;">
+            <span class="modal-close" onclick="closeModal('registerModal')">&times;</span>
+            <h2 class="modal-title">Create Customer Account</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label class="form-label" for="regUsername">Username</label>
+                    <input type="text" id="regUsername" class="form-control" placeholder="e.g. janesmith" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="regEmail">Email Address</label>
+                    <input type="email" id="regEmail" class="form-control" placeholder="name@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="regPassword">Password</label>
+                    <input type="password" id="regPassword" class="form-control" placeholder="Minimum 6 characters" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="regContactInfo">Phone / Contact Number</label>
+                    <input type="text" id="regContactInfo" class="form-control" placeholder="+880-1xxxxxxxxx" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Complete Registration</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Already registered? <a href="javascript:void(0)" onclick="closeModal('registerModal'); openModal('loginModal');" style="color: var(--color-primary); font-weight:600;">Sign In</a>
+            </p>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="sellerLoginModal">
+        <div class="modal">
+            <span class="modal-close" onclick="closeModal('sellerLoginModal')">&times;</span>
+            <h2 class="modal-title">Sign In - Seller Portal</h2>
+            <form id="sellerLoginForm">
+                <div class="form-group">
+                    <label class="form-label" for="sellerLoginEmail">Email Address</label>
+                    <input type="email" id="sellerLoginEmail" class="form-control" placeholder="seller@etrailglobal.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerLoginPassword">Password</label>
+                    <input type="password" id="sellerLoginPassword" class="form-control" placeholder="Seller123" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Login to Seller Panel</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Apply for a supplier account? <a href="javascript:void(0)" onclick="closeModal('sellerLoginModal'); openModal('sellerRegisterModal');" style="color: var(--color-primary); font-weight:600;">Apply Now</a>
+            </p>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="sellerRegisterModal">
+        <div class="modal" style="max-width: 600px;">
+            <span class="modal-close" onclick="closeModal('sellerRegisterModal')">&times;</span>
+            <h2 class="modal-title">Become a Seller / Supplier Application</h2>
+            <form id="sellerRegisterForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegUsername">Username *</label>
+                        <input type="text" id="sellerRegUsername" class="form-control" placeholder="e.g. factoryrep" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegEmail">Business Email *</label>
+                        <input type="email" id="sellerRegEmail" class="form-control" placeholder="sales@factory.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerRegPassword">Password *</label>
+                    <input type="password" id="sellerRegPassword" class="form-control" placeholder="Minimum 6 characters" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegCompanyName">Company Registered Name *</label>
+                        <input type="text" id="sellerRegCompanyName" class="form-control" placeholder="e.g. Apex Tech Textiles Ltd" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegYearEstablished">Established Year</label>
+                        <input type="text" id="sellerRegYearEstablished" class="form-control" placeholder="e.g. 2015">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegContactInfo">Business Phone *</label>
+                        <input type="text" id="sellerRegContactInfo" class="form-control" placeholder="e.g. +880-1xxxxxxxxx" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegWhatsApp">WhatsApp Number *</label>
+                        <input type="text" id="sellerRegWhatsApp" class="form-control" placeholder="e.g. +880-1xxxxxxxxx" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegGmail">Alternate Email (Gmail)</label>
+                        <input type="email" id="sellerRegGmail" class="form-control" placeholder="e.g. alternate@gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegTax">Tax / BIN Number</label>
+                        <input type="text" id="sellerRegTax" class="form-control" placeholder="e.g. 123456789">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerRegCompanyAddress">Company Address / Factory Location *</label>
+                    <input type="text" id="sellerRegCompanyAddress" class="form-control" placeholder="e.g. Plot 12, Gazipur Industrial Zone" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerRegWebsite">Company Website</label>
+                    <input type="text" id="sellerRegWebsite" class="form-control" placeholder="e.g. https://apextech.com">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Submit Seller Application</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Already have a seller account? <a href="javascript:void(0)" onclick="closeModal('sellerRegisterModal'); openModal('sellerLoginModal');" style="color: var(--color-primary); font-weight:600;">Sign In</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        let currentCarouselIndex = 0;
+        let carouselItemsCount = 0;
+        let carouselInterval = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchBanners();
+            fetchHotCategories();
+            fetchFeaturedProducts();
+            fetchDoubleGridProducts();
+            fetchGeneralProducts();
+            fetchFlashDeals();
+            startFlashCountdown();
+
+
+        });
+
+        function startCarouselTimer() {
+            if (carouselInterval) clearInterval(carouselInterval);
+            carouselInterval = setInterval(() => moveCarousel(1), 3500);
+        }
+
+        async function fetchBanners() {
+            try {
+                const response = await fetch('/api/content/banners');
+                if (!response.ok) return;
+                const banners = await response.json();
+                
+                // 1. Top Carousel Banners
+                const topBanners = banners.filter(b => b.position === 1);
+                const topCarousel = document.getElementById('topCarouselInner');
+
+                if (topBanners.length > 0) {
+                    carouselItemsCount = topBanners.length;
+                    currentCarouselIndex = 0;
+                    topCarousel.innerHTML = topBanners.map(b => `
+                        <a class="carousel-item market-slide" href="${b.linkUrl || 'product.html'}" style="background-image: url('${b.imageUrl}')">
+                            <div class="market-slide-overlay"></div>
+                            <div class="market-slide-content">
+                                <span>Featured Campaign</span>
+                                <h1>${b.title}</h1>
+                                <p>Discover wholesale suppliers, factory pricing, and verified trade listings.</p>
+                                <strong>Shop Now</strong>
+                            </div>
+                        </a>
+                    `).join('');
+                    updateCarouselPosition();
+                    startCarouselTimer();
+                }
+
+                // 2. Middle Campaign Banner
+                const midBanners = banners.filter(b => b.position === 2);
+                if (midBanners.length > 0) {
+                    const mb = midBanners[0];
+                    document.getElementById('middleBannerBody').style.backgroundImage = `url('${mb.imageUrl}')`;
+                    document.getElementById('middleBannerContent').innerHTML = `
+                        <span>Supplier Campaign</span>
+                        <h2>${mb.title}</h2>
+                        <p>Contact suppliers and arrange private negotiations.</p>
+                        <a href="${mb.linkUrl || 'product.html'}" class="btn btn-primary">Browse Now</a>
+                    `;
+                }
+
+                // 3. Right Hero Side Banner (Admin Configurable)
+                const rightBanners = banners.filter(b => b.position === 3);
+                const sidePanel = document.getElementById('heroSidePanel');
+                if (sidePanel) {
+                    if (rightBanners.length > 0) {
+                        const rb = rightBanners[0];
+                        sidePanel.innerHTML = `
+                            <div class="side-promo-banner" style="background-image: url('${rb.imageUrl}')">
+                                <div class="side-promo-overlay"></div>
+                                <div class="side-promo-content">
+                                    <span class="mini-label">Featured Partner</span>
+                                    <h3>${rb.title}</h3>
+                                    <p>Verified wholesale manufacturer dispatch and factory audit guarantees.</p>
+                                    <a href="${rb.linkUrl || 'product.html'}" class="btn btn-primary" style="width: 100%; justify-content: center; font-size: 13px; padding: 8px 12px;">Source Now</a>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        // Default Fallback B2B Banner
+                        sidePanel.innerHTML = `
+                            <div class="side-promo-banner" style="background-image: url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=400&q=80')">
+                                <div class="side-promo-overlay"></div>
+                                <div class="side-promo-content">
+                                    <span class="mini-label">B2B Trade Guarantee</span>
+                                    <h3>Secure Direct Sourcing</h3>
+                                    <p>Verified supplier badge audits, safe payment escrow, and guaranteed local B2B dispatch.</p>
+                                    <a href="product.html?search=verified" class="btn btn-primary" style="width: 100%; justify-content: center; font-size: 13px; padding: 8px 12px;">Browse Verified Sellers</a>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+            } catch (err) {
+                console.error("Failed to load banners", err);
+            }
+        }
+
+        function moveCarousel(direction) {
+            if (carouselItemsCount <= 1) return;
+            currentCarouselIndex += direction;
+            if (currentCarouselIndex >= carouselItemsCount) currentCarouselIndex = 0;
+            if (currentCarouselIndex < 0) currentCarouselIndex = carouselItemsCount - 1;
+            updateCarouselPosition();
+            startCarouselTimer();
+        }
+
+        function updateCarouselPosition() {
+            const topCarousel = document.getElementById('topCarouselInner');
+            if (topCarousel) topCarousel.style.transform = `translateX(-${currentCarouselIndex * 100}%)`;
+        }
+
+        async function fetchHotCategories() {
+            const grid = document.getElementById('hotCategoriesGrid');
+            const sidebarList = document.getElementById('sidebarCategoryList');
+            try {
+                const response = await fetch('/api/content/hot-categories');
+                if (!response.ok) return;
+                const cats = await response.json();
+
+                // Render grid (circles)
+                if (grid) {
+                    if (cats.length === 0) {
+                        grid.innerHTML = `<div class="market-loading">No hot categories configured.</div>`;
+                    } else {
+                        grid.innerHTML = cats.map(c => `
+                            <a class="market-category-card" href="/product.html?category=${encodeURIComponent(c.name)}">
+                                <div class="market-category-img" style="background-image: url('${c.imageUrl}')"></div>
+                                <strong>${c.name}</strong>
+                                <span>Explore deals</span>
+                            </a>
+                        `).join('');
+                    }
+                }
+
+                // Render left vertical category list with picture thumbnails next to text
+                if (sidebarList) {
+                    if (cats.length === 0) {
+                        // Dynamic Fallback category list with default pics matching client categories
+                        const fallbackCats = [
+                            { name: "All categories", url: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=120&q=80" },
+                            { name: "Home", url: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=120&q=80" },
+                            { name: "Women's World", url: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=120&q=80" },
+                            { name: "Men's Collection", url: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=120&q=80" },
+                            { name: "Accessories", url: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=120&q=80" },
+                            { name: "Mobiles & Tabs", url: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=120&q=80" },
+                            { name: "Alarm", url: "https://images.unsplash.com/photo-1563861826100-9cb868fdcd1d?auto=format&fit=crop&w=120&q=80" },
+                            { name: "Sinks and kitchen taps", url: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=120&q=80" },
+                            { name: "Paper & Plastic", url: "https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&fit=crop&w=120&q=80" },
+                            { name: "Men Clothing & Fashion", url: "https://images.unsplash.com/photo-1488161628813-04466f872be2?auto=format&fit=crop&w=120&q=80" },
+                            { name: "Eco-Friendly Products", url: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=120&q=80" },
+                            { name: "Eco-Friendly Home Decor & Accessories", url: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=120&q=80" },
+                            { name: "Bamboo Based Product", url: "https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=120&q=80" }
+                        ];
+                        sidebarList.innerHTML = fallbackCats.map(c => `
+                            <a class="sidebar-category-item" href="product.html?category=${encodeURIComponent(c.name)}">
+                                <div class="sidebar-category-thumb" style="background-image: url('${c.url}')"></div>
+                                <span>${c.name}</span>
+                            </a>
+                        `).join('');
+                    } else {
+                        sidebarList.innerHTML = cats.map(c => `
+                            <a class="sidebar-category-item" href="product.html?category=${encodeURIComponent(c.name)}">
+                                <div class="sidebar-category-thumb" style="background-image: url('${c.imageUrl}')"></div>
+                                <span>${c.name}</span>
+                            </a>
+                        `).join('');
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function fetchFeaturedProducts() {
+            const grid = document.getElementById('featuredGrid');
+            try {
+                const response = await fetch('/api/product?isFeatured=true');
+                if (!response.ok) return;
+                const products = await response.json();
+                grid.innerHTML = products.length
+                    ? products.slice(0, 4).map(p => renderProductCard(p)).join('')
+                    : `<div class="market-loading">No featured products highlighted.</div>`;
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function fetchDoubleGridProducts() {
+            const bsGrid = document.getElementById('bestSellingGrid');
+            const tdGrid = document.getElementById('todaysDealsGrid');
+
+            try {
+                const bsResponse = await fetch('/api/product?isBestSeller=true');
+                if (bsResponse.ok) {
+                    const products = await bsResponse.json();
+                    bsGrid.innerHTML = products.length ? products.slice(0, 3).map(p => renderListProductCard(p)).join('') : `<div class="market-loading">No best sellers.</div>`;
+                }
+
+                const tdResponse = await fetch('/api/product?isTodayDeal=true');
+                if (tdResponse.ok) {
+                    const products = await tdResponse.json();
+                    tdGrid.innerHTML = products.length ? products.slice(0, 3).map(p => renderListProductCard(p)).join('') : `<div class="market-loading">No active daily deals.</div>`;
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        async function fetchGeneralProducts() {
+            const grid = document.getElementById('generalProductsGrid');
+            try {
+                const response = await fetch('/api/product');
+                if (!response.ok) return;
+                const products = await response.json();
+                grid.innerHTML = products.length
+                    ? products.slice(0, 8).map(p => renderProductCard(p)).join('')
+                    : `<div class="market-loading">No wholesale items.</div>`;
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function renderProductCard(p) {
+            const sym = window.siteSettings.currency_symbol || "৳";
+            const priceText = getPriceText(p.price, p.discountPrice);
+            const hasDiscount = p.discountPrice && p.discountPrice > 0 && p.discountPrice < p.price;
+            const originalPriceHtml = hasDiscount ? `<span style="text-decoration: line-through; color: var(--text-muted); font-size: 13px; font-weight: normal; margin-left: 8px;">${sym}${p.price.toFixed(2)}</span>` : '';
+            const discountBadgeHtml = hasDiscount ? `<span style="background: var(--color-danger); color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-left: 8px;">SAVE ${Math.round(((p.price - p.discountPrice) / p.price) * 100)}%</span>` : '';
+            return `
+                <a class="market-product-card" href="/product.html?id=${p.id}">
+                    <div class="market-product-img" style="background-image: url('${p.imageUrl || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=600&q=80'}')">
+                        ${p.sellerVerified ? '<span>Audited</span>' : ''}
+                    </div>
+                    <div class="market-product-body">
+                        <small>${p.category}</small>
+                        <h3>${p.name}</h3>
+                        <p>${p.description}</p>
+                        <div class="market-product-meta">
+                            <strong>${priceText}${originalPriceHtml}${discountBadgeHtml}</strong>
+                            <em>MOQ ${p.minOrderQuantity}</em>
+                        </div>
+                        <div class="seller-line">${p.sellerCompany || p.sellerName || 'Supplier'}</div>
+                    </div>
+                </a>
+            `;
+        }
+
+        function renderListProductCard(p) {
+            return `
+                <a class="deal-item" href="/product.html?id=${p.id}">
+                    <div style="background-image:url('${p.imageUrl || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=300&q=80'}')"></div>
+                    <section>
+                        <small>${p.category}</small>
+                        <strong>${p.name}</strong>
+                        <span>${getPriceText(p.price, p.discountPrice)} / MOQ ${p.minOrderQuantity}</span>
+                    </section>
+                </a>
+            `;
+        }
+
+        function getPriceText(price, discountPrice) {
+            const sym = window.siteSettings.currency_symbol || "৳";
+            const activePrice = (discountPrice && discountPrice > 0 && discountPrice < price) ? discountPrice : price;
+            return `${sym}${activePrice.toFixed(2)}`;
+        }
+
+        const policiesText = {
+            terms: { title: "Terms & Conditions", content: `<h3>1. Customer Terms</h3><p>All sales and purchase queries published constitute raw inquiries.</p>` },
+            return: { title: "Return & Settlement Policy", content: `<h3>1. Quality Audits</h3><p>Returns are subject to the individual agreements between buyers and sellers.</p>` },
+            support: { title: "Support Policy", content: `<h3>1. Customer Support Assistance</h3><p>Our helpdesk assists Customers and Sellers.</p>` },
+            privacy: { title: "Privacy & Data Security Policy", content: `<h3>1. Personal Data Confidentiality</h3><p>Negotiations are strictly confidential.</p>` }
+        };
+
+        function openPolicyModal(policyType) {
+            const titleMap = {
+                terms: "Terms & Conditions",
+                return: "Return & Settlement Policy",
+                support: "Support Policy",
+                privacy: "Privacy & Data Security Policy"
+            };
+            const dynamicContent = window.siteSettings["policy_" + policyType];
+            if (dynamicContent) {
+                document.getElementById('policyModalTitle').textContent = titleMap[policyType] || "Policy";
+                document.getElementById('policyModalContent').innerHTML = dynamicContent;
+                openModal('policyModal');
+                return;
+            }
+            const data = policiesText[policyType];
+            if (data) {
+                document.getElementById('policyModalTitle').textContent = data.title;
+                document.getElementById('policyModalContent').innerHTML = data.content;
+                openModal('policyModal');
+            }
+        }
+
+        function triggerHeroSearch() {
+            const keyword = document.getElementById('heroSearchInput').value;
+            const category = document.getElementById('heroCategorySelect').value;
+            window.location.href = `/product.html?search=${encodeURIComponent(keyword)}&category=${encodeURIComponent(category)}`;
+        }
+
+        function startFlashCountdown() {
+            const now = new Date();
+            const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+            let timeDiff = Math.floor((endOfDay - now) / 1000);
+
+            function updateTimer() {
+                if (timeDiff <= 0) {
+                    timeDiff = 8 * 3600; 
+                }
+                const hrs = Math.floor(timeDiff / 3600);
+                const mins = Math.floor((timeDiff % 3600) / 60);
+                const secs = timeDiff % 60;
+
+                const hrEl = document.getElementById('timerHr');
+                const minEl = document.getElementById('timerMin');
+                const secEl = document.getElementById('timerSec');
+
+                if (hrEl) hrEl.textContent = String(hrs).padStart(2, '0');
+                if (minEl) minEl.textContent = String(mins).padStart(2, '0');
+                if (secEl) secEl.textContent = String(secs).padStart(2, '0');
+
+                timeDiff--;
+            }
+
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        }
+
+        async function fetchFlashDeals() {
+            const container = document.getElementById('flashDealsContainer');
+            if (!container) return;
+
+            try {
+                const response = await fetch('/api/product?isTodayDeal=true');
+                if (response.ok) {
+                    const products = await response.json();
+                    if (products.length === 0) {
+                        container.innerHTML = `<div class="market-loading">No active deals today. Check back later!</div>`;
+                        return;
+                    }
+
+                    container.innerHTML = products.slice(0, 4).map(p => {
+                        const priceText = getPriceText(p.price, p.discountPrice);
+                        const sym = window.siteSettings.currency_symbol || "৳";
+                        const hasDiscount = p.discountPrice && p.discountPrice > 0 && p.discountPrice < p.price;
+                        let originalPriceText = hasDiscount ? sym + p.price.toFixed(2) : '';
+                        let percentOff = hasDiscount ? Math.round(((p.price - p.discountPrice) / p.price) * 100) : 15;
+
+                        const stockProgress = 65 + (p.id % 4) * 7;
+                        
+                        return `
+                            <a class="deal-item-card" href="/product.html?id=${p.id}">
+                                <div class="deal-item-img" style="background-image: url('${p.imageUrl || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=300&q=80'}')">
+                                    <span class="deal-item-discount">-${percentOff}%</span>
+                                </div>
+                                <div class="deal-item-name">${p.name}</div>
+                                <div class="deal-price-row">
+                                    <span class="deal-item-price">${priceText}</span>
+                                    ${originalPriceText ? `<span class="deal-item-original-price">${originalPriceText}</span>` : ''}
+                                </div>
+                                <div class="deal-stock-info">
+                                    <div class="deal-stock-text">
+                                        <span>Active Deals</span>
+                                        <span>${stockProgress}% Sold</span>
+                                    </div>
+                                    <div class="deal-stock-bar-container">
+                                        <div class="deal-stock-bar" style="width: ${stockProgress}%"></div>
+                                    </div>
+                                </div>
+                            </a>
+                        `;
+                    }).join('');
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+
+    </script>
+</body>
+</html>

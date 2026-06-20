@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Negotiation Hub | EtrailGlobal</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-primary)">
+                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                    <polyline points="2 17 12 22 22 17"></polyline>
+                    <polyline points="2 12 12 17 22 12"></polyline>
+                </svg>
+                EtrailGlobal
+            </a>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="product.html" class="nav-link">Products</a>
+            </nav>
+            <div class="auth-nav" id="authNav">
+                <button class="btn btn-secondary" style="opacity: 0.5;">Loading...</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container">
+
+        <div class="chat-layout">
+
+            <!-- Left Side: Recent Chats Inbox -->
+            <div class="chat-inbox">
+                <div class="inbox-header">Recent Sourcing Inquiries</div>
+                <div class="inbox-list" id="inboxList">
+                    <div style="text-align: center; padding: 24px; color: var(--text-muted);">
+                        Loading active threads...
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Active Chat Window -->
+            <div class="chat-window" id="chatWindow">
+                <!-- Header (Selected partner metadata) -->
+                <div class="chat-header" id="chatHeader">
+                    <div>
+                        <h3 style="font-size:16px; font-weight:700;">No Conversation Selected</h3>
+                        <p style="font-size:12px; color:var(--text-muted)">Select a company from the left panel to begin
+                            negotiations.</p>
+                    </div>
+                </div>
+
+                <!-- Chat history bubbles -->
+                <div class="chat-messages" id="chatMessages">
+                    <div style="margin: auto; text-align: center; color: var(--text-muted); max-width: 320px;">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                            style="margin-bottom:16px; color:var(--text-muted)">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        <h3>Sourcing Discussion</h3>
+                        <p style="font-size:13px; margin-top:8px;">Discuss wholesale specifications, arrange custom
+                            shipping, and close contract terms directly.</p>
+                    </div>
+                </div>
+
+                <!-- Input box -->
+                <div class="chat-input-area" id="chatInputArea" style="display: none;">
+                    <input type="text" id="chatInput" class="form-control"
+                        placeholder="Type your negotiation message or terms..." style="flex:1;">
+                    <button id="sendMsgBtn" class="btn btn-primary">
+                        Send Offer
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Login/Register Overlay panels -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <span class="modal-close" onclick="closeModal('loginModal')">&times;</span>
+            <h2 class="modal-title">Sign In to EtrailGlobal</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="enter customer@etrailglobal.com"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="enter Customer123"
+                        required>
+                </div>
+                <button type="submit" class="btn btn-primary"
+                    style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Sign In</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Don't have an account? <a href="javascript:void(0)"
+                    onclick="closeModal('loginModal'); openModal('registerModal');"
+                    style="color: var(--color-primary); font-weight:600;">Register Here</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        let selectedUserId = null;
+        let pollingInterval = null;
+        let lastMessageCount = 0;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check auth
+            setTimeout(() => {
+                if (!window.currentUser) {
+                    showToast("Please log in to use negotiations", true);
+                    window.location.href = '/index.html';
+                } else {
+                    initializeChatHub();
+                }
+            }, 300);
+
+            // Bind send button
+            document.getElementById('sendMsgBtn').addEventListener('click', handleSendMessage);
+            document.getElementById('chatInput').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') handleSendMessage();
+            });
+        });
+
+        async function initializeChatHub() {
+            await fetchInbox();
+
+            // Check if user was passed in URL query
+            const params = new URLSearchParams(window.location.search);
+            const queryUserId = params.get('userId');
+
+            if (queryUserId) {
+                const targetId = parseInt(queryUserId);
+                if (targetId === window.currentUser.id) {
+                    showToast("You cannot chat with yourself", true);
+                    return;
+                }
+
+                await selectOrAddUser(targetId);
+            }
+        }
+
+        async function fetchInbox() {
+            const list = document.getElementById('inboxList');
+            try {
+                const response = await fetch('/api/message/recent');
+                if (response.ok) {
+                    const chats = await response.json();
+
+                    if (chats.length === 0 && !selectedUserId) {
+                        list.innerHTML = `
+                            <div style="text-align: center; padding: 24px; color: var(--text-muted); font-size:13px;">
+                                No inquiries yet. Contact sellers directly from listings.
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    list.innerHTML = chats.map(c => {
+                        const date = new Date(c.lastMessageTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        const activeClass = selectedUserId === c.userId ? 'active' : '';
+                        const unreadHtml = c.unreadCount > 0 ? `<span class="badge-unread">${c.unreadCount}</span>` : '';
+
+                        return `
+                            <div class="inbox-item ${activeClass}" id="inbox_user_${c.userId}" onclick="selectConversation(${c.userId}, '${c.username.replace(/'/g, "\\'")}', '${(c.companyName || 'Independent').replace(/'/g, "\\'")}', '${c.role}')">
+                                <div class="user-line">
+                                    <span>${c.companyName || c.username}</span>
+                                    <span style="font-size: 11px; color:var(--text-muted)">${date}</span>
+                                </div>
+                                <div class="user-line" style="margin-top:2px;">
+                                    <span class="snippet">${c.lastMessageContent}</span>
+                                    ${unreadHtml}
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function selectOrAddUser(targetId) {
+            // Check if user already exists in DOM list
+            const existingElement = document.getElementById(`inbox_user_${targetId}`);
+            if (existingElement) {
+                existingElement.click();
+            } else {
+                // Fetch public user details
+                try {
+                    const response = await fetch(`/api/auth/user/${targetId}`);
+                    if (response.ok) {
+                        const u = await response.json();
+
+                        // Render a temporary item at the top of the inbox
+                        const list = document.getElementById('inboxList');
+
+                        // Clear placeholders if any
+                        if (list.innerHTML.includes('No inquiries yet')) {
+                            list.innerHTML = '';
+                        }
+
+                        const tempItemHtml = `
+                            <div class="inbox-item active" id="inbox_user_${u.id}" onclick="selectConversation(${u.id}, '${u.username.replace(/'/g, "\\'")}', '${(u.companyName || 'Independent').replace(/'/g, "\\'")}', '${u.role}')">
+                                <div class="user-line">
+                                    <span>${u.companyName || u.username}</span>
+                                    <span style="font-size: 11px; color:var(--color-primary)">New</span>
+                                </div>
+                                <div class="user-line" style="margin-top:2px;">
+                                    <span class="snippet" style="color:var(--color-primary)">Start typing to send inquiry...</span>
+                                </div>
+                            </div>
+                        `;
+                        list.insertAdjacentHTML('afterbegin', tempItemHtml);
+
+                        // Open dialogue
+                        selectConversation(u.id, u.username, u.companyName || 'Independent', u.role);
+                    } else {
+                        showToast("Could not find user details", true);
+                    }
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+        }
+
+        function selectConversation(userId, username, companyName, role) {
+            selectedUserId = userId;
+
+            // Highlight inbox element
+            const items = document.querySelectorAll('.inbox-item');
+            items.forEach(i => i.classList.remove('active'));
+            const el = document.getElementById(`inbox_user_${userId}`);
+            if (el) el.classList.add('active');
+
+            // Render Header
+            const header = document.getElementById('chatHeader');
+            header.innerHTML = `
+                <div>
+                    <h3 style="font-size:16px; font-weight:700;">${companyName} (${username})</h3>
+                    <p style="font-size:12px; color:var(--text-secondary)">Role: ${role} | Business Negotiations</p>
+                </div>
+                <div>
+                    <button class="btn btn-secondary" onclick="window.location.href='/dashboard.html'" style="padding: 6px 12px; font-size:12px;">Go to Dashboard</button>
+                </div>
+            `;
+
+            // Reveal Input
+            document.getElementById('chatInputArea').style.display = 'flex';
+            document.getElementById('chatInput').focus();
+
+            // Clear old polling interval
+            if (pollingInterval) clearInterval(pollingInterval);
+            lastMessageCount = 0;
+
+            // Load Chat Messages
+            loadMessages();
+
+            // Set Polling Interval (every 2 seconds)
+            pollingInterval = setInterval(loadMessages, 2000);
+        }
+
+        async function loadMessages() {
+            if (!selectedUserId) return;
+            const msgBox = document.getElementById('chatMessages');
+
+            try {
+                const response = await fetch(`/api/message/chat/${selectedUserId}`);
+                if (response.ok) {
+                    const messages = await response.json();
+
+                    // Only re-render if message count changed
+                    if (messages.length === lastMessageCount) return;
+                    lastMessageCount = messages.length;
+
+                    if (messages.length === 0) {
+                        msgBox.innerHTML = `
+                            <div style="margin: auto; text-align: center; color: var(--text-muted);">
+                                🤝 Start Sourcing Discussion. Ask for catalogs, tiered discounts, or lead times.
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    msgBox.innerHTML = messages.map(m => {
+                        const isSent = m.senderId === window.currentUser.id;
+                        const date = new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        const bubbleClass = isSent ? 'chat-bubble-sent' : 'chat-bubble-received';
+
+                        return `
+                            <div class="chat-bubble ${bubbleClass}">
+                                <div>${m.content}</div>
+                                <span class="chat-time">${date}</span>
+                            </div>
+                        `;
+                    }).join('');
+
+                    // Scroll to bottom
+                    msgBox.scrollTop = msgBox.scrollHeight;
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function handleSendMessage() {
+            const input = document.getElementById('chatInput');
+            const content = input.value.trim();
+            if (!content || !selectedUserId) return;
+
+            try {
+                const response = await fetch('/api/message', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ receiverId: selectedUserId, content })
+                });
+
+                if (response.ok) {
+                    input.value = '';
+
+                    // Instantly trigger re-load
+                    await loadMessages();
+                    await fetchInbox();
+                } else {
+                    showToast("Failed to send message", true);
+                }
+            } catch (err) {
+                console.error(err);
+                showToast("Error sending message", true);
+            }
+        }
+    </script>
+</body>
+
+</html>

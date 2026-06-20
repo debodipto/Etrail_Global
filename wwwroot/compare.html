@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Sourced Listings | EtrailGlobal</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .compare-container {
+            margin-top: 30px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            overflow-x: auto;
+            box-shadow: var(--shadow-sm);
+        }
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            min-width: 800px;
+        }
+        .compare-table th, .compare-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+        .compare-table tr:hover {
+            background-color: rgba(0, 0, 0, 0.005);
+        }
+        .compare-header-cell {
+            font-weight: 700;
+            color: var(--text-secondary);
+            background: #f8fafc;
+            width: 200px;
+            border-right: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+        .compare-value-cell {
+            width: calc(80% / 4);
+            border-right: 1px solid var(--border-color);
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+        .compare-value-cell:last-child {
+            border-right: none;
+        }
+        .compare-item-img {
+            width: 120px;
+            height: 120px;
+            background-size: cover;
+            background-position: center;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            margin: 0 auto 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-primary)"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                EtrailGlobal
+            </a>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="product.html" class="nav-link">Products</a>
+            </nav>
+            <div class="auth-nav" id="authNav">
+                <button class="btn btn-secondary" style="opacity: 0.5;">Loading...</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container">
+        
+        <div style="margin-top: 40px;">
+            <span class="badge badge-verified" style="margin-bottom: 8px; font-weight: 700; font-size:11px;">Listing Comparison</span>
+            <h1 style="font-size: 28px; font-weight: 800; color: var(--text-primary);">Compare Sourced Listings</h1>
+            <p style="color: var(--text-muted); font-size: 14px;">Compare specifications, unit pricing breaks, stock capacity, and lead times side by side.</p>
+        </div>
+
+        <div id="compareContentWrapper" class="compare-container" style="display: none;">
+            <table class="compare-table">
+                <tbody id="compareTableBody">
+                    <!-- Rows rendered dynamically -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Empty Compare State -->
+        <div id="compareEmptyState" style="display:none; text-align:center; padding:80px 40px; background:#fff; border:1px solid var(--border-color); border-radius:var(--radius-md); margin-top:30px; box-shadow:var(--shadow-sm);">
+            <div style="font-size: 64px; margin-bottom: 20px;">🔄</div>
+            <h2 style="font-size:22px; font-weight:700; margin-bottom:8px; color:var(--text-primary);">No Products to Compare</h2>
+            <p style="color:var(--text-muted); font-size:14px; max-width:400px; margin: 0 auto 24px;">Explore our catalog, shortlists supplier details, and click the compare icon to stack specifications side by side.</p>
+            <a href="product.html" class="btn btn-primary" style="display:inline-flex;">Browse Products</a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="market-footer" style="border-top: 1px solid var(--border-color); padding: 48px 0; background: #ffffff; color: var(--text-secondary); font-size: 14px; margin-top: 64px;">
+        <div class="container footer-grid">
+            <div>
+                <div class="logo" style="margin-bottom:12px;">EtrailGlobal</div>
+                <p>Green and white wholesale sourcing marketplace for products, suppliers, and direct B2B conversations.</p>
+                <p class="footer-contact">
+                    <span id="footerAddress">Gulshan-2, Dhaka, Bangladesh</span>
+                    <span id="footerPhone">+880-9612-ETRAIL</span>
+                    <span id="footerEmail">support@etrail.com.bd</span>
+                </p>
+            </div>
+            <div>
+                <h4>Marketplace</h4>
+                <a href="product.html">All Products</a>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact Us</a>
+                <a href="dashboard.html">Dashboard</a>
+            </div>
+            <div>
+                <h4>Seller Zone</h4>
+                <button onclick="openModal('sellerRegisterModal')" class="btn btn-primary">Apply Now</button>
+                <button onclick="openModal('sellerLoginModal')" class="btn btn-secondary">Seller Login</button>
+            </div>
+        </div>
+        <div class="container" style="border-top:1px solid var(--border-color); padding-top:24px; margin-top:32px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+            <p style="font-size:13px; color:var(--text-muted); margin:0;">© 2026 EtrailGlobal. All rights reserved.</p>
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                <span style="font-size:12px; color:var(--text-muted); font-weight:600;">We Accept:</span>
+                <span style="font-size:11px; font-weight:700; background:#fff; border:1px solid var(--border-color); padding:4px 8px; border-radius:4px; color:#1a1f71; display:inline-block;">VISA</span>
+                <span style="font-size:11px; font-weight:700; background:#fff; border:1px solid var(--border-color); padding:4px 8px; border-radius:4px; color:#eb001b; display:inline-block;">Mastercard</span>
+                <span style="font-size:11px; font-weight:700; background:#e2125d; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">bKash</span>
+                <span style="font-size:11px; font-weight:700; background:#ff6b00; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">Nagad</span>
+                <span style="font-size:11px; font-weight:700; background:#8c3494; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">Rocket</span>
+                <span style="font-size:11px; font-weight:700; background:#005c2d; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">DBBL</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        let compareItems = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(async () => {
+                if (!window.currentUser) {
+                    showToast("Please log in to view compared items", true);
+                    window.location.href = '/index.html';
+                    return;
+                }
+                await loadCompareList();
+            }, 300);
+        });
+
+        async function loadCompareList() {
+            try {
+                const response = await fetch('/api/customer/compare');
+                if (response.ok) {
+                    compareItems = await response.json();
+                    renderCompareTable();
+                } else {
+                    showToast("Failed to retrieve compared items", true);
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        function renderCompareTable() {
+            const wrapper = document.getElementById('compareContentWrapper');
+            const emptyState = document.getElementById('compareEmptyState');
+            const tbody = document.getElementById('compareTableBody');
+
+            if (!compareItems || compareItems.length === 0) {
+                wrapper.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            wrapper.style.display = 'block';
+
+            const sym = window.siteSettings.currency_symbol || "৳";
+
+            // Parse specs JSON on each item for dynamic row compilation
+            compareItems.forEach(item => {
+                item.parsedSpecs = {};
+                try {
+                    if (item.description && item.description.startsWith('{')) {
+                        // In case specs are serialized in description
+                        item.parsedSpecs = JSON.parse(item.description);
+                    } else if (item.specificationsJson) {
+                        item.parsedSpecs = JSON.parse(item.specificationsJson);
+                    }
+                } catch(e) {}
+            });
+
+            // Gather all unique specification keys across all products
+            const allSpecKeysSet = new Set();
+            compareItems.forEach(item => {
+                Object.keys(item.parsedSpecs).forEach(key => allSpecKeysSet.add(key));
+            });
+            const allSpecKeys = Array.from(allSpecKeysSet);
+
+            let html = '';
+
+            // 1. Picture Row
+            html += `<tr><td class="compare-header-cell">Product Image</td>`;
+            html += compareItems.map(item => `
+                <td class="compare-value-cell" style="text-align: center;">
+                    <div class="compare-item-img" style="background-image:url('${item.imageUrl || '/images/placeholder.png'}')"></div>
+                </td>
+            `).join('');
+            html += `</tr>`;
+
+            // 2. Name Row
+            html += `<tr><td class="compare-header-cell">Product Name</td>`;
+            html += compareItems.map(item => `
+                <td class="compare-value-cell"><strong style="color:var(--text-primary); font-size:15px;">${item.name}</strong></td>
+            `).join('');
+            html += `</tr>`;
+
+            // 3. Category Row
+            html += `<tr><td class="compare-header-cell">Category</td>`;
+            html += compareItems.map(item => `
+                <td class="compare-value-cell"><span class="badge badge-success">${item.category}</span></td>
+            `).join('');
+            html += `</tr>`;
+
+            // 4. Price Row
+            html += `<tr><td class="compare-header-cell">Price (BDT)</td>`;
+            html += compareItems.map(item => {
+                const hasDiscount = item.discountPrice > 0 && item.discountPrice < item.price;
+                const activePrice = hasDiscount ? item.discountPrice : item.price;
+                const originalPriceHtml = hasDiscount 
+                    ? `<span style="text-decoration:line-through; color:var(--text-muted); font-size:12px; margin-left:6px;">${sym}${item.price.toFixed(2)}</span>` 
+                    : '';
+                const badgeHtml = hasDiscount 
+                    ? `<span style="background:var(--color-danger); color:white; padding:2px 4px; border-radius:4px; font-size:9px; font-weight:bold; margin-left:6px;">-${Math.round(((item.price - item.discountPrice) / item.price) * 100)}%</span>` 
+                    : '';
+                return `
+                    <td class="compare-value-cell">
+                        <span style="color:var(--color-primary); font-weight:800; font-size:16px;">${sym}${activePrice.toFixed(2)}</span>${originalPriceHtml}${badgeHtml}
+                    </td>
+                `;
+            }).join('');
+            html += `</tr>`;
+
+            // 5. MOQ Row
+            html += `<tr><td class="compare-header-cell">Minimum Order Qty</td>`;
+            html += compareItems.map(item => `
+                <td class="compare-value-cell"><strong>${item.minOrderQuantity} units</strong></td>
+            `).join('');
+            html += `</tr>`;
+
+            // 6. Stock Level Row
+            html += `<tr><td class="compare-header-cell">Available Stock</td>`;
+            html += compareItems.map(item => {
+                const stockHtml = item.stock <= 0 
+                    ? `<span style="color:var(--color-danger); font-weight:700;">⚠️ Out of Stock</span>` 
+                    : `<span style="color:var(--color-success); font-weight:600;">✓ ${item.stock} units</span>`;
+                return `<td class="compare-value-cell">${stockHtml}</td>`;
+            }).join('');
+            html += `</tr>`;
+
+            // 7. Shipping Lead Time Row
+            html += `<tr><td class="compare-header-cell">Lead Time (Standard)</td>`;
+            html += compareItems.map(item => `
+                <td class="compare-value-cell"><strong>${item.leadTimeDays || 3} days</strong> to port ship</td>
+            `).join('');
+            html += `</tr>`;
+
+            // 8. Dynamic Spec Rows
+            allSpecKeys.forEach(specKey => {
+                html += `<tr><td class="compare-header-cell">${specKey}</td>`;
+                html += compareItems.map(item => `
+                    <td class="compare-value-cell">${item.parsedSpecs[specKey] || '-'}</td>
+                `).join('');
+                html += `</tr>`;
+            });
+
+            // 9. Actions Row
+            html += `<tr><td class="compare-header-cell">Actions</td>`;
+            html += compareItems.map(item => `
+                <td class="compare-value-cell">
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <button onclick="addToCartFromCompare(${item.productId}, ${item.minOrderQuantity})" class="btn btn-primary" style="justify-content:center; padding:10px; font-size:12px; font-weight:700;" ${item.stock <= 0 ? 'disabled style="opacity:0.5; pointer-events:none;"' : ''}>
+                            🛒 Add to Cart
+                        </button>
+                        <button onclick="removeCompareItem(${item.productId})" class="btn btn-danger" style="background:#fff; color:var(--color-danger); border:1px solid var(--color-danger); justify-content:center; padding:10px; font-size:12px; font-weight:600; cursor:pointer;">
+                            Remove
+                        </button>
+                    </div>
+                </td>
+            `).join('');
+            html += `</tr>`;
+
+            tbody.innerHTML = html;
+        }
+
+        async function addToCartFromCompare(productId, qty) {
+            try {
+                const response = await fetch('/api/customer/cart', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ productId: productId, quantity: qty })
+                });
+
+                if (response.ok) {
+                    showToast("Product added to cart!");
+                    if (window.updateHeaderStats) {
+                        window.updateHeaderStats();
+                    }
+                } else {
+                    const err = await response.json();
+                    showToast(err.message || "Failed to add to cart", true);
+                }
+            } catch(e) {
+                showToast("Error adding to cart", true);
+            }
+        }
+
+        async function removeCompareItem(productId) {
+            if (!confirm("Remove this item from the comparison matrix?")) return;
+            try {
+                const response = await fetch(`/api/customer/compare/${productId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    showToast("Item removed from comparison list");
+                    compareItems = compareItems.filter(i => i.productId !== productId);
+                    renderCompareTable();
+                    if (window.updateHeaderStats) {
+                        window.updateHeaderStats();
+                    }
+                } else {
+                    showToast("Failed to remove item", true);
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+    </script>
+</body>
+</html>

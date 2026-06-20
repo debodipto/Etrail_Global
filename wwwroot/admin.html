@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | E-trail Global</title>
+    <style>
+        :root {
+            --bg: #f6f8fb;
+            --panel: #ffffff;
+            --panel-soft: #f9fafb;
+            --line: #e5e7eb;
+            --text: #111827;
+            --muted: #6b7280;
+            --primary: #146c43;
+            --primary-strong: #0f5132;
+            --accent: #b7791f;
+            --danger: #b42318;
+            --shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+            --radius: 8px;
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        button, input, select, textarea {
+            font: inherit;
+        }
+
+        .login-shell {
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            background:
+                linear-gradient(120deg, rgba(20, 108, 67, 0.88), rgba(17, 24, 39, 0.92)),
+                url("https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1600&q=80") center/cover;
+        }
+
+        .login-card {
+            width: min(440px, 100%);
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: var(--radius);
+            padding: 32px;
+            box-shadow: var(--shadow);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 22px;
+            margin-bottom: 22px;
+        }
+
+        .brand-mark {
+            width: 32px;
+            height: 32px;
+            border-radius: 7px;
+            background: var(--primary);
+            color: white;
+            display: grid;
+            place-items: center;
+            font-weight: 900;
+        }
+
+        h1, h2, h3 { margin: 0; }
+        .login-card h1 { font-size: 24px; margin-bottom: 8px; }
+        .muted { color: var(--muted); }
+        .small { font-size: 12px; }
+
+        .field { margin-top: 16px; }
+        label {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 7px;
+            text-transform: uppercase;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 7px;
+            background: white;
+            color: var(--text);
+            padding: 11px 12px;
+            outline: none;
+        }
+
+        textarea { min-height: 92px; resize: vertical; }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(20, 108, 67, 0.14);
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 7px;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: var(--panel-soft);
+            color: var(--text);
+            border: 1px solid var(--line);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover { background: var(--primary-strong); }
+        .btn-danger {
+            background: var(--danger);
+            border-color: var(--danger);
+            color: white;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--muted);
+        }
+
+        .wide { width: 100%; margin-top: 22px; }
+
+        .app {
+            min-height: 100vh;
+            display: none;
+            grid-template-columns: 260px 1fr;
+        }
+
+        .sidebar {
+            background: #0f172a;
+            color: #e5e7eb;
+            padding: 22px 16px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar .brand {
+            color: white;
+            margin-bottom: 28px;
+        }
+
+        .nav-btn {
+            width: 100%;
+            border: 0;
+            background: transparent;
+            color: #cbd5e1;
+            text-align: left;
+            padding: 11px 12px;
+            border-radius: 7px;
+            cursor: pointer;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .main {
+            padding: 24px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+
+        .topbar h1 { font-size: 25px; }
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .panel-head {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .panel-body { padding: 20px; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .stat {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: var(--shadow);
+        }
+
+        .stat span {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .stat strong {
+            display: block;
+            margin-top: 8px;
+            font-size: 28px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border-bottom: 1px solid var(--line);
+            padding: 12px;
+            text-align: left;
+            vertical-align: top;
+            font-size: 14px;
+        }
+
+        th {
+            background: var(--panel-soft);
+            color: var(--muted);
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .table-wrap { overflow-x: auto; }
+        .badge {
+            display: inline-flex;
+            padding: 3px 8px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+            background: #e8f5ee;
+            color: var(--primary);
+            border: 1px solid #cce8d9;
+        }
+
+        .badge-warn {
+            background: #fff7ed;
+            color: var(--accent);
+            border-color: #fed7aa;
+        }
+
+        .badge-danger {
+            background: #fef3f2;
+            color: var(--danger);
+            border-color: #fecaca;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .toast {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 50;
+            background: #111827;
+            color: white;
+            padding: 12px 14px;
+            border-radius: 7px;
+            box-shadow: var(--shadow);
+            display: none;
+            max-width: 360px;
+        }
+
+        .toast.show { display: block; }
+        .toast.error { background: var(--danger); }
+
+        @media (max-width: 1000px) {
+            .app { grid-template-columns: 1fr; }
+            .sidebar {
+                position: static;
+                height: auto;
+            }
+            .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+
+        @media (max-width: 640px) {
+            .main { padding: 16px; }
+            .topbar { align-items: flex-start; flex-direction: column; }
+            .grid, .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <section class="login-shell" id="loginShell">
+        <div class="login-card">
+            <div class="brand"><span class="brand-mark">E</span><span>E-trail Global</span></div>
+            <h1>Admin Control Panel</h1>
+            <p class="muted">Manage users, sellers, products, homepage content, tickets, orders, messages, and site settings.</p>
+
+            <form id="adminLoginForm">
+                <div class="field">
+                    <label for="loginEmail">Admin Email</label>
+                    <input id="loginEmail" type="email" value="admin@etrailglobal.com" required>
+                </div>
+                <div class="field">
+                    <label for="loginPassword">Password</label>
+                    <input id="loginPassword" type="password" value="Admin123" required>
+                </div>
+                <button class="btn btn-primary wide" type="submit">Enter Dashboard</button>
+            </form>
+            <p class="small muted" style="margin-top: 16px;">Default admin: admin@etrailglobal.com / Admin123</p>
+        </div>
+    </section>
+
+    <section class="app" id="adminApp">
+        <aside class="sidebar">
+            <div class="brand"><span class="brand-mark">E</span><span>Admin</span></div>
+            <button class="nav-btn active" data-tab="overview">Overview</button>
+            <button class="nav-btn" data-tab="users">Users</button>
+            <button class="nav-btn" data-tab="sellers">Seller Verification</button>
+            <button class="nav-btn" data-tab="products">Products</button>
+            <button class="nav-btn" data-tab="content">Homepage Content</button>
+            <button class="nav-btn" data-tab="orders">Orders</button>
+            <button class="nav-btn" data-tab="tickets">Support Tickets</button>
+            <button class="nav-btn" data-tab="messages">Messages</button>
+            <button class="nav-btn" data-tab="settings">Settings</button>
+            <button class="nav-btn" onclick="window.location.href='index.html'">View Site</button>
+        </aside>
+
+        <main class="main">
+            <div class="topbar">
+                <div>
+                    <h1 id="pageTitle">Overview</h1>
+                    <p class="muted" id="pageSubtitle">Full project control from one admin workspace.</p>
+                </div>
+                <div class="actions">
+                    <button class="btn" onclick="loadTab(currentTab)">Refresh</button>
+                    <button class="btn btn-danger" onclick="logout()">Logout</button>
+                </div>
+            </div>
+            <div id="content"></div>
+        </main>
+    </section>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        let currentTab = "overview";
+        let settingsCache = {};
+
+        const titles = {
+            overview: ["Overview", "Live platform numbers and quick health indicators."],
+            users: ["Users", "Manage buyers, sellers, and admin-visible account records."],
+            sellers: ["Seller Verification", "Approve or pause supplier verification status."],
+            products: ["Products", "Delete listings and control homepage product badges."],
+            content: ["Homepage Content", "Manage banners and hot categories."],
+            orders: ["Orders", "Review customer order records."],
+            tickets: ["Support Tickets", "Update and close customer support tickets."],
+            messages: ["Messages", "Review recent conversations and remove unsafe messages."],
+            settings: ["Settings", "Update branding, currency, contact data, and policies."]
+        };
+
+        document.getElementById("adminLoginForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            await login();
+        });
+
+        document.querySelectorAll(".nav-btn[data-tab]").forEach((button) => {
+            button.addEventListener("click", () => loadTab(button.dataset.tab));
+        });
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const status = await api("/api/auth/status", { quiet: true });
+            if (status && status.role === "Admin") {
+                showApp();
+                await loadTab("overview");
+            }
+        });
+
+        async function login() {
+            const email = document.getElementById("loginEmail").value.trim();
+            const password = document.getElementById("loginPassword").value;
+            const user = await api("/api/auth/login", {
+                method: "POST",
+                body: JSON.stringify({ email, password })
+            });
+
+            if (!user) return;
+            if (user.role !== "Admin") {
+                await api("/api/auth/logout", { method: "POST", quiet: true });
+                toast("Only admin accounts can open this panel.", true);
+                return;
+            }
+
+            showApp();
+            await loadTab("overview");
+            toast("Admin login successful.");
+        }
+
+        async function logout() {
+            await api("/api/auth/logout", { method: "POST", quiet: true });
+            document.getElementById("adminApp").style.display = "none";
+            document.getElementById("loginShell").style.display = "grid";
+            toast("Logged out.");
+        }
+
+        function showApp() {
+            document.getElementById("loginShell").style.display = "none";
+            document.getElementById("adminApp").style.display = "grid";
+        }
+
+        async function loadTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll(".nav-btn[data-tab]").forEach((button) => {
+                button.classList.toggle("active", button.dataset.tab === tab);
+            });
+            document.getElementById("pageTitle").textContent = titles[tab][0];
+            document.getElementById("pageSubtitle").textContent = titles[tab][1];
+            document.getElementById("content").innerHTML = panel("Loading", "<p class='muted'>Loading data...</p>");
+
+            if (tab === "overview") return loadOverview();
+            if (tab === "users") return loadUsers();
+            if (tab === "sellers") return loadSellers();
+            if (tab === "products") return loadProducts();
+            if (tab === "content") return loadContent();
+            if (tab === "orders") return loadOrders();
+            if (tab === "tickets") return loadTickets();
+            if (tab === "messages") return loadMessages();
+            if (tab === "settings") return loadSettings();
+        }
+
+        async function loadOverview() {
+            const data = await api("/api/admin/overview");
+            if (!data) return;
+            document.getElementById("content").innerHTML = `
+                <div class="grid">
+                    ${stat("Total Users", data.totalUsers)}
+                    ${stat("Sellers", data.sellers)}
+                    ${stat("Pending Sellers", data.pendingSellers)}
+                    ${stat("Products", data.products)}
+                    ${stat("Orders", data.orders)}
+                    ${stat("Open Tickets", data.openTickets)}
+                    ${stat("Messages", data.messages)}
+                    ${stat("Buyers", data.buyers)}
+                </div>
+                ${panel("Admin Notes", `
+                    <p class="muted">Use the sidebar to control every major section of the project. Product creation still works from the seller/product pages, while this admin panel handles moderation, badges, content, account cleanup, and operational records.</p>
+                `)}
+            `;
+        }
+
+        async function loadUsers() {
+            const users = await api("/api/admin/users");
+            if (!users) return;
+            document.getElementById("content").innerHTML = panel("All Users", table(["Name", "Email", "Role", "Company", "Verified", "Joined", "Action"], users.map((u) => [
+                escapeHtml(u.username),
+                escapeHtml(u.email),
+                badge(u.role, u.role === "Admin" ? "" : "warn"),
+                escapeHtml(u.companyName || "-"),
+                u.isVerified ? badge("Yes") : badge("No", "warn"),
+                fmtDate(u.createdAt),
+                `<button class="btn btn-danger" onclick="deleteUser(${u.id})">Delete</button>`
+            ])));
+        }
+
+        async function loadSellers() {
+            const sellers = await api("/api/admin/sellers");
+            if (!sellers) return;
+            document.getElementById("content").innerHTML = panel("Seller Verification", table(["Seller / Contact", "Company Details", "WhatsApp / Phone", "Status", "Action"], sellers.map((s) => [
+                `<strong>${escapeHtml(s.username)}</strong><br><span class="small muted">${escapeHtml(s.email)}</span>${s.alternateEmail ? `<br><span class="small text-secondary">Gmail: ${escapeHtml(s.alternateEmail)}</span>` : ""}`,
+                `<strong>${escapeHtml(s.companyName || "-")}</strong><br>` +
+                `<span class="small muted">Address: ${escapeHtml(s.companyAddress || "-")}</span><br>` +
+                `<span class="small muted">Est: ${escapeHtml(s.yearEstablished || "-")} | Tax: ${escapeHtml(s.taxNumber || "-")}</span>` +
+                `${s.websiteUrl ? `<br><a href="${escapeHtml(s.websiteUrl)}" target="_blank" class="small" style="color:var(--color-primary); text-decoration:underline;">${escapeHtml(s.websiteUrl)}</a>` : ""}`,
+                `Phone: ${escapeHtml(s.contactInfo || "-")}<br><span style="color:var(--color-primary); font-weight:600;">WhatsApp: ${escapeHtml(s.whatsAppNumber || "-")}</span>`,
+                s.isVerified ? badge("Verified") : badge("Pending", "warn"),
+                `<button class="btn ${s.isVerified ? "" : "btn-primary"}" onclick="toggleSeller(${s.id}, ${!s.isVerified})">${s.isVerified ? "Mark Pending" : "Verify"}</button>`
+            ])));
+        }
+
+        async function loadProducts() {
+            const products = await api("/api/product");
+            if (!products) return;
+            document.getElementById("content").innerHTML = panel("Product Moderation", table(["Product", "Seller", "Category", "Status & Badges", "Action"], products.map((p) => [
+                `<strong>${escapeHtml(p.name)}</strong><br><span class="small muted">MOQ ${p.minOrderQuantity}</span>`,
+                escapeHtml(p.sellerCompany || p.sellerName || "-"),
+                escapeHtml(p.category),
+                `
+                    <label style="color: var(--color-primary); font-weight:700;"><input type="checkbox" id="approved_${p.id}" ${p.isApproved ? "checked" : ""}> Approved (Live)</label><br>
+                    <label><input type="checkbox" id="featured_${p.id}" ${p.isFeatured ? "checked" : ""}> Featured</label><br>
+                    <label><input type="checkbox" id="best_${p.id}" ${p.isBestSeller ? "checked" : ""}> Best Seller</label><br>
+                    <label><input type="checkbox" id="deal_${p.id}" ${p.isTodayDeal ? "checked" : ""}> Today's Deal</label>
+                `,
+                `<div class="actions"><button class="btn btn-primary" onclick="saveProductFlags(${p.id})">Save</button><button class="btn btn-danger" onclick="deleteProduct(${p.id})">Delete</button></div>`
+            ])));
+        }
+
+        async function loadContent() {
+            const banners = await api("/api/content/banners");
+            const cats = await api("/api/content/hot-categories");
+            if (!banners || !cats) return;
+            document.getElementById("content").innerHTML = `
+                ${panel("Add Banner", `
+                    <form onsubmit="addBanner(event)" class="form-grid">
+                        <div class="field"><label>Title</label><input id="bannerTitle" required></div>
+                        <div class="field"><label>Image URL</label><input id="bannerImage" type="url" required></div>
+                        <div class="field"><label>Link URL</label><input id="bannerLink" value="/product.html"></div>
+                        <div class="field"><label>Position</label><select id="bannerPosition"><option value="1">Top Slider</option><option value="2">Middle Banner</option><option value="3">Right Hero Banner</option></select></div>
+                        <button class="btn btn-primary" type="submit">Add Banner</button>
+                    </form>
+                `)}
+                ${panel("Banners", table(["Title", "Position", "Link", "Action"], banners.map((b) => [
+                    escapeHtml(b.title),
+                    b.position === 1 ? "Top Slider" : b.position === 2 ? "Middle Banner" : "Right Hero Banner",
+
+                    escapeHtml(b.linkUrl || "-"),
+                    `<button class="btn btn-danger" onclick="deleteBanner(${b.id})">Delete</button>`
+                ])))}
+                ${panel("Add Hot Category", `
+                    <form onsubmit="addHotCategory(event)" class="form-grid">
+                        <div class="field"><label>Name</label><input id="catName" required></div>
+                        <div class="field"><label>Image URL</label><input id="catImage" type="url" required></div>
+                        <button class="btn btn-primary" type="submit">Add Category</button>
+                    </form>
+                `)}
+                ${panel("Hot Categories", table(["Name", "Image", "Action"], cats.map((c) => [
+                    escapeHtml(c.name),
+                    `<span class="small muted">${escapeHtml(c.imageUrl)}</span>`,
+                    `<button class="btn btn-danger" onclick="deleteHotCategory(${c.id})">Delete</button>`
+                ])))}
+            `;
+        }
+
+        async function loadOrders() {
+            const orders = await api("/api/admin/orders");
+            if (!orders) return;
+            document.getElementById("content").innerHTML = panel("Orders", table(["Order", "Customer", "Amount", "Status", "Date"], orders.map((o) => [
+                `<strong>${escapeHtml(o.orderNumber)}</strong><br><span class="small muted">${escapeHtml(o.paymentMethod)}</span>`,
+                `${escapeHtml(o.customerName)}<br><span class="small muted">${escapeHtml(o.customerEmail)}</span>`,
+                money(o.totalAmount),
+                badge(o.status, o.status === "Delivered" ? "" : "warn"),
+                fmtDate(o.orderDate)
+            ])));
+        }
+
+        async function loadTickets() {
+            const tickets = await api("/api/admin/tickets");
+            if (!tickets) return;
+            document.getElementById("content").innerHTML = panel("Support Tickets", table(["Ticket", "Customer", "Priority", "Status", "Action"], tickets.map((t) => [
+                `<strong>${escapeHtml(t.subject)}</strong><br><span class="small muted">${escapeHtml(t.description)}</span>`,
+                `${escapeHtml(t.customerName)}<br><span class="small muted">${escapeHtml(t.customerEmail)}</span>`,
+                badge(t.priority, t.priority === "High" ? "danger" : "warn"),
+                badge(t.status, t.status === "Closed" ? "" : "warn"),
+                `<select id="ticket_${t.id}"><option ${selected(t.status, "Open")}>Open</option><option ${selected(t.status, "In Progress")}>In Progress</option><option ${selected(t.status, "Closed")}>Closed</option></select><button class="btn btn-primary" style="margin-top:8px" onclick="saveTicket(${t.id})">Save</button>`
+            ])));
+        }
+
+        async function loadMessages() {
+            const messages = await api("/api/admin/messages");
+            if (!messages) return;
+            document.getElementById("content").innerHTML = panel("Recent Messages", table(["From", "To", "Message", "Date", "Action"], messages.map((m) => [
+                escapeHtml(m.senderName),
+                escapeHtml(m.receiverName),
+                escapeHtml(m.content),
+                fmtDate(m.timestamp),
+                `<button class="btn btn-danger" onclick="deleteMessage(${m.id})">Delete</button>`
+            ])));
+        }
+
+        async function loadSettings() {
+            const settings = await api("/api/settings");
+            if (!settings) return;
+            settingsCache = settings;
+            document.getElementById("content").innerHTML = panel("Site Settings", `
+                <form onsubmit="saveSettings(event)">
+                    <div class="form-grid">
+                        ${field("site_title", "Site Title")}
+                        ${field("currency_symbol", "Currency Symbol")}
+                        ${field("contact_phone", "Contact Phone")}
+                        ${field("contact_email", "Contact Email")}
+                    </div>
+                    <div class="field"><label>Contact Address</label><input id="contact_address" value="${escapeAttr(settings.contact_address || "")}"></div>
+                    ${textarea("policy_terms", "Terms Policy")}
+                    ${textarea("policy_return", "Return Policy")}
+                    ${textarea("policy_support", "Support Policy")}
+                    ${textarea("policy_privacy", "Privacy Policy")}
+                    <button class="btn btn-primary" type="submit">Save Settings</button>
+                </form>
+            `);
+        }
+
+        async function toggleSeller(id, verified) {
+            await api(`/api/admin/sellers/${id}/verify`, {
+                method: "POST",
+                body: JSON.stringify({ isVerified: verified })
+            });
+            toast("Seller status updated.");
+            loadSellers();
+        }
+
+        async function deleteUser(id) {
+            if (!confirm("Delete this user and all related records?")) return;
+            await api(`/api/admin/users/${id}`, { method: "DELETE" });
+            toast("User deleted.");
+            loadUsers();
+        }
+
+        async function saveProductFlags(id) {
+            const isApproved = document.getElementById(`approved_${id}`).checked;
+            const flags = {
+                isFeatured: document.getElementById(`featured_${id}`).checked,
+                isBestSeller: document.getElementById(`best_${id}`).checked,
+                isTodayDeal: document.getElementById(`deal_${id}`).checked
+            };
+
+            await api(`/api/admin/products/${id}/flags`, {
+                method: "PUT",
+                body: JSON.stringify(flags)
+            });
+
+            await api(`/api/admin/products/${id}/approve`, {
+                method: "POST",
+                body: JSON.stringify({ isApproved })
+            });
+
+            toast("Product settings and approval status updated.");
+            loadProducts();
+        }
+
+        async function deleteProduct(id) {
+            if (!confirm("Delete this product?")) return;
+            await api(`/api/product/${id}`, { method: "DELETE" });
+            toast("Product deleted.");
+            loadProducts();
+        }
+
+        async function addBanner(event) {
+            event.preventDefault();
+            await api("/api/content/banners", {
+                method: "POST",
+                body: JSON.stringify({
+                    title: document.getElementById("bannerTitle").value,
+                    imageUrl: document.getElementById("bannerImage").value,
+                    linkUrl: document.getElementById("bannerLink").value,
+                    position: Number(document.getElementById("bannerPosition").value)
+                })
+            });
+            toast("Banner added.");
+            loadContent();
+        }
+
+        async function deleteBanner(id) {
+            if (!confirm("Delete this banner?")) return;
+            await api(`/api/content/banners/${id}`, { method: "DELETE" });
+            toast("Banner deleted.");
+            loadContent();
+        }
+
+        async function addHotCategory(event) {
+            event.preventDefault();
+            await api("/api/content/hot-categories", {
+                method: "POST",
+                body: JSON.stringify({
+                    name: document.getElementById("catName").value,
+                    imageUrl: document.getElementById("catImage").value
+                })
+            });
+            toast("Category added.");
+            loadContent();
+        }
+
+        async function deleteHotCategory(id) {
+            if (!confirm("Delete this hot category?")) return;
+            await api(`/api/content/hot-categories/${id}`, { method: "DELETE" });
+            toast("Category deleted.");
+            loadContent();
+        }
+
+        async function saveTicket(id) {
+            await api(`/api/admin/tickets/${id}/status`, {
+                method: "PUT",
+                body: JSON.stringify({ status: document.getElementById(`ticket_${id}`).value })
+            });
+            toast("Ticket updated.");
+            loadTickets();
+        }
+
+        async function deleteMessage(id) {
+            if (!confirm("Delete this message?")) return;
+            await api(`/api/admin/messages/${id}`, { method: "DELETE" });
+            toast("Message deleted.");
+            loadMessages();
+        }
+
+        async function saveSettings(event) {
+            event.preventDefault();
+            const payload = {};
+            ["site_title", "currency_symbol", "contact_phone", "contact_email", "contact_address", "policy_terms", "policy_return", "policy_support", "policy_privacy"].forEach((key) => {
+                payload[key] = document.getElementById(key).value;
+            });
+            await api("/api/admin/settings", {
+                method: "PUT",
+                body: JSON.stringify(payload)
+            });
+            toast("Settings saved.");
+            loadSettings();
+        }
+
+        async function api(url, options = {}) {
+            const request = {
+                method: options.method || "GET",
+                headers: { "Content-Type": "application/json" },
+                body: options.body
+            };
+
+            try {
+                const response = await fetch(url, request);
+                if (!response.ok) {
+                    if (!options.quiet) {
+                        const message = await readError(response);
+                        toast(message || `Request failed: ${response.status}`, true);
+                    }
+                    return null;
+                }
+
+                const text = await response.text();
+                return text ? JSON.parse(text) : {};
+            } catch (error) {
+                if (!options.quiet) toast("Network or server error.", true);
+                return null;
+            }
+        }
+
+        async function readError(response) {
+            try {
+                const data = await response.json();
+                return data.message;
+            } catch {
+                return "";
+            }
+        }
+
+        function stat(label, value) {
+            return `<div class="stat"><span>${label}</span><strong>${value}</strong></div>`;
+        }
+
+        function panel(title, body) {
+            return `<section class="panel" style="margin-bottom:18px"><div class="panel-head"><h3>${title}</h3></div><div class="panel-body">${body}</div></section>`;
+        }
+
+        function table(headers, rows) {
+            if (!rows.length) return "<p class='muted'>No records found.</p>";
+            return `<div class="table-wrap"><table><thead><tr>${headers.map((h) => `<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+        }
+
+        function badge(text, type = "") {
+            const cls = type === "danger" ? "badge badge-danger" : type === "warn" ? "badge badge-warn" : "badge";
+            return `<span class="${cls}">${escapeHtml(text)}</span>`;
+        }
+
+        function field(key, label) {
+            return `<div class="field"><label>${label}</label><input id="${key}" value="${escapeAttr(settingsCache[key] || "")}"></div>`;
+        }
+
+        function textarea(key, label) {
+            return `<div class="field"><label>${label}</label><textarea id="${key}">${escapeHtml(settingsCache[key] || "")}</textarea></div>`;
+        }
+
+        function selected(value, option) {
+            return value === option ? "selected" : "";
+        }
+
+        function money(value) {
+            const symbol = settingsCache.currency_symbol || "BDT ";
+            return `${escapeHtml(symbol)}${Number(value || 0).toFixed(2)}`;
+        }
+
+        function fmtDate(value) {
+            if (!value) return "-";
+            return new Date(value).toLocaleString();
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
+        }
+
+        function escapeAttr(value) {
+            return escapeHtml(value).replaceAll("\n", " ");
+        }
+
+        function toast(message, isError = false) {
+            const el = document.getElementById("toast");
+            el.textContent = message;
+            el.className = isError ? "toast show error" : "toast show";
+            setTimeout(() => {
+                el.className = "toast";
+            }, 3200);
+        }
+    </script>
+</body>
+</html>

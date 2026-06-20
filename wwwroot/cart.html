@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sourced B2B Cart | EtrailGlobal</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .cart-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        @media (max-width: 992px) {
+            .cart-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        .cart-item-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
+            gap: 20px;
+        }
+        .cart-item-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex: 1;
+        }
+        .cart-item-img {
+            width: 80px;
+            height: 80px;
+            background-size: cover;
+            background-position: center;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+        .qty-controller {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            background: #fff;
+        }
+        .qty-btn {
+            padding: 8px 14px;
+            font-weight: 700;
+            background: #f8fafc;
+            cursor: pointer;
+            font-size: 16px;
+            transition: var(--transition-fast);
+        }
+        .qty-btn:hover {
+            background: var(--border-color);
+        }
+        .qty-input {
+            width: 60px;
+            text-align: center;
+            font-weight: 700;
+            padding: 8px 0;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+        }
+        .summary-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-primary)"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                EtrailGlobal
+            </a>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="product.html" class="nav-link">Products</a>
+            </nav>
+            <div class="auth-nav" id="authNav">
+                <button class="btn btn-secondary" style="opacity: 0.5;">Loading...</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container">
+        
+        <div style="margin-top: 40px;">
+            <span class="badge badge-verified" style="margin-bottom: 8px; font-weight: 700; font-size:11px;">B2B Sourcing</span>
+            <h1 style="font-size: 28px; font-weight: 800; color: var(--text-primary);">Sourced Cart Overview</h1>
+            <p style="color: var(--text-muted); font-size: 14px;">Review items, adjust quantities matching supplier Minimum Order Quantities (MOQ), and finalize corporate invoices.</p>
+        </div>
+
+        <div id="cartContentWrapper" class="cart-layout" style="display: none;">
+            <!-- Cart Items List -->
+            <div>
+                <div id="cartItemsList">
+                    <!-- Items populated dynamically -->
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
+                    <a href="product.html" class="btn btn-secondary">← Continue Sourcing</a>
+                    <button onclick="clearCart()" class="btn btn-danger" style="background:#fff; color:var(--color-danger); border:1px solid var(--color-danger); cursor:pointer;">🗑️ Clear Entire Cart</button>
+                </div>
+            </div>
+
+            <!-- Checkout Order Summary -->
+            <div class="summary-card">
+                <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--border-color); color: var(--text-primary);">Order Summary</h3>
+                
+                <div style="display:flex; flex-direction:column; gap:12px; font-size:14px; color:var(--text-secondary); margin-bottom: 20px;">
+                    <div style="display:flex; justify-content:space-between;">
+                        <span>Total Items:</span>
+                        <strong id="summaryTotalItems" style="color:var(--text-primary)">0 units</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <span>Lead Time:</span>
+                        <strong id="summaryMaxLeadTime" style="color:var(--text-primary)">3 Days Standard</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:16px; border-top:1px solid var(--border-color); padding-top:12px;">
+                        <span style="font-weight:700; color:var(--text-primary)">Total Price:</span>
+                        <strong id="summaryTotalPrice" style="color:var(--color-primary); font-size:18px; font-weight:800;">৳0.00</strong>
+                    </div>
+                </div>
+
+                <form id="checkoutForm" onsubmit="handleCheckoutSubmit(event)">
+                    <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); border-top:1px solid var(--border-color); padding-top:16px;">Delivery Details</h4>
+                    <div class="form-group" style="margin-bottom:12px;">
+                        <label class="form-label" for="checkoutBilling">Billing Address</label>
+                        <textarea id="checkoutBilling" class="form-control" rows="2" required></textarea>
+                    </div>
+                    <div class="form-group" style="margin-bottom:12px;">
+                        <label class="form-label" for="checkoutShipping">Shipping Address / Port Destination</label>
+                        <textarea id="checkoutShipping" class="form-control" rows="2" required></textarea>
+                    </div>
+                    <div class="form-group" style="margin-bottom:20px;">
+                        <label class="form-label" for="checkoutPayment">Payment Method</label>
+                        <select id="checkoutPayment" class="form-control" style="background-color: var(--bg-main)">
+                            <option value="Cash on Delivery">Cash on Delivery</option>
+                            <option value="Bank Transfer">Bank Transfer / Cash Against Documents</option>
+                            <option value="L/C (Letter of Credit)">L/C (Letter of Credit - B2B)</option>
+                        </select>
+                    </div>
+                    <button type="submit" id="btnCheckoutSubmit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 14px; font-weight:700;">
+                        🛍️ Proceed to Checkout
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Empty Cart State -->
+        <div id="cartEmptyState" style="display:none; text-align:center; padding:80px 40px; background:#fff; border:1px solid var(--border-color); border-radius:var(--radius-md); margin-top:30px; box-shadow:var(--shadow-sm);">
+            <div style="font-size: 64px; margin-bottom: 20px;">🛒</div>
+            <h2 style="font-size:22px; font-weight:700; margin-bottom:8px; color:var(--text-primary);">Your Cart is Empty</h2>
+            <p style="color:var(--text-muted); font-size:14px; max-width:400px; margin: 0 auto 24px;">Browse our premium catalog of verified manufacturers to add items and place orders.</p>
+            <a href="product.html" class="btn btn-primary" style="display:inline-flex;">Browse Products</a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="market-footer" style="border-top: 1px solid var(--border-color); padding: 48px 0; background: #ffffff; color: var(--text-secondary); font-size: 14px; margin-top: 64px;">
+        <div class="container footer-grid">
+            <div>
+                <div class="logo" style="margin-bottom:12px;">EtrailGlobal</div>
+                <p>Green and white wholesale sourcing marketplace for products, suppliers, and direct B2B conversations.</p>
+                <p class="footer-contact">
+                    <span id="footerAddress">Gulshan-2, Dhaka, Bangladesh</span>
+                    <span id="footerPhone">+880-9612-ETRAIL</span>
+                    <span id="footerEmail">support@etrail.com.bd</span>
+                </p>
+            </div>
+            <div>
+                <h4>Marketplace</h4>
+                <a href="product.html">All Products</a>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact Us</a>
+                <a href="dashboard.html">Dashboard</a>
+            </div>
+            <div>
+                <h4>Seller Zone</h4>
+                <button onclick="openModal('sellerRegisterModal')" class="btn btn-primary">Apply Now</button>
+                <button onclick="openModal('sellerLoginModal')" class="btn btn-secondary">Seller Login</button>
+            </div>
+        </div>
+        <div class="container" style="border-top:1px solid var(--border-color); padding-top:24px; margin-top:32px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+            <p style="font-size:13px; color:var(--text-muted); margin:0;">© 2026 EtrailGlobal. All rights reserved.</p>
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                <span style="font-size:12px; color:var(--text-muted); font-weight:600;">We Accept:</span>
+                <span style="font-size:11px; font-weight:700; background:#fff; border:1px solid var(--border-color); padding:4px 8px; border-radius:4px; color:#1a1f71; display:inline-block;">VISA</span>
+                <span style="font-size:11px; font-weight:700; background:#fff; border:1px solid var(--border-color); padding:4px 8px; border-radius:4px; color:#eb001b; display:inline-block;">Mastercard</span>
+                <span style="font-size:11px; font-weight:700; background:#e2125d; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">bKash</span>
+                <span style="font-size:11px; font-weight:700; background:#ff6b00; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">Nagad</span>
+                <span style="font-size:11px; font-weight:700; background:#8c3494; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">Rocket</span>
+                <span style="font-size:11px; font-weight:700; background:#005c2d; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">DBBL</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="checkoutSuccessModal">
+        <div class="modal" style="text-align: center; max-width: 450px; padding: 32px;">
+            <div style="font-size: 54px; color: var(--color-success); margin-bottom: 16px;">✓</div>
+            <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 8px;">Order Placed Successfully!</h2>
+            <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 12px;">Invoice Number: <strong id="successOrderNumber" style="color:var(--color-primary);">ET-XXXXX</strong></p>
+            <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 24px;">Our compliance desk has notified the supplier. You can track this order in your purchase records.</p>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <button onclick="window.location.href='/dashboard.html'" class="btn btn-primary" style="justify-content:center; padding:12px;">Go to Dashboard</button>
+                <button onclick="window.location.href='/index.html'" class="btn btn-secondary" style="justify-content:center; padding:12px; border:1px solid var(--border-color);">Return Home</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        let cartItems = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(async () => {
+                if (!window.currentUser) {
+                    showToast("Please log in to view your cart", true);
+                    window.location.href = '/index.html';
+                    return;
+                }
+                await loadCartDetails();
+            }, 300);
+        });
+
+        async function loadCartDetails() {
+            try {
+                const response = await fetch('/api/customer/cart');
+                if (response.ok) {
+                    cartItems = await response.json();
+                    renderCart();
+                } else {
+                    showToast("Failed to retrieve cart items", true);
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        function renderCart() {
+            const wrapper = document.getElementById('cartContentWrapper');
+            const emptyState = document.getElementById('cartEmptyState');
+            const itemsList = document.getElementById('cartItemsList');
+
+            if (!cartItems || cartItems.length === 0) {
+                wrapper.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            wrapper.style.display = 'grid';
+
+            const sym = window.siteSettings.currency_symbol || "৳";
+
+            itemsList.innerHTML = cartItems.map(item => {
+                const hasDiscount = item.discountPrice > 0 && item.discountPrice < item.price;
+                const activePrice = hasDiscount ? item.discountPrice : item.price;
+                const subtotal = activePrice * item.quantity;
+                
+                const originalPriceHtml = hasDiscount 
+                    ? `<span style="text-decoration:line-through; color:var(--text-muted); font-size:12px; font-weight:normal; margin-left:6px;">${sym}${item.price.toFixed(2)}</span>` 
+                    : '';
+
+                return `
+                    <div class="cart-item-card">
+                        <div class="cart-item-info">
+                            <div class="cart-item-img" style="background-image:url('${item.imageUrl || '/images/placeholder.png'}')"></div>
+                            <div>
+                                <span style="font-size:11px; text-transform:uppercase; color:var(--color-secondary); font-weight:700;">${item.category}</span>
+                                <h3 style="font-size:15px; font-weight:700; color:var(--text-primary); margin-top:2px;">${item.name}</h3>
+                                <div style="font-size:13px; color:var(--text-secondary); margin-top:4px;">
+                                    <span>Unit Price: </span>
+                                    <strong style="color:var(--color-primary);">${sym}${activePrice.toFixed(2)}</strong>${originalPriceHtml}
+                                </div>
+                                <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">Min Order Qty (MOQ): ${item.minOrderQuantity} units</div>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
+                            <div class="qty-controller">
+                                <button type="button" class="qty-btn" onclick="adjustQty(${item.productId}, -1, ${item.minOrderQuantity})">-</button>
+                                <input type="number" class="qty-input" id="qtyInput_${item.productId}" value="${item.quantity}" min="${item.minOrderQuantity}" onchange="handleQtyChange(${item.productId}, this, ${item.minOrderQuantity})" />
+                                <button type="button" class="qty-btn" onclick="adjustQty(${item.productId}, 1, ${item.minOrderQuantity})">+</button>
+                            </div>
+                            
+                            <div style="text-align:right; min-width: 100px;">
+                                <div style="font-size:11px; color:var(--text-muted)">Subtotal</div>
+                                <strong style="color:var(--text-primary); font-size:16px; font-weight:700;">${sym}${subtotal.toFixed(2)}</strong>
+                            </div>
+
+                            <button onclick="removeCartItem(${item.productId})" style="background:transparent; color:var(--color-danger); font-size:18px; cursor:pointer; padding:6px; transition:opacity var(--transition-fast);" title="Remove Item">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Pre-fill addresses
+            document.getElementById('checkoutBilling').value = window.currentUser.billingAddress || '';
+            document.getElementById('checkoutShipping').value = window.currentUser.shippingAddress || '';
+
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const sym = window.siteSettings.currency_symbol || "৳";
+            let totalPrice = 0;
+            let totalItems = 0;
+            let maxLeadTime = 3;
+
+            cartItems.forEach(item => {
+                const hasDiscount = item.discountPrice > 0 && item.discountPrice < item.price;
+                const activePrice = hasDiscount ? item.discountPrice : item.price;
+                
+                totalPrice += activePrice * item.quantity;
+                totalItems += item.quantity;
+                if (item.leadTimeDays && item.leadTimeDays > maxLeadTime) {
+                    maxLeadTime = item.leadTimeDays;
+                }
+            });
+
+            document.getElementById('summaryTotalItems').textContent = `${totalItems} units`;
+            document.getElementById('summaryMaxLeadTime').textContent = `${maxLeadTime} Days Standard`;
+            document.getElementById('summaryTotalPrice').textContent = `${sym}${totalPrice.toFixed(2)}`;
+        }
+
+        async function adjustQty(productId, change, moq) {
+            const input = document.getElementById(`qtyInput_${productId}`);
+            if (!input) return;
+            
+            let val = parseInt(input.value) + change;
+            if (val < moq) val = moq;
+            input.value = val;
+
+            await updateCartItemQuantityApi(productId, val);
+        }
+
+        async function handleQtyChange(productId, input, moq) {
+            let val = parseInt(input.value);
+            if (isNaN(val) || val < moq) {
+                val = moq;
+                input.value = moq;
+            }
+            await updateCartItemQuantityApi(productId, val);
+        }
+
+        async function updateCartItemQuantityApi(productId, newQty) {
+            try {
+                const response = await fetch(`/api/customer/cart/${productId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ quantity: newQty })
+                });
+                
+                if (response.ok) {
+                    // Update local state
+                    const item = cartItems.find(i => i.productId === productId);
+                    if (item) {
+                        item.quantity = newQty;
+                    }
+                    renderCart();
+                    if (window.updateHeaderStats) {
+                        window.updateHeaderStats();
+                    }
+                } else {
+                    showToast("Failed to update cart quantity", true);
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        async function removeCartItem(productId) {
+            if (!confirm("Remove this item from your cart?")) return;
+            try {
+                const response = await fetch(`/api/customer/cart/${productId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    showToast("Item removed from cart");
+                    cartItems = cartItems.filter(i => i.productId !== productId);
+                    renderCart();
+                    if (window.updateHeaderStats) {
+                        window.updateHeaderStats();
+                    }
+                } else {
+                    showToast("Failed to remove item", true);
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        async function clearCart() {
+            if (!confirm("Are you sure you want to delete all items from your cart?")) return;
+            try {
+                const response = await fetch('/api/customer/cart/clear', {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    showToast("Cart cleared");
+                    cartItems = [];
+                    renderCart();
+                    if (window.updateHeaderStats) {
+                        window.updateHeaderStats();
+                    }
+                } else {
+                    showToast("Failed to clear cart", true);
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        async function handleCheckoutSubmit(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnCheckoutSubmit');
+            btn.disabled = true;
+            btn.innerHTML = "Processing Order...";
+
+            const billingAddress = document.getElementById('checkoutBilling').value;
+            const shippingAddress = document.getElementById('checkoutShipping').value;
+            const paymentMethod = document.getElementById('checkoutPayment').value;
+
+            try {
+                const response = await fetch('/api/customer/checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ billingAddress, shippingAddress, paymentMethod })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    document.getElementById('successOrderNumber').textContent = result.orderNumber || "ET-SUCCESS";
+                    openModal('checkoutSuccessModal');
+                    
+                    // Reset local cart state
+                    cartItems = [];
+                    renderCart();
+                    if (window.updateHeaderStats) {
+                        window.updateHeaderStats();
+                    }
+                } else {
+                    const err = await response.json();
+                    showToast(err.message || "Checkout failed", true);
+                }
+            } catch(err) {
+                showToast("Error processing order checkout", true);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = "🛍️ Proceed to Checkout";
+            }
+        }
+    </script>
+</body>
+</html>

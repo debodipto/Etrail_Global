@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | EtrailGlobal B2B Wholesale Marketplace</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <meta name="description" content="Get in touch with the EtrailGlobal customer support desk, request audits, or reach out to our corporate headquarters in Gulshan-2, Dhaka.">
+    <style>
+        .contact-hero {
+            padding: 80px 0;
+            background: linear-gradient(135deg, rgba(21, 128, 61, 0.08), rgba(22, 163, 74, 0.02));
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+        }
+        .contact-hero h1 {
+            font-size: 42px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+        .contact-hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        .contact-content {
+            padding: 60px 0;
+            display: grid;
+            grid-template-columns: 1.2fr 1.8fr;
+            gap: 48px;
+        }
+        .info-pane {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .info-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        .info-icon {
+            font-size: 28px;
+            background: rgba(21, 128, 61, 0.1);
+            color: var(--color-primary);
+            width: 50px;
+            height: 50px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .info-text h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        .info-text p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin: 0;
+        }
+        .form-pane {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 40px;
+            box-shadow: var(--shadow-md);
+        }
+        .form-pane h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--color-primary);
+        }
+        .map-container {
+            grid-column: 1 / -1;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            height: 350px;
+            padding: 8px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .map-placeholder {
+            flex: 1;
+            background-color: #e2e8f0;
+            border-radius: var(--radius-sm);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-muted);
+            background-image: radial-gradient(var(--border-color-hover) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+        @media (max-width: 768px) {
+            .contact-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="market-home">
+
+    <!-- Header -->
+    <header class="market-header">
+        <div class="container market-topbar">
+            <a href="index.html" class="logo market-logo">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                EtrailGlobal
+            </a>
+
+            <div class="market-search">
+                <select id="heroCategorySelect" aria-label="Category">
+                    <option value="All">All categories</option>
+                    <option value="Home">Home</option>
+                    <option value="Women's World">Women's World</option>
+                    <option value="Men's Collection">Men's Collection</option>
+                    <option value="Accessories">Accessories</option>
+                    <option value="Mobiles & Tabs">Mobiles & Tabs</option>
+                    <option value="Alarm">Alarm</option>
+                    <option value="Sinks and kitchen taps">Sinks and kitchen taps</option>
+                    <option value="Paper & Plastic">Paper & Plastic</option>
+                    <option value="Men Clothing & Fashion">Men Clothing & Fashion</option>
+                    <option value="Eco-Friendly Products">Eco-Friendly Products</option>
+                    <option value="Eco-Friendly Home Decor & Accessories">Eco-Friendly Home Decor & Accessories</option>
+                    <option value="Bamboo Based Product">Bamboo Based Product</option>
+                </select>
+                <input type="text" id="heroSearchInput" placeholder="Search products, suppliers, or categories">
+                <button onclick="triggerHeroSearch()" class="btn btn-primary">Search</button>
+            </div>
+
+            <div class="auth-nav" id="authNav">
+                <button class="btn btn-secondary" style="opacity: 0.5;">Loading...</button>
+            </div>
+        </div>
+
+        <div class="container market-nav-row">
+            <nav class="market-links">
+                <a href="index.html">Home</a>
+                <a href="product.html">All Products</a>
+                <a href="product.html?isTodayDeal=true">Flash Deals</a>
+                <a href="product.html?isBestSeller=true">Best Sellers</a>
+            </nav>
+            <button class="seller-cta" onclick="openModal('sellerRegisterModal')">Become a Seller</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <section class="contact-hero">
+            <div class="container">
+                <h1>Contact Our Sourcing Desk</h1>
+                <p>Have questions about bulk orders, trade assurance, audits, or technical support? Send us a message and our support team will reply within 24 hours.</p>
+            </div>
+        </section>
+
+        <section class="container contact-content">
+            <!-- Contact Info -->
+            <div class="info-pane">
+                <div class="info-card">
+                    <div class="info-icon">📍</div>
+                    <div class="info-text">
+                        <h3>Corporate Head Office</h3>
+                        <p>EtrailGlobal BD Ltd.<br/>Gulshan-2, Dhaka, 1212<br/>Bangladesh</p>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-icon">📞</div>
+                    <div class="info-text">
+                        <h3>Support Phone Lines</h3>
+                        <p>+880-9612-ETRAIL<br/>+880-2-9884567<br/>Mon-Fri, 9:00 AM - 6:00 PM</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">✉️</div>
+                    <div class="info-text">
+                        <h3>General Sourcing Support</h3>
+                        <p>support@etrail.com.bd<br/>kyc@etrailglobal.com</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="form-pane">
+                <h2>Send Sourcing Message</h2>
+                <form id="contactUsForm" onsubmit="handleContactSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="contactName">Your Name *</label>
+                            <input type="text" id="contactName" class="form-control" placeholder="e.g. Jane Smith" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="contactEmail">Business Email *</label>
+                            <input type="email" id="contactEmail" class="form-control" placeholder="e.g. jane@company.com" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="contactPhone">Contact Phone *</label>
+                            <input type="text" id="contactPhone" class="form-control" placeholder="e.g. +88017xxxxxxxx" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="contactSubject">Inquiry Subject *</label>
+                            <select id="contactSubject" class="form-control" style="background-color:#fff;">
+                                <option value="Buyer Account Support">Buyer Account / Sourcing Help</option>
+                                <option value="Seller KYC Application">Seller Verification / Application</option>
+                                <option value="B2B Escrow / Dispute">B2B Checkout & Dispute Settlement</option>
+                                <option value="Bulk Order Inquiry">Custom High-Volume Sourcing</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="contactMessage">Message / Request details *</label>
+                        <textarea id="contactMessage" class="form-control" rows="5" placeholder="Detail your sourcing requirements or query..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding:12px 24px; font-weight:700;">Submit Inquiry</button>
+                </form>
+            </div>
+
+            <!-- Map Mock -->
+            <div class="map-container">
+                <div style="font-size:14px; font-weight:700; margin-bottom:8px; color:var(--text-primary);">📍 Our Location - Dhaka, Bangladesh</div>
+                <div class="map-placeholder">
+                    <span style="font-size:36px; margin-bottom:8px;">🗺️</span>
+                    <strong style="color:var(--text-primary);">Gulshan-2, Dhaka (Google Map Mock)</strong>
+                    <span style="font-size:12px; margin-top:4px;">Intersection of Gulshan Avenue & Madani Avenue</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="market-footer">
+        <div class="container footer-grid">
+            <div>
+                <div class="logo" style="margin-bottom:12px;">EtrailGlobal</div>
+                <p>Green and white wholesale sourcing marketplace for products, suppliers, and direct B2B conversations.</p>
+                <p class="footer-contact">
+                    <span id="footerAddress">Gulshan-2, Dhaka, Bangladesh</span>
+                    <span id="footerPhone">+880-9612-ETRAIL</span>
+                    <span id="footerEmail">support@etrail.com.bd</span>
+                </p>
+            </div>
+            <div>
+                <h4>Marketplace</h4>
+                <a href="product.html">All Products</a>
+                <a href="about.html">About Us</a>
+                <a href="contact.html" style="font-weight:bold; color:var(--color-primary);">Contact Us</a>
+                <a href="dashboard.html">Dashboard</a>
+            </div>
+            <div>
+                <h4>Seller Zone</h4>
+                <button onclick="openModal('sellerRegisterModal')" class="btn btn-primary">Apply Now</button>
+                <button onclick="openModal('sellerLoginModal')" class="btn btn-secondary">Seller Login</button>
+            </div>
+        </div>
+        <div class="container" style="border-top:1px solid var(--border-color); padding-top:24px; margin-top:32px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+            <p style="font-size:13px; color:var(--text-muted);">© 2026 EtrailGlobal. All rights reserved.</p>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-size:12px; color:var(--text-muted); font-weight:600;">We Accept:</span>
+                <span style="font-size:12px; font-weight:700; background:#fff; border:1px solid var(--border-color); padding:4px 8px; border-radius:4px; color:#1a1f71;">VISA</span>
+                <span style="font-size:12px; font-weight:700; background:#fff; border:1px solid var(--border-color); padding:4px 8px; border-radius:4px; color:#eb001b;">Mastercard</span>
+                <span style="font-size:12px; font-weight:700; background:#e2125d; color:#fff; padding:4px 8px; border-radius:4px;">bKash</span>
+                <span style="font-size:12px; font-weight:700; background:#ff6b00; color:#fff; padding:4px 8px; border-radius:4px;">Nagad</span>
+                <span style="font-size:12px; font-weight:700; background:#8c3494; color:#fff; padding:4px 8px; border-radius:4px;">Rocket</span>
+                <span style="font-size:12px; font-weight:700; background:#005c2d; color:#fff; padding:4px 8px; border-radius:4px;">DBBL</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Policy Modal -->
+    <div class="modal-overlay" id="policyModal">
+        <div class="modal" style="max-width: 600px;">
+            <span class="modal-close" onclick="closeModal('policyModal')">&times;</span>
+            <h2 class="modal-title" id="policyModalTitle">Company Policy</h2>
+            <div style="max-height: 400px; overflow-y: auto; font-size: 14px; color: var(--text-secondary); line-height: 1.6;" id="policyModalContent"></div>
+            <button onclick="closeModal('policyModal')" class="btn btn-primary" style="margin-top:24px; width:100%; justify-content:center;">Close Policy Document</button>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <span class="modal-close" onclick="closeModal('loginModal')">&times;</span>
+            <h2 class="modal-title">Sign In to EtrailGlobal</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="customer@etrailglobal.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="Customer123" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Sign In</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Don't have an account? <a href="javascript:void(0)" onclick="closeModal('loginModal'); openModal('registerModal');" style="color: var(--color-primary); font-weight:600;">Register Here</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal-overlay" id="registerModal">
+        <div class="modal" style="max-width: 600px;">
+            <span class="modal-close" onclick="closeModal('registerModal')">&times;</span>
+            <h2 class="modal-title">Create Customer Account</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label class="form-label" for="regUsername">Username</label>
+                    <input type="text" id="regUsername" class="form-control" placeholder="e.g. janesmith" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="regEmail">Email Address</label>
+                    <input type="email" id="regEmail" class="form-control" placeholder="name@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="regPassword">Password</label>
+                    <input type="password" id="regPassword" class="form-control" placeholder="Minimum 6 characters" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="regContactInfo">Phone / Contact Number</label>
+                    <input type="text" id="regContactInfo" class="form-control" placeholder="+880-1xxxxxxxxx" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Complete Registration</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Already registered? <a href="javascript:void(0)" onclick="closeModal('registerModal'); openModal('loginModal');" style="color: var(--color-primary); font-weight:600;">Sign In</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Seller Login Modal -->
+    <div class="modal-overlay" id="sellerLoginModal">
+        <div class="modal">
+            <span class="modal-close" onclick="closeModal('sellerLoginModal')">&times;</span>
+            <h2 class="modal-title">Sign In - Seller Portal</h2>
+            <form id="sellerLoginForm">
+                <div class="form-group">
+                    <label class="form-label" for="sellerLoginEmail">Email Address</label>
+                    <input type="email" id="sellerLoginEmail" class="form-control" placeholder="seller@etrailglobal.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerLoginPassword">Password</label>
+                    <input type="password" id="sellerLoginPassword" class="form-control" placeholder="Seller123" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Login to Seller Panel</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Apply for a supplier account? <a href="javascript:void(0)" onclick="closeModal('sellerLoginModal'); openModal('sellerRegisterModal');" style="color: var(--color-primary); font-weight:600;">Apply Now</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Seller Register Modal -->
+    <div class="modal-overlay" id="sellerRegisterModal">
+        <div class="modal" style="max-width: 600px;">
+            <span class="modal-close" onclick="closeModal('sellerRegisterModal')">&times;</span>
+            <h2 class="modal-title">Become a Seller / Supplier Application</h2>
+            <form id="sellerRegisterForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegUsername">Username *</label>
+                        <input type="text" id="sellerRegUsername" class="form-control" placeholder="e.g. factoryrep" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegEmail">Business Email *</label>
+                        <input type="email" id="sellerRegEmail" class="form-control" placeholder="sales@factory.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerRegPassword">Password *</label>
+                    <input type="password" id="sellerRegPassword" class="form-control" placeholder="Minimum 6 characters" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegCompanyName">Company Registered Name *</label>
+                        <input type="text" id="sellerRegCompanyName" class="form-control" placeholder="e.g. Apex Tech Textiles Ltd" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegYearEstablished">Established Year</label>
+                        <input type="text" id="sellerRegYearEstablished" class="form-control" placeholder="e.g. 2015">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegContactInfo">Business Phone *</label>
+                        <input type="text" id="sellerRegContactInfo" class="form-control" placeholder="e.g. +880-1xxxxxxxxx" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegWhatsApp">WhatsApp Number *</label>
+                        <input type="text" id="sellerRegWhatsApp" class="form-control" placeholder="e.g. +880-1xxxxxxxxx" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegGmail">Alternate Email (Gmail)</label>
+                        <input type="email" id="sellerRegGmail" class="form-control" placeholder="e.g. alternate@gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegTax">Tax / BIN Number</label>
+                        <input type="text" id="sellerRegTax" class="form-control" placeholder="e.g. 123456789">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerRegCompanyAddress">Company Address / Factory Location *</label>
+                    <input type="text" id="sellerRegCompanyAddress" class="form-control" placeholder="e.g. Plot 12, Gazipur Industrial Zone" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerRegWebsite">Company Website</label>
+                    <input type="text" id="sellerRegWebsite" class="form-control" placeholder="e.g. https://apextech.com">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Submit Seller Application</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Already have a seller account? <a href="javascript:void(0)" onclick="closeModal('sellerRegisterModal'); openModal('sellerLoginModal');" style="color: var(--color-primary); font-weight:600;">Sign In</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        function triggerHeroSearch() {
+            const keyword = document.getElementById('heroSearchInput').value;
+            const category = document.getElementById('heroCategorySelect').value;
+            window.location.href = `/product.html?search=${encodeURIComponent(keyword)}&category=${encodeURIComponent(category)}`;
+        }
+
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const phone = document.getElementById('contactPhone').value;
+            const subject = document.getElementById('contactSubject').value;
+            const message = document.getElementById('contactMessage').value;
+
+            // Trigger premium success notice
+            showToast(`Thank you, ${name}! Your B2B inquiry on "${subject}" has been submitted successfully.`);
+            document.getElementById('contactUsForm').reset();
+        }
+    </script>
+</body>
+</html>

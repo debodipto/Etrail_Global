@@ -1,0 +1,3000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B2B Management Dashboard | EtrailGlobal</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-primary)"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                EtrailGlobal
+            </a>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="product.html" class="nav-link">Products</a>
+            </nav>
+            <div class="auth-nav" id="authNav">
+                <button class="btn btn-secondary" style="opacity: 0.5;">Loading...</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container">
+        
+        <div class="dashboard-layout">
+            
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div style="margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color)">
+                    <h3 id="dashUserName" style="font-size:16px; font-weight:700;">Loading User...</h3>
+                    <span id="dashUserRole" class="badge" style="margin-top: 4px;">Role</span>
+                </div>
+                
+                <!-- Sidebar menus will render dynamically based on user role -->
+                <ul class="sidebar-menu" id="sidebarMenu">
+                    <!-- Dynamic Items -->
+                </ul>
+            </aside>
+
+            <!-- Main Content Area -->
+            <section class="dashboard-content">
+                <div id="dashboardWelcome">
+                    <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">Loading Dashboard Panel...</h2>
+                    <p style="color: var(--text-secondary)">Retrieving your business records from secure servers.</p>
+                </div>
+                
+                <!-- Dynamic Content Panes -->
+                <div id="dashboardDataPane" style="display:none;">
+                    <!-- Data tables and metrics go here -->
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+    <!-- Post Product Modal (For Sellers) -->
+    <div class="modal-overlay" id="addProductModal">
+        <div class="modal" style="max-width: 600px;">
+            <span class="modal-close" onclick="closeModal('addProductModal')">&times;</span>
+            <h2 class="modal-title" id="addProductModalTitle">Create Product Listing</h2>
+            <form id="addProductForm">
+                <div class="form-group">
+                    <label class="form-label" for="prodName">Product Name</label>
+                    <input type="text" id="prodName" class="form-control" placeholder="e.g. 100% Cotton Polo Shirts" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="prodCategory">Category</label>
+                        <select id="prodCategory" class="form-control" style="background-color: var(--bg-main)">
+                            <option value="Home">Home</option>
+                            <option value="Women's World">Women's World</option>
+                            <option value="Men's Collection">Men's Collection</option>
+                            <option value="Accessories">Accessories</option>
+                            <option value="Mobiles & Tabs">Mobiles & Tabs</option>
+                            <option value="Alarm">Alarm</option>
+                            <option value="Sinks and kitchen taps">Sinks and kitchen taps</option>
+                            <option value="Paper & Plastic">Paper & Plastic</option>
+                            <option value="Men Clothing & Fashion">Men Clothing & Fashion</option>
+                            <option value="Eco-Friendly Products">Eco-Friendly Products</option>
+                            <option value="Eco-Friendly Home Decor & Accessories">Eco-Friendly Home Decor & Accessories</option>
+                            <option value="Bamboo Based Product">Bamboo Based Product</option>
+                            <option value="Bikes & Vehicles">Bikes & Vehicles</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="prodMOQ">Minimum Order Quantity (MOQ)</label>
+                        <input type="number" id="prodMOQ" class="form-control" value="100" min="1" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="prodPrice">Price (BDT)</label>
+                        <input type="number" id="prodPrice" class="form-control" placeholder="e.g. 500.00" step="0.01" min="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="prodDiscountPrice">Discounted Price (Optional)</label>
+                        <input type="number" id="prodDiscountPrice" class="form-control" placeholder="e.g. 450.00" step="0.01" min="0">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="prodStock">Available Stock</label>
+                        <input type="number" id="prodStock" class="form-control" value="100" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="prodLeadTime">Lead Time (Days to Ship)</label>
+                        <input type="number" id="prodLeadTime" class="form-control" value="3" min="1" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="prodImagesInput">Product Pictures (Upload Multiple)</label>
+                    <input type="file" id="prodImagesInput" class="form-control" accept="image/*" multiple style="background-color: var(--bg-main)">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="prodVideoInput">Product Video (Upload Single)</label>
+                    <input type="file" id="prodVideoInput" class="form-control" accept="video/*" style="background-color: var(--bg-main)">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Media Previews</label>
+                    <div class="upload-previews" id="prodMediaPreviews">
+                        <div class="upload-placeholder-text">Selected product pictures and videos will be previewed here.</div>
+                    </div>
+                </div>
+                <!-- Dynamic Category Specifications Container -->
+                <div class="form-group" id="prodSpecsContainer" style="display: none; border: 1px solid var(--border-color); padding: 16px; border-radius: 8px; margin-bottom: 16px; background-color: rgba(0,0,0,0.02)">
+                    <h4 style="margin-top: 0; margin-bottom: 12px; font-size: 14px; font-weight: 700; color: var(--color-primary);">Category Specifications</h4>
+                    <div id="prodSpecsFields" style="display: flex; flex-direction: column; gap: 12px;"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="prodDescription">Product Description / Specifications</label>
+                    <textarea id="prodDescription" class="form-control" rows="4" placeholder="Enter materials, sizing details, lead times..." required></textarea>
+                </div>
+                <button type="submit" id="addProductSubmitBtn" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 8px; padding: 12px;">Publish Listing</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Quotes Modal removed -->
+
+    <!-- Quick login/register panels -->
+    <!-- Buyer/Local User Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <span class="modal-close" onclick="closeModal('loginModal')">&times;</span>
+            <h2 class="modal-title">Sign In to Etrail Bangladesh</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="enter customer@etrailglobal.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="enter Customer123" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Sign In</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Don't have an account? <a href="javascript:void(0)" onclick="closeModal('loginModal'); openModal('registerModal');" style="color: var(--color-primary); font-weight:600;">Register Here</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Customer Register Modal -->
+    <div class="modal-overlay" id="registerModal">
+        <div class="modal" style="max-width: 600px;">
+            <span class="modal-close" onclick="closeModal('registerModal')">&times;</span>
+            <h2 class="modal-title">Create Customer Account</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label class="form-label" for="regUsername">Username</label>
+                    <input type="text" id="regUsername" class="form-control" placeholder="e.g. janesmith" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="regEmail">Email Address</label>
+                    <input type="email" id="regEmail" class="form-control" placeholder="name@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="regPassword">Password</label>
+                    <input type="password" id="regPassword" class="form-control" placeholder="Minimum 6 characters" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="regContactInfo">Phone / Contact Number</label>
+                    <input type="text" id="regContactInfo" class="form-control" placeholder="e.g. +880-1xxxxxxxxx" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Complete Registration</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Already registered? <a href="javascript:void(0)" onclick="closeModal('registerModal'); openModal('loginModal');" style="color: var(--color-primary); font-weight:600;">Sign In</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Seller Login Modal -->
+    <div class="modal-overlay" id="sellerLoginModal">
+        <div class="modal">
+            <span class="modal-close" onclick="closeModal('sellerLoginModal')">&times;</span>
+            <h2 class="modal-title">Sign In - Seller Portal</h2>
+            <form id="sellerLoginForm">
+                <div class="form-group">
+                    <label class="form-label" for="sellerLoginEmail">Email Address</label>
+                    <input type="email" id="sellerLoginEmail" class="form-control" placeholder="enter seller@etrailglobal.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerLoginPassword">Password</label>
+                    <input type="password" id="sellerLoginPassword" class="form-control" placeholder="enter Seller123" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Login to Seller Panel</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Apply for a supplier account? <a href="javascript:void(0)" onclick="closeModal('sellerLoginModal'); openModal('sellerRegisterModal');" style="color: var(--color-primary); font-weight:600;">Apply Now</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Seller Register Modal -->
+    <div class="modal-overlay" id="sellerRegisterModal">
+        <div class="modal" style="max-width: 600px;">
+            <span class="modal-close" onclick="closeModal('sellerRegisterModal')">&times;</span>
+            <h2 class="modal-title">Become a Seller / Supplier Application</h2>
+            <form id="sellerRegisterForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegUsername">Username *</label>
+                        <input type="text" id="sellerRegUsername" class="form-control" placeholder="e.g. factoryrep" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegEmail">Business Email *</label>
+                        <input type="email" id="sellerRegEmail" class="form-control" placeholder="sales@factory.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerRegPassword">Password *</label>
+                    <input type="password" id="sellerRegPassword" class="form-control" placeholder="Minimum 6 characters" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegCompanyName">Company Registered Name *</label>
+                        <input type="text" id="sellerRegCompanyName" class="form-control" placeholder="e.g. Apex Tech Textiles Ltd" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegYearEstablished">Established Year</label>
+                        <input type="text" id="sellerRegYearEstablished" class="form-control" placeholder="e.g. 2015">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegContactInfo">Business Phone *</label>
+                        <input type="text" id="sellerRegContactInfo" class="form-control" placeholder="e.g. +880-1xxxxxxxxx" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegWhatsApp">WhatsApp Number *</label>
+                        <input type="text" id="sellerRegWhatsApp" class="form-control" placeholder="e.g. +880-1xxxxxxxxx" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegGmail">Alternate Email (Gmail)</label>
+                        <input type="email" id="sellerRegGmail" class="form-control" placeholder="e.g. alternate@gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegTax">Tax / BIN Number</label>
+                        <input type="text" id="sellerRegTax" class="form-control" placeholder="e.g. 123456789">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerRegCompanyAddress">Company Address / Factory Location *</label>
+                    <input type="text" id="sellerRegCompanyAddress" class="form-control" placeholder="e.g. Plot 12, Gazipur Industrial Zone" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerRegWebsite">Company Website</label>
+                    <input type="text" id="sellerRegWebsite" class="form-control" placeholder="e.g. https://apextech.com">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Submit Seller Application</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Already have a seller account? <a href="javascript:void(0)" onclick="closeModal('sellerRegisterModal'); openModal('sellerLoginModal');" style="color: var(--color-primary); font-weight:600;">Sign In</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Guard dashboard access
+            setTimeout(() => {
+                if (!window.currentUser) {
+                    showToast("Please log in to access the dashboard", true);
+                    window.location.href = '/index.html';
+                } else {
+                    initializeDashboard();
+                }
+            }, 300);
+
+            // Bind forms
+            document.getElementById('addProductForm').addEventListener('submit', handleAddProductSubmit);
+
+            const catInput = document.getElementById('prodCategory');
+            if (catInput) {
+                catInput.addEventListener('change', renderDynamicSpecs);
+                renderDynamicSpecs();
+            }
+
+            // Bind media inputs to handle previews
+            const imgInput = document.getElementById('prodImagesInput');
+            if (imgInput) imgInput.addEventListener('change', handleProductMediaChange);
+            
+            const vidInput = document.getElementById('prodVideoInput');
+            if (vidInput) vidInput.addEventListener('change', handleProductMediaChange);
+        });
+
+        function initializeDashboard() {
+            document.getElementById('dashUserName').textContent = window.currentUser.companyName || window.currentUser.username;
+            document.getElementById('dashUserRole').textContent = window.currentUser.role;
+            if (window.currentUser.role === 'Seller' && window.currentUser.isVerified) {
+                document.getElementById('dashUserRole').className = 'badge badge-verified';
+                document.getElementById('dashUserRole').innerHTML = '✓ Verified Seller';
+            } else if (window.currentUser.role === 'Seller') {
+                document.getElementById('dashUserRole').className = 'badge badge-pending';
+                document.getElementById('dashUserRole').innerHTML = 'Pending Verification';
+            } else if (window.currentUser.role === 'Admin') {
+                document.getElementById('dashUserRole').className = 'badge badge-verified';
+                document.getElementById('dashUserRole').innerHTML = 'System Admin';
+            } else {
+                document.getElementById('dashUserRole').className = 'badge badge-verified';
+                document.getElementById('dashUserRole').innerHTML = 'Customer Profile';
+            }
+
+            renderSidebar();
+                       // Render first tab by default
+            if (window.currentUser.role === 'Buyer') {
+                switchTab('customer_dashboard');
+            } else if (window.currentUser.role === 'Seller') {
+                switchTab('seller_dashboard');
+            } else if (window.currentUser.role === 'Admin') {
+                switchTab('admin_pending');
+            }
+        }
+
+        function renderSidebar() {
+            const menu = document.getElementById('sidebarMenu');
+            if (window.currentUser.role === 'Buyer') {
+                menu.innerHTML = `
+                    <li class="sidebar-item" id="tab_customer_dashboard"><button onclick="switchTab('customer_dashboard')">📊 Dashboard</button></li>
+                    <li class="sidebar-item" id="tab_customer_orders"><button onclick="switchTab('customer_orders')">🛍️ Purchase History</button></li>
+                    <li class="sidebar-item" id="tab_customer_downloads"><button onclick="switchTab('customer_downloads')">📥 Downloads</button></li>
+                    <li class="sidebar-item"><button onclick="window.location.href='/cart.html'">🛒 Sourced Cart</button></li>
+                    <li class="sidebar-item"><button onclick="window.location.href='/wishlist.html'">❤️ My Wishlist</button></li>
+                    <li class="sidebar-item"><button onclick="window.location.href='/compare.html'">🔄 Compare Specs</button></li>
+                    <li class="sidebar-item" id="tab_customer_sellers"><button onclick="switchTab('customer_sellers')">🤝 Followed Sellers</button></li>
+                    <li class="sidebar-item" id="tab_customer_tickets"><button onclick="switchTab('customer_tickets')">🎫 Support Ticket</button></li>
+                    <li class="sidebar-item" id="tab_customer_profile"><button onclick="switchTab('customer_profile')">👤 Manage Profile</button></li>
+                    <li class="sidebar-item" id="tab_customer_delete_account"><button onclick="switchTab('customer_delete_account')">⚠️ Delete Account</button></li>
+                `;
+            } else if (window.currentUser.role === 'Seller') {
+                menu.innerHTML = `
+                    <li class="sidebar-item" id="tab_seller_dashboard"><button onclick="switchTab('seller_dashboard')">📊 Dashboard Overview</button></li>
+                    <li class="sidebar-item" id="tab_seller_listings"><button onclick="switchTab('seller_listings')">📦 My Product Catalog</button></li>
+                    <li class="sidebar-item" id="tab_seller_orders"><button onclick="switchTab('seller_orders')">🛍️ Wholesale Orders</button></li>
+                    <li class="sidebar-item" id="tab_seller_followers"><button onclick="switchTab('seller_followers')">👥 Store Followers</button></li>
+                    <li class="sidebar-item" id="tab_seller_reviews"><button onclick="switchTab('seller_reviews')">⭐ Customer Reviews</button></li>
+                    <li class="sidebar-item" id="tab_seller_profile"><button onclick="switchTab('seller_profile')">👤 Manage Profile</button></li>
+                `;
+            } else if (window.currentUser.role === 'Admin') {
+                menu.innerHTML = `
+                    <li class="sidebar-item" id="tab_admin_pending"><button onclick="switchTab('admin_pending')">🛡️ Pending Sellers</button></li>
+                    <li class="sidebar-item" id="tab_admin_verified"><button onclick="switchTab('admin_verified')">✓ Verified Suppliers</button></li>
+                    <li class="sidebar-item" id="tab_admin_banners"><button onclick="switchTab('admin_banners')">🖼️ Homepage Banners</button></li>
+                    <li class="sidebar-item" id="tab_admin_hotcats"><button onclick="switchTab('admin_hotcats')">🔥 Hot Categories</button></li>
+                    <li class="sidebar-item" id="tab_admin_products"><button onclick="switchTab('admin_products')">🏷️ Product Badges</button></li>
+                    <li class="sidebar-item" id="tab_admin_settings"><button onclick="switchTab('admin_settings')">⚙️ System Settings</button></li>
+                `;
+            }
+        }
+
+        function switchTab(tabId) {
+            const items = document.querySelectorAll('.sidebar-item');
+            items.forEach(i => i.classList.remove('active'));
+            
+            const activeItem = document.getElementById(`tab_${tabId}`);
+            if (activeItem) activeItem.classList.add('active');
+
+            renderPaneContent(tabId);
+        }
+
+        function renderPaneContent(tabId) {
+            document.getElementById('dashboardWelcome').style.display = 'none';
+            const pane = document.getElementById('dashboardDataPane');
+            pane.style.display = 'block';
+
+            if (tabId === 'customer_dashboard') {
+                loadCustomerDashboard();
+            } else if (tabId === 'customer_orders') {
+                loadCustomerOrders();
+            } else if (tabId === 'customer_downloads') {
+                loadCustomerDownloads();
+            } else if (tabId === 'customer_wishlist') {
+                loadCustomerWishlist();
+            } else if (tabId === 'customer_compare') {
+                loadCustomerCompare();
+            } else if (tabId === 'customer_sellers') {
+                loadCustomerSellers();
+            } else if (tabId === 'customer_conversations') {
+                loadCustomerConversations();
+            } else if (tabId === 'customer_tickets') {
+                loadCustomerTickets();
+            } else if (tabId === 'customer_profile') {
+                loadCustomerProfile();
+            } else if (tabId === 'customer_delete_account') {
+                loadCustomerDeleteAccount();
+            } else if (tabId === 'seller_dashboard') {
+                loadSellerDashboard();
+            } else if (tabId === 'seller_listings') {
+                loadSellerListings();
+            } else if (tabId === 'seller_orders') {
+                loadSellerOrdersTab();
+            } else if (tabId === 'seller_followers') {
+                loadSellerFollowers();
+            } else if (tabId === 'seller_reviews') {
+                loadSellerReviews();
+            } else if (tabId === 'seller_profile') {
+                loadSellerProfileTab();
+            } else if (tabId === 'admin_pending') {
+                loadAdminSellers(false);
+            } else if (tabId === 'admin_verified') {
+                loadAdminSellers(true);
+            } else if (tabId === 'admin_banners') {
+                loadAdminBanners();
+            } else if (tabId === 'admin_hotcats') {
+                loadAdminHotCategories();
+            } else if (tabId === 'admin_products') {
+                loadAdminProducts();
+            } else if (tabId === 'admin_settings') {
+                loadAdminSettings();
+            }
+        }
+
+        // ================= CUSTOMER ACTIONS =================
+        async function loadCustomerDashboard() {
+            const pane = document.getElementById('dashboardDataPane');
+            pane.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
+                    <h3 style="font-size:22px; font-weight:700;">Local Customer Overview</h3>
+                </div>
+                
+                <!-- Stat Cards Grid -->
+                <div class="stats-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:20px; margin-bottom:32px;">
+                    <div class="stat-card" style="background: linear-gradient(135deg, rgba(21, 128, 61, 0.1), rgba(22, 163, 74, 0.05)); border: 1px solid rgba(21, 128, 61, 0.2); padding: 24px; border-radius: var(--radius-md); text-align: center; transition: transform var(--transition-fast);">
+                        <div style="font-size: 32px; margin-bottom: 8px;">🛒</div>
+                        <h4 style="font-size: 14px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Shopping Cart</h4>
+                        <div id="statCartCount" style="font-size: 28px; font-weight: 800; color: var(--color-primary); margin-top: 4px;">Loading...</div>
+                        <span style="font-size: 12px; color: var(--text-muted);">Total items in cart</span>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, rgba(225, 29, 72, 0.08), rgba(225, 29, 72, 0.03)); border: 1px solid rgba(225, 29, 72, 0.15); padding: 24px; border-radius: var(--radius-md); text-align: center; transition: transform var(--transition-fast);">
+                        <div style="font-size: 32px; margin-bottom: 8px;">❤️</div>
+                        <h4 style="font-size: 14px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">My Wishlist</h4>
+                        <div id="statWishCount" style="font-size: 28px; font-weight: 800; color: var(--color-danger); margin-top: 4px;">Loading...</div>
+                        <span style="font-size: 12px; color: var(--text-muted);">Saved items to buy</span>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05)); border: 1px solid rgba(245, 158, 11, 0.2); padding: 24px; border-radius: var(--radius-md); text-align: center; transition: transform var(--transition-fast);">
+                        <div style="font-size: 32px; margin-bottom: 8px;">📦</div>
+                        <h4 style="font-size: 14px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Total Orders</h4>
+                        <div id="statOrderCount" style="font-size: 28px; font-weight: 800; color: var(--color-accent); margin-top: 4px;">Loading...</div>
+                        <span style="font-size: 12px; color: var(--text-muted);">Successfully completed</span>
+                    </div>
+                </div>
+
+                <!-- Addresses Section -->
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:24px; margin-bottom:32px;">
+                    <!-- Billing Card -->
+                    <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 24px; box-shadow: var(--shadow-sm); position: relative; overflow: hidden;">
+                        <div style="position:absolute; right: -15px; bottom: -15px; font-size: 90px; opacity: 0.03; font-family: sans-serif; pointer-events: none;">📄</div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
+                            <h4 style="font-size:16px; font-weight:700; color: var(--text-primary); display:flex; align-items:center; gap:8px;">
+                                <span style="color:var(--color-primary)">📌</span> Default Billing Address
+                            </h4>
+                            <button onclick="switchTab('customer_profile')" style="color:var(--color-primary); font-size:13px; font-weight:600; cursor:pointer; text-decoration:underline; border:none; background:none;">Edit</button>
+                        </div>
+                        <p id="dashBillingAddress" style="color:var(--text-secondary); font-size:14px; line-height: 1.6; min-height: 60px;">
+                            Loading billing details...
+                        </p>
+                    </div>
+                    
+                    <!-- Shipping Card -->
+                    <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 24px; box-shadow: var(--shadow-sm); position: relative; overflow: hidden;">
+                        <div style="position:absolute; right: -15px; bottom: -15px; font-size: 90px; opacity: 0.03; font-family: sans-serif; pointer-events: none;">🚚</div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
+                            <h4 style="font-size:16px; font-weight:700; color: var(--text-primary); display:flex; align-items:center; gap:8px;">
+                                <span style="color:var(--color-primary)">🚛</span> Default Shipping Address
+                            </h4>
+                            <button onclick="switchTab('customer_profile')" style="color:var(--color-primary); font-size:13px; font-weight:600; cursor:pointer; text-decoration:underline; border:none; background:none;">Edit</button>
+                        </div>
+                        <p id="dashShippingAddress" style="color:var(--text-secondary); font-size:14px; line-height: 1.6; min-height: 60px;">
+                            Loading shipping details...
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Shortcuts Section -->
+                <div style="background: rgba(21, 128, 61, 0.02); border: 1px dashed var(--color-primary); border-radius: var(--radius-md); padding: 24px;">
+                    <h4 style="font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--color-primary)">⚡ Quick Actions</h4>
+                    <div style="display:flex; flex-wrap:wrap; gap:12px;">
+                        <a href="/product.html" class="btn btn-primary" style="font-size:13px; padding: 8px 16px;">Browse Catalogue</a>
+                        <a href="/cart.html" class="btn btn-secondary" style="font-size:13px; padding: 8px 16px;">Sourced Cart</a>
+                        <a href="/wishlist.html" class="btn btn-secondary" style="font-size:13px; padding: 8px 16px;">My Wishlist</a>
+                        <a href="/compare.html" class="btn btn-secondary" style="font-size:13px; padding: 8px 16px;">Compare Specs</a>
+                        <button onclick="switchTab('customer_tickets')" class="btn btn-secondary" style="font-size:13px; padding: 8px 16px; cursor:pointer;">Contact Support Desk</button>
+                    </div>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/customer/stats');
+                if (response.ok) {
+                    const stats = await response.json();
+                    document.getElementById('statCartCount').textContent = stats.cartCount;
+                    document.getElementById('statWishCount').textContent = stats.wishlistCount;
+                    document.getElementById('statOrderCount').textContent = stats.orderCount;
+                }
+            } catch (err) {
+                console.error(err);
+            }
+
+            const billingText = window.currentUser.billingAddress || "No billing address set yet. Please edit your profile to add one.";
+            const shippingText = window.currentUser.shippingAddress || "No shipping address set yet. Please edit your profile to add one.";
+            document.getElementById('dashBillingAddress').innerHTML = billingText.replace(/\n/g, '<br/>');
+            document.getElementById('dashShippingAddress').innerHTML = shippingText.replace(/\n/g, '<br/>');
+        }
+
+        async function loadCustomerOrders() {
+            const pane = document.getElementById('dashboardDataPane');
+            pane.innerHTML = `
+                <h3 style="font-size:20px; font-weight:700; margin-bottom:24px;">Purchase History</h3>
+                <div id="ordersContainer">
+                    <p style="text-align:center; color:var(--text-muted);">Loading purchase records...</p>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/customer/orders');
+                if (response.ok) {
+                    const orders = await response.json();
+                    const container = document.getElementById('ordersContainer');
+
+                    if (orders.length === 0) {
+                        container.innerHTML = `<div style="text-align:center; padding: 40px; color:var(--text-muted);">You have not placed any orders yet.</div>`;
+                        return;
+                    }
+
+                    const sym = window.siteSettings.currency_symbol || "৳";
+                    container.innerHTML = orders.map((o, idx) => {
+                        let items = [];
+                        try { items = JSON.parse(o.itemDetailsJson); } catch(e){}
+                        const itemsListHtml = items.map(item => `
+                            <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid #f1f5f9;">
+                                <div style="display:flex; align-items:center; gap:12px;">
+                                    <img src="${item.ImageUrl || '/images/placeholder.png'}" style="width:40px; height:40px; border-radius:4px; object-fit:cover; border:1px solid var(--border-color);"/>
+                                    <div>
+                                        <div style="font-weight:600; font-size:14px; color:var(--text-primary);">${item.Name}</div>
+                                        <div style="font-size:12px; color:var(--text-muted);">Qty: ${item.Qty} units</div>
+                                    </div>
+                                </div>
+                                <div style="font-weight:700; color:var(--color-primary);">${sym}${item.Price.toFixed(2)} / unit</div>
+                            </div>
+                        `).join('');
+
+                        let statusBadge = '';
+                        if (o.status === 'Delivered') statusBadge = '<span class="badge badge-success">✓ Delivered</span>';
+                        else if (o.status === 'Shipped') statusBadge = '<span class="badge badge-success" style="background-color:rgba(21,128,61,0.05); color:var(--color-primary); border:1px solid var(--color-primary)">🚛 Shipped</span>';
+                        else statusBadge = `<span class="badge badge-pending">${o.status}</span>`;
+
+                        const formattedDate = new Date(o.orderDate).toLocaleDateString('en-US', {
+                            year: 'numeric', month: 'long', day: 'numeric'
+                        });
+
+                        return `
+                            <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-md); margin-bottom:20px; box-shadow:var(--shadow-sm); overflow:hidden;">
+                                <div onclick="toggleOrderDetails(${idx})" style="display:flex; justify-content:space-between; align-items:center; padding:16px 24px; background:#f8fafc; cursor:pointer; border-bottom:1px solid var(--border-color); user-select:none;">
+                                    <div>
+                                        <div style="font-size:13px; color:var(--text-muted)">Order Number</div>
+                                        <div style="font-weight:700; color:var(--text-primary); font-size:15px;">#${o.orderNumber}</div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size:13px; color:var(--text-muted)">Order Date</div>
+                                        <div style="font-weight:600; color:var(--text-secondary);">${formattedDate}</div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size:13px; color:var(--text-muted)">Status</div>
+                                        <div>${statusBadge}</div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size:13px; color:var(--text-muted)">Total Amount</div>
+                                        <div style="font-weight:700; color:var(--color-primary); font-size:16px;">${sym}${o.totalAmount.toFixed(2)}</div>
+                                    </div>
+                                    <div id="orderArrow_${idx}" style="font-size:16px; color:var(--text-muted); transition:transform var(--transition-fast);">▼</div>
+                                </div>
+                                <div id="orderDetails_${idx}" style="display:none; padding:24px; background:#fff; border-top:1px solid var(--border-color);">
+                                    <div style="margin-bottom:16px;">
+                                        <h5 style="font-weight:700; font-size:14px; margin-bottom:10px; border-bottom:1px solid var(--border-color); padding-bottom:6px;">Items Purchased</h5>
+                                        ${itemsListHtml}
+                                    </div>
+                                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:20px; margin-top:20px; font-size:13px; color:var(--text-secondary);">
+                                        <div>
+                                            <div style="font-weight:700; color:var(--text-primary); margin-bottom:4px;">Billing Address</div>
+                                            <div>${o.billingAddress.replace(/\n/g, '<br/>')}</div>
+                                        </div>
+                                        <div>
+                                            <div style="font-weight:700; color:var(--text-primary); margin-bottom:4px;">Shipping Address</div>
+                                            <div>${o.shippingAddress.replace(/\n/g, '<br/>')}</div>
+                                        </div>
+                                    </div>
+                                    <div style="margin-top:20px; border-top:1px solid var(--border-color); padding-top:12px; font-size:13px; color:var(--text-muted); display:flex; justify-content:space-between; align-items:center;">
+                                        <span>Payment Mode: <strong>${o.paymentMethod}</strong></span>
+                                        <span>Need help? <a href="javascript:void(0)" onclick="switchTab('customer_tickets')" style="color:var(--color-primary); text-decoration:underline;">Open a dispute ticket</a></span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            } catch (err) {
+                container.innerHTML = `<div style="text-align:center; padding: 20px; color:var(--color-danger);">Failed to load orders.</div>`;
+            }
+        }
+
+        function toggleOrderDetails(idx) {
+            const el = document.getElementById(`orderDetails_${idx}`);
+            const arrow = document.getElementById(`orderArrow_${idx}`);
+            if (el.style.display === 'none') {
+                el.style.display = 'block';
+                arrow.style.transform = 'rotate(180deg)';
+            } else {
+                el.style.display = 'none';
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        async function loadCustomerDownloads() {
+            const pane = document.getElementById('dashboardDataPane');
+            pane.innerHTML = `
+                <h3 style="font-size:20px; font-weight:700; margin-bottom:24px;">Downloaded Resources & Invoices</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>File Size</th>
+                                <th>Download Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="downloadsTableBody">
+                            <tr><td colspan="4" style="text-align:center;">Loading resources...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/customer/downloads');
+                if (response.ok) {
+                    const downloads = await response.json();
+                    const tbody = document.getElementById('downloadsTableBody');
+
+                    if (downloads.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No digital downloads available for your account.</td></tr>`;
+                        return;
+                    }
+
+                    tbody.innerHTML = downloads.map(d => {
+                        const dateFormatted = new Date(d.downloadDate).toLocaleDateString('en-US', {
+                            year: 'numeric', month: 'short', day: 'numeric'
+                        });
+
+                        return `
+                            <tr>
+                                <td>
+                                    <div style="display:flex; align-items:center; gap:12px;">
+                                        <span style="font-size:24px;">📄</span>
+                                        <div>
+                                            <strong style="color:var(--text-primary); font-size:14px;">${d.fileName}</strong>
+                                            <div style="font-size:11px; color:var(--text-muted)">Secure PDF document</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>${d.fileSize}</td>
+                                <td>${dateFormatted}</td>
+                                <td>
+                                    <a href="javascript:void(0)" onclick="showToast('Your download for ${d.fileName} has started.')" class="btn btn-primary" style="padding: 6px 12px; font-size:12px; gap:4px;">
+                                        📥 Download
+                                    </a>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function loadCustomerWishlist() {
+            const pane = document.getElementById('dashboardDataPane');
+            pane.innerHTML = `
+                <h3 style="font-size:20px; font-weight:700; margin-bottom:24px;">My Wishlist</h3>
+                <div id="wishlistContainer" class="grid" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:20px;">
+                    <p style="text-align:center; grid-column: 1/-1; color:var(--text-muted);">Loading your wishlist...</p>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/customer/wishlist');
+                if (response.ok) {
+                    const items = await response.json();
+                    const container = document.getElementById('wishlistContainer');
+
+                    if (items.length === 0) {
+                        container.innerHTML = `<div style="text-align:center; grid-column:1/-1; padding:40px; color:var(--text-muted);">Your wishlist is empty. Browse products and click heart to save!</div>`;
+                        return;
+                    }
+
+                    const sym = window.siteSettings.currency_symbol || "৳";
+                    container.innerHTML = items.map(item => {
+                        const activePrice = (item.discountPrice && item.discountPrice > 0) ? item.discountPrice : item.price;
+
+                        return `
+                            <div class="card" style="padding:0; border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow:hidden;">
+                                <div class="card-img" style="background-image:url('${item.imageUrl || '/images/placeholder.png'}'); height:140px; background-size:cover; background-position:center;"></div>
+                                <div class="card-body" style="padding:16px; display:flex; flex-direction:column; gap:8px;">
+                                    <span style="font-size:10px; text-transform:uppercase; font-weight:700; color:var(--color-primary);">${item.category}</span>
+                                    <h4 style="font-size:14px; line-height:1.3; font-weight:700; height:36px; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; color:var(--text-primary);">${item.name}</h4>
+                                    <div style="font-weight:700; color:var(--color-primary); font-size:15px; margin-top:4px;">
+                                        ${sym}${activePrice.toFixed(2)}
+                                        ${item.discountPrice && item.discountPrice > 0 ? `<del style="font-size:10px; color:var(--text-muted); font-weight:400; margin-left:4px;">${sym}${item.price.toFixed(2)}</del>` : ''}
+                                    </div>
+                                    <div style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">MOQ: ${item.minOrderQuantity} units</div>
+                                    <div style="display:grid; grid-template-columns: 1fr auto; gap:8px; margin-top:auto;">
+                                        <button onclick="mockAddToCart(${item.productId}, '${item.name.replace(/'/g, "\\'")}')" class="btn btn-primary" style="padding:8px; font-size:11px; justify-content:center; cursor:pointer;">🛒 Add to Cart</button>
+                                        <button onclick="removeFromWishlist(${item.productId})" class="btn btn-danger" style="padding:8px; justify-content:center; background:#fff; color:var(--color-danger); border:1px solid var(--color-danger); cursor:pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function mockAddToCart(productId, name) {
+            showToast(`Added ${name} to your local Cart!`);
+            const statBadge = document.getElementById('statCartCount');
+            if (statBadge) {
+                const current = parseInt(statBadge.textContent) || 0;
+                statBadge.textContent = current + 1;
+            }
+        }
+
+        async function removeFromWishlist(productId) {
+            if (!confirm("Remove this item from your wishlist?")) return;
+            try {
+                const response = await fetch(`/api/customer/wishlist/${productId}`, {
+                    method: 'DELETE'
+                });
+                if (response.ok) {
+                    showToast("Product removed from wishlist");
+                    loadCustomerWishlist();
+                } else {
+                    showToast("Failed to remove item", true);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function loadCustomerCompare() {
+            const pane = document.getElementById('dashboardDataPane');
+            pane.innerHTML = `
+                <h3 style="font-size:20px; font-weight:700; margin-bottom:24px;">Compare Products</h3>
+                <div id="compareTableContainer" class="table-container">
+                    <p style="text-align:center; color:var(--text-muted);">Loading comparison details...</p>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/customer/compare');
+                if (response.ok) {
+                    const products = await response.json();
+                    const container = document.getElementById('compareTableContainer');
+
+                    if (products.length === 0) {
+                        container.innerHTML = `<div style="text-align:center; padding: 40px; color:var(--text-muted);">Comparison list is empty. Add products to compare from catalog!</div>`;
+                        return;
+                    }
+
+                    const sym = window.siteSettings.currency_symbol || "৳";
+                    
+                    let headers = `<th>Specification</th>`;
+                    let imagesRow = `<td>Preview</td>`;
+                    let namesRow = `<td><strong>Product Name</strong></td>`;
+                    let categoriesRow = `<td>Category</td>`;
+                    let moqRow = `<td>Min Order Qty (MOQ)</td>`;
+                    let pricingRow = `<td>Price</td>`;
+                    let descRow = `<td>Description</td>`;
+                    let actionRow = `<td>Actions</td>`;
+
+                    products.forEach(p => {
+                        let pricingStr = `${sym}${p.price.toFixed(2)}`;
+                        if (p.discountPrice && p.discountPrice > 0) {
+                            pricingStr = `<span style="color:#d97706; font-weight:700;">${sym}${p.discountPrice.toFixed(2)}</span> <del style="color:var(--text-muted); font-size:11px; margin-left:4px;">${sym}${p.price.toFixed(2)}</del>`;
+                        }
+
+                        headers += `<th style="width: calc(80% / ${products.length}); text-align:center;">Product #${p.productId}</th>`;
+                        imagesRow += `<td style="text-align:center;"><img src="${p.imageUrl || '/images/placeholder.png'}" style="width:100px; height:80px; object-fit:cover; border-radius:6px; border:1px solid var(--border-color);"/></td>`;
+                        namesRow += `<td><strong style="color:var(--color-primary); font-size:14px;">${p.name}</strong></td>`;
+                        categoriesRow += `<td><span class="badge badge-success" style="font-size:10px;">${p.category}</span></td>`;
+                        moqRow += `<td><strong>${p.minOrderQuantity}</strong> units</td>`;
+                        pricingRow += `<td style="font-size:12px; line-height:1.4;">${pricingStr}</td>`;
+                        descRow += `<td style="font-size:12px; max-width: 200px; line-height:1.4; color:var(--text-secondary);">${p.description}</td>`;
+                        actionRow += `<td style="text-align:center;">
+                            <div style="display:flex; flex-direction:column; gap:8px; align-items:center;">
+                                <button onclick="mockAddToCart(${p.productId}, '${p.name.replace(/'/g, "\\'")}')" class="btn btn-primary" style="padding: 6px 12px; font-size: 11px; cursor:pointer;">Add to Cart</button>
+                                <button onclick="removeFromCompare(${p.productId})" class="btn btn-danger" style="padding: 4px 8px; font-size: 11px; background:#fff; color:var(--color-danger); border:1px solid var(--color-danger); cursor:pointer;">Remove</button>
+                            </div>
+                        </td>`;
+                    });
+
+                    container.innerHTML = `
+                        <table>
+                            <thead>
+                                <tr>${headers}</tr>
+                            </thead>
+                            <tbody>
+                                <tr>${imagesRow}</tr>
+                                <tr>${namesRow}</tr>
+                                <tr>${categoriesRow}</tr>
+                                <tr>${moqRow}</tr>
+                                <tr>${pricingRow}</tr>
+                                <tr>${descRow}</tr>
+                                <tr>${actionRow}</tr>
+                            </tbody>
+                        </table>
+                    `;
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function removeFromCompare(productId) {
+            if (!confirm("Remove this product from comparison list?")) return;
+            try {
+                const response = await fetch(`/api/customer/compare/${productId}`, {
+                    method: 'DELETE'
+                });
+                if (response.ok) {
+                    showToast("Product removed from comparison list");
+                    loadCustomerCompare();
+                } else {
+                    showToast("Failed to remove item", true);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function loadCustomerSellers() {
+            const pane = document.getElementById('dashboardDataPane');
+            pane.innerHTML = `
+                <h3 style="font-size:20px; font-weight:700; margin-bottom:24px;">Followed Sellers</h3>
+                <div id="sellersContainer" class="grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:20px;">
+                    <p style="text-align:center; grid-column:1/-1; color:var(--text-muted);">Loading followed sellers...</p>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/customer/followed-sellers');
+                if (response.ok) {
+                    const sellers = await response.json();
+                    const container = document.getElementById('sellersContainer');
+
+                    if (sellers.length === 0) {
+                        container.innerHTML = `<div style="text-align:center; grid-column:1/-1; padding:40px; color:var(--text-muted);">You are not following any sellers yet. Follow suppliers to keep track of their listings.</div>`;
+                        return;
+                    }
+
+                    container.innerHTML = sellers.map(s => {
+                        const contact = s.contactInfo || "No phone contact details listed.";
+                        return `
+                            <div class="card" style="padding:20px; background:#fff; border:1px solid var(--border-color); border-radius:var(--radius-md); box-shadow:var(--shadow-sm); display:flex; flex-direction:column; gap:12px;">
+                                <div>
+                                    <span class="badge ${s.isVerified ? 'badge-success' : 'badge-pending'}" style="margin-bottom:8px; font-size:10px;">
+                                        ${s.isVerified ? '✓ Verified Seller' : 'Seller Profile'}
+                                    </span>
+                                    <h4 style="font-size:16px; font-weight:700; color:var(--text-primary); margin-top:2px;">${s.companyName}</h4>
+                                    <span style="font-size:12px; color:var(--text-muted)">Business Type: ${s.businessType}</span>
+                                </div>
+                                <div style="font-size:13px; color:var(--text-secondary); border-top:1px solid #f1f5f9; padding-top:10px;">
+                                    <strong>Contact details:</strong><br/>
+                                    <span>${contact}</span>
+                                </div>
+                                <div style="display:grid; grid-template-columns: 1fr; gap:8px; margin-top:auto; padding-top:10px;">
+                                    <button onclick="unfollowSeller(${s.sellerId})" class="btn btn-danger" style="padding:8px; font-size:12px; background:#fff; color:var(--color-danger); border:1px solid var(--color-danger); justify-content:center; cursor:pointer; font-weight:600; width:100%;">Unfollow Supplier</button>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function unfollowSeller(sellerId) {
+            if (!confirm("Unfollow this supplier?")) return;
+            try {
+                const response = await fetch(`/api/customer/followed-sellers/${sellerId}`, {
+                    method: 'DELETE'
+                });
+                if (response.ok) {
+                    showToast("Unfollowed supplier successfully");
+                    loadCustomerSellers();
+                } else {
+                    showToast("Failed to unfollow supplier", true);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function loadCustomerConversations() {
+            const pane = document.getElementById('dashboardDataPane');
+            pane.innerHTML = `
+                <h3 style="font-size:20px; font-weight:700; margin-bottom:24px;">Conversations</h3>
+                <div id="recentChatsList" style="display:flex; flex-direction:column; gap:12px;">
+                    <p style="text-align:center; color:var(--text-muted)">Loading conversations...</p>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/message/recent');
+                if (response.ok) {
+                    const chats = await response.json();
+                    const list = document.getElementById('recentChatsList');
+
+                    if (chats.length === 0) {
+                        list.innerHTML = `<div style="text-align:center; padding:40px; color:var(--text-muted)">No active chat conversations found.</div>`;
+                        return;
+                    }
+
+                    list.innerHTML = chats.map(c => {
+                        const date = new Date(c.lastMessageTimestamp).toLocaleTimeString('en-US', {
+                            hour: 'numeric', minute: '2-digit'
+                        });
+                        const unreadHtml = c.unreadCount > 0 
+                            ? `<span class="badge badge-success" style="padding:2px 8px; border-radius:10px;">${c.unreadCount} Unread</span>`
+                            : '';
+
+                        return `
+                            <div onclick="window.location.href='/chat.html?userId=${c.partnerId}'" style="display:flex; justify-content:space-between; align-items:center; padding:16px 24px; border:1px solid var(--border-color); border-radius:var(--radius-md); background:#fff; cursor:pointer; transition:var(--transition-fast); box-shadow:var(--shadow-sm);">
+                                <div style="display:flex; align-items:center; gap:16px;">
+                                    <div style="width:44px; height:44px; border-radius:50%; background:#15803d; color:#fff; display:flex; justify-content:center; align-items:center; font-weight:700; font-size:16px;">
+                                        ${c.partnerName.substring(0, 1).toUpperCase()}
+                                    </div>
+                                    <div>
+                                        <div style="font-weight:700; color:var(--text-primary); font-size:15px; display:flex; align-items:center; gap:8px;">
+                                            ${c.partnerName} ${unreadHtml}
+                                        </div>
+                                        <div style="font-size:13px; color:var(--text-muted); max-width:400px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px;">
+                                            ${c.lastMessageContent}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div style="font-size:12px; color:var(--text-muted); font-weight:500;">${date}</div>
+                                    <span style="font-size:11px; color:var(--color-primary); font-weight:600; text-decoration:underline; display:inline-block; margin-top:4px;">Open Chat</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function loadCustomerTickets() {
+            const pane = document.getElementById('dashboardDataPane');
+            pane.innerHTML = `
+                <h3 style="font-size:20px; font-weight:700; margin-bottom:24px;">Support Tickets</h3>
+                
+                <div id="ticketsListContainer" style="margin-bottom:32px;">
+                    <p style="text-align:center; color:var(--text-muted);">Loading support tickets...</p>
+                </div>
+
+                <div style="background:#f8fafc; border:1px solid var(--border-color); padding:24px; border-radius:var(--radius-md);">
+                    <h4 style="font-size:16px; font-weight:700; margin-bottom:16px; color:var(--color-primary);">Create Support Ticket</h4>
+                    <form id="createTicketForm" onsubmit="handleCreateTicketSubmit(event)">
+                        <div class="form-group">
+                            <label class="form-label" for="tktSubject">Subject / Query Title</label>
+                            <input type="text" id="tktSubject" class="form-control" placeholder="e.g. Inquiry regarding order transit delay" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="tktPriority">Priority Level</label>
+                                <select id="tktPriority" class="form-control" style="background-color:#fff;">
+                                    <option value="Low">Low - General Questions</option>
+                                    <option value="Medium" selected>Medium - Account/Invoices issues</option>
+                                    <option value="High">High - Escalated/Payment disputes</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tktDescription">Detail Description</label>
+                            <textarea id="tktDescription" class="form-control" rows="4" placeholder="Detail your queries, order number, billing records, etc." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="padding: 10px 20px; cursor:pointer;">Submit Ticket</button>
+                    </form>
+                </div>
+            `;
+
+            await loadTicketsList();
+        }
+
+        async function loadTicketsList() {
+            const container = document.getElementById('ticketsListContainer');
+            try {
+                const response = await fetch('/api/customer/tickets');
+                if (response.ok) {
+                    const tickets = await response.json();
+                    if (tickets.length === 0) {
+                        container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px;">No support tickets open. Submit one below if you face any issues!</div>`;
+                        return;
+                    }
+
+                    container.innerHTML = tickets.map(t => {
+                        const dateStr = new Date(t.createdAt).toLocaleDateString('en-US', {
+                            year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                        });
+                        
+                        let priorityBadge = '';
+                        if (t.priority === 'High') priorityBadge = '<span class="badge" style="background:#ffebee; color:#d32f2f;">🔥 High</span>';
+                        else if (t.priority === 'Medium') priorityBadge = '<span class="badge" style="background:#fff3e0; color:#ef6c00;">⚡ Medium</span>';
+                        else priorityBadge = '<span class="badge" style="background:#e8f5e9; color:#2e7d32;">💤 Low</span>';
+
+                        let statusBadge = '';
+                        if (t.status === 'Open') statusBadge = '<span class="badge badge-pending">Open</span>';
+                        else if (t.status === 'Closed') statusBadge = '<span class="badge badge-success" style="background:#eceff1; border:1px solid #cfd8dc; color:#455a64;">Closed</span>';
+                        else statusBadge = `<span class="badge badge-success">${t.status}</span>`;
+
+                        const closeBtn = t.status === 'Open'
+                            ? `<button onclick="closeSupportTicket(${t.id})" class="btn btn-danger" style="padding:4px 8px; font-size:11px; background:#fff; color:var(--color-danger); border:1px solid var(--color-danger); cursor:pointer;">Close Ticket</button>`
+                            : '';
+
+                        return `
+                            <div style="border:1px solid var(--border-color); border-radius:var(--radius-md); padding:16px 20px; background:#fff; margin-bottom:12px; box-shadow:var(--shadow-sm);">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                                    <div style="display:flex; gap:8px; align-items:center;">
+                                        <span style="font-weight:700; font-size:15px; color:var(--text-primary);">Ticket #${t.id}: ${t.subject}</span>
+                                        ${priorityBadge}
+                                    </div>
+                                    <div style="display:flex; gap:12px; align-items:center;">
+                                        <span style="font-size:12px; color:var(--text-muted)">${dateStr}</span>
+                                        ${statusBadge}
+                                        ${closeBtn}
+                                    </div>
+                                </div>
+                                <p style="color:var(--text-secondary); font-size:13px; line-height:1.5;">${t.description.replace(/\n/g, '<br/>')}</p>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function handleCreateTicketSubmit(e) {
+            e.preventDefault();
+            const subject = document.getElementById('tktSubject').value;
+            const priority = document.getElementById('tktPriority').value;
+            const description = document.getElementById('tktDescription').value;
+
+            try {
+                const response = await fetch('/api/customer/tickets', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ subject, priority, description })
+                });
+
+                if (response.ok) {
+                    showToast("Support ticket opened successfully!");
+                    document.getElementById('createTicketForm').reset();
+                    await loadTicketsList();
+                } else {
+                    showToast("Failed to submit support ticket", true);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function closeSupportTicket(id) {
+            if (!confirm("Are you sure you want to close this ticket?")) return;
+            try {
+                const response = await fetch(`/api/customer/tickets/${id}`, {
+                    method: 'DELETE'
+                });
+                if (response.ok) {
+                    showToast("Ticket closed successfully");
+                    await loadTicketsList();
+                } else {
+                    showToast("Failed to close ticket", true);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function loadCustomerProfile() {
+            const pane = document.getElementById('dashboardDataPane');
+            pane.innerHTML = `
+                <h3 style="font-size:20px; font-weight:700; margin-bottom:24px;">Manage Profile</h3>
+                <div style="background:#fff; border:1px solid var(--border-color); padding:32px; border-radius:var(--radius-md); box-shadow:var(--shadow-sm); max-width:800px;">
+                    <form id="editProfileForm" onsubmit="handleEditProfileSubmit(event)">
+                        <h4 style="border-bottom:1px solid var(--border-color); padding-bottom:8px; margin-bottom:20px; color:var(--color-primary); font-size:15px; font-weight:700;">Account Info</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="profUsername">Username</label>
+                                <input type="text" id="profUsername" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="profEmail">Email Address</label>
+                                <input type="email" id="profEmail" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="profContact">Phone / Contact Number</label>
+                                <input type="text" id="profContact" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <h4 style="border-bottom:1px solid var(--border-color); padding-bottom:8px; margin-top:20px; margin-bottom:20px; color:var(--color-primary); font-size:15px; font-weight:700;">Local Addresses</h4>
+                        <div class="form-group">
+                            <label class="form-label" for="profBilling">Default Billing Address</label>
+                            <textarea id="profBilling" class="form-control" rows="3" placeholder="Enter billing address in Bangladesh..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="profShipping">Default Shipping Address</label>
+                            <textarea id="profShipping" class="form-control" rows="3" placeholder="Enter delivery address..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="margin-top:16px; padding: 12px 24px; font-size:15px; font-weight:700; cursor:pointer;">Save Profile</button>
+                    </form>
+                </div>
+            `;
+
+            document.getElementById('profUsername').value = window.currentUser.username || "";
+            document.getElementById('profEmail').value = window.currentUser.email || "";
+            document.getElementById('profContact').value = window.currentUser.contactInfo || "";
+            document.getElementById('profBilling').value = window.currentUser.billingAddress || "";
+            document.getElementById('profShipping').value = window.currentUser.shippingAddress || "";
+        }
+
+        async function handleEditProfileSubmit(e) {
+            e.preventDefault();
+            const username = document.getElementById('profUsername').value;
+            const email = document.getElementById('profEmail').value;
+            const companyName = "";
+            const contactInfo = document.getElementById('profContact').value;
+            const billingAddress = document.getElementById('profBilling').value;
+            const shippingAddress = document.getElementById('profShipping').value;
+
+            try {
+                const response = await fetch('/api/auth/profile', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, companyName, contactInfo, billingAddress, shippingAddress })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    showToast("Profile details updated successfully!");
+                    window.currentUser = data; 
+                    updateNavigation();
+                    initializeDashboard(); 
+                    loadCustomerProfile(); 
+                } else {
+                    showToast(data.message || "Failed to update profile", true);
+                }
+            } catch (err) {
+                console.error(err);
+                showToast("An error occurred updating profile", true);
+            }
+        }
+
+        function loadCustomerDeleteAccount() {
+            const pane = document.getElementById('dashboardDataPane');
+            pane.innerHTML = `
+                <h3 style="font-size:20px; font-weight:700; margin-bottom:24px; color:var(--color-danger);">Delete My Account</h3>
+                <div style="background:#fff; border:1px solid rgba(225, 29, 72, 0.2); padding:32px; border-radius:var(--radius-md); box-shadow:var(--shadow-sm); max-width:800px;">
+                    <div style="background:rgba(225, 29, 72, 0.05); padding:16px 20px; border-left:4px solid var(--color-danger); border-radius:4px; margin-bottom:24px; font-size:14px; color:#9f1239; line-height:1.6;">
+                        <strong>⚠️ CAUTION: Permanent Action!</strong><br/>
+                        Deleting your account will erase your customer profile, order logs, download records, wishlist shortlists, and chat logs permanently. This cannot be undone.
+                    </div>
+                    
+                    <form id="deleteAccountForm" onsubmit="handleDeleteAccountSubmit(event)">
+                        <div class="form-group" style="display:flex; align-items:flex-start; gap:10px; margin-bottom:24px;">
+                            <input type="checkbox" id="confirmDeleteCheck" required style="width:18px; height:18px; margin-top:2px; cursor:pointer;">
+                            <label for="confirmDeleteCheck" style="font-size:14px; color:var(--text-secondary); cursor:pointer; user-select:none; font-weight:500;">
+                                I confirm that I want to delete my account permanently and clear all database records from Etrail Bangladesh.
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-danger" style="padding:12px 24px; font-size:14px; font-weight:700; border-radius:var(--radius-sm); cursor:pointer;">
+                            Permanently Delete My Account
+                        </button>
+                    </form>
+                </div>
+            `;
+        }
+
+        async function handleDeleteAccountSubmit(e) {
+            e.preventDefault();
+            const checked = document.getElementById('confirmDeleteCheck').checked;
+            if (!checked) return;
+
+            if (!confirm("Are you absolutely sure you want to delete your account? This action is immediate and permanent.")) return;
+
+            try {
+                const response = await fetch('/api/auth/delete', {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    showToast("Your account has been deleted successfully.");
+                    window.currentUser = null;
+                    updateNavigation();
+                    setTimeout(() => {
+                        window.location.href = '/index.html';
+                    }, 1500);
+                } else {
+                    const data = await response.json();
+                    showToast(data.message || "Failed to delete account", true);
+                }
+            } catch (err) {
+                console.error(err);
+                showToast("Error processing account deletion", true);
+            }
+        }
+
+        // ================= BUYER ACTIONS =================
+        async function loadBuyerRfqs() {
+            const pane = document.getElementById('dashboardDataPane');
+            pane.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
+                    <h3 style="font-size:20px; font-weight:700;">My Posted RFQs</h3>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product Sourcing Request</th>
+                                <th>Category</th>
+                                <th>Quantity</th>
+                                <th>Unit Budget</th>
+                                <th>Terms</th>
+                                <th>Status</th>
+                                <th>Bids / Quotes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="buyerRfqsTable">
+                            <tr><td colspan="7" style="text-align:center;">Loading your RFQs...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/rfq/my');
+                if (response.ok) {
+                    const rfqs = await response.json();
+                    const tbody = document.getElementById('buyerRfqsTable');
+                    
+                    if (rfqs.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted)">You haven't posted any RFQs yet.</td></tr>`;
+                        return;
+                    }
+
+                    tbody.innerHTML = rfqs.map(r => `
+                        <tr>
+                            <td><strong style="color:var(--text-primary); font-size:14px;">${r.title}</strong></td>
+                            <td>${r.category}</td>
+                            <td>${r.quantity} ${r.unit}</td>
+                            <td>${window.siteSettings.currency_symbol || "৳"}${r.budgetPrice.toFixed(2)}</td>
+                            <td>${r.shippingTerms}</td>
+                            <td>
+                                <span class="badge ${r.status === 0 ? 'badge-success' : 'badge-danger'}">
+                                    ${r.status === 0 ? 'Open' : 'Closed'}
+                                </span>
+                            </td>
+                            <td>
+                                <button onclick="openQuotesReview(${r.id})" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">
+                                    View Offers (${r.status === 0 ? 'Active' : 'Finalized'})
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function openQuotesReview(rfqId) {
+            const tableBody = document.getElementById('quotesModalTableBody');
+            tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Loading bids...</td></tr>`;
+            
+            try {
+                const response = await fetch(`/api/rfq/${rfqId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const sym = window.siteSettings.currency_symbol || "৳";
+                    document.getElementById('viewQuotesRfqTitle').textContent = `Offers for: "${data.rfq.title}" (Target Budget: ${sym}${data.rfq.budgetPrice.toFixed(2)})`;
+                    
+                    if (data.quotes.length === 0) {
+                        tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted)">No quotes received yet.</td></tr>`;
+                        openModal('viewQuotesModal');
+                        return;
+                    }
+
+                    tableBody.innerHTML = data.quotes.map(q => {
+                        let statusBadge = '';
+                        let actionsHtml = '';
+
+                        if (q.status === 0) { // Pending
+                            statusBadge = `<span class="badge badge-pending">Pending Review</span>`;
+                            if (data.rfq.status === 0) {
+                                actionsHtml = `
+                                    <div style="display:flex; gap:8px;">
+                                        <button onclick="updateBidStatus(${q.id}, 1, ${rfqId})" class="btn btn-primary" style="padding:4px 8px; font-size:11px;">Accept</button>
+                                        <button onclick="updateBidStatus(${q.id}, 2, ${rfqId})" class="btn btn-danger" style="padding:4px 8px; font-size:11px;">Decline</button>
+                                    </div>
+                                `;
+                            } else {
+                                actionsHtml = `<span style="font-size:11px; color:var(--text-muted)">RFQ Closed</span>`;
+                            }
+                        } else if (q.status === 1) { // Accepted
+                            statusBadge = `<span class="badge badge-success">Accepted</span>`;
+                            actionsHtml = `<span style="font-size:11px; color:var(--text-muted)">Accepted</span>`;
+                        } else { // Rejected
+                            statusBadge = `<span class="badge badge-danger">Declined</span>`;
+                            actionsHtml = `-`;
+                        }
+
+                        return `
+                            <tr>
+                                <td>
+                                    <strong>${q.sellerCompany}</strong><br/>
+                                    <span style="font-size:11px; color:var(--text-muted)">${q.sellerName}</span>
+                                </td>
+                                <td style="color:var(--color-primary); font-weight:700;">${window.siteSettings.currency_symbol || "৳"}${q.proposedPrice.toFixed(2)}/unit</td>
+                                <td>${q.deliveryTimeDays} days</td>
+                                <td style="font-size:12px; max-width:200px; overflow:hidden; text-overflow:ellipsis;">${q.notes}</td>
+                                <td>${statusBadge}</td>
+                                <td>${actionsHtml}</td>
+                            </tr>
+                        `;
+                    }).join('');
+
+                    openModal('viewQuotesModal');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function updateBidStatus(quoteId, newStatus, rfqId) {
+            try {
+                const response = await fetch(`/api/rfq/quote/${quoteId}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
+                });
+
+                if (response.ok) {
+                    showToast(newStatus === 1 ? "Bid accepted!" : "Bid declined.");
+                    closeModal('viewQuotesModal');
+                    loadBuyerRfqs();
+                } else {
+                    const data = await response.json();
+                    showToast(data.message || "Failed to update status", true);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // ================= SELLER ACTIONS =================
+        async function loadSellerDashboard() {
+            const pane = document.getElementById('dashboardDataPane');
+            pane.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
+                    <h3 style="font-size:22px; font-weight:700;">Seller Dashboard Overview</h3>
+                </div>
+                
+                <div class="stats-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:20px; margin-bottom:32px;">
+                    <div class="stat-card" style="background: linear-gradient(135deg, rgba(21, 128, 61, 0.08), rgba(21, 128, 61, 0.02)); border: 1px solid rgba(21, 128, 61, 0.15); padding: 24px; border-radius: var(--radius-md); text-align: center; box-shadow: var(--shadow-sm);">
+                        <div style="font-size: 32px; margin-bottom: 8px;">📦</div>
+                        <h4 style="font-size: 14px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">My Listings</h4>
+                        <div id="sellerTotalProd" style="font-size: 28px; font-weight: 800; color: var(--color-primary); margin-top: 4px;">Loading...</div>
+                        <span id="sellerPendingProd" style="font-size: 12px; color: var(--text-muted);">0 pending approval</span>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(37, 99, 235, 0.02)); border: 1px solid rgba(37, 99, 235, 0.15); padding: 24px; border-radius: var(--radius-md); text-align: center; box-shadow: var(--shadow-sm);">
+                        <div style="font-size: 32px; margin-bottom: 8px;">👥</div>
+                        <h4 style="font-size: 14px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Store Followers</h4>
+                        <div id="sellerTotalFollowers" style="font-size: 28px; font-weight: 800; color: #2563eb; margin-top: 4px;">Loading...</div>
+                        <span style="font-size: 12px; color: var(--text-muted);">Active buyer relationships</span>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(245, 158, 11, 0.02)); border: 1px solid rgba(245, 158, 11, 0.15); padding: 24px; border-radius: var(--radius-md); text-align: center; box-shadow: var(--shadow-sm);">
+                        <div style="font-size: 32px; margin-bottom: 8px;">⭐</div>
+                        <h4 style="font-size: 14px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Average Rating</h4>
+                        <div id="sellerAvgRating" style="font-size: 28px; font-weight: 800; color: #d97706; margin-top: 4px;">Loading...</div>
+                        <span id="sellerReviewCount" style="font-size: 12px; color: var(--text-muted);">0 total reviews</span>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(16, 185, 129, 0.02)); border: 1px solid rgba(16, 185, 129, 0.15); padding: 24px; border-radius: var(--radius-md); text-align: center; box-shadow: var(--shadow-sm);">
+                        <div style="font-size: 32px; margin-bottom: 8px;">💰</div>
+                        <h4 style="font-size: 14px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">Sales Revenue</h4>
+                        <div id="sellerRevenue" style="font-size: 28px; font-weight: 800; color: #059669; margin-top: 4px;">Loading...</div>
+                        <span id="sellerItemsSold" style="font-size: 12px; color: var(--text-muted);">0 items sold in orders</span>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 32px;">
+                    <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">Wholesale Orders Received</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Order #</th>
+                                    <th>Buyer Details</th>
+                                    <th>Items Ordered</th>
+                                    <th>Date</th>
+                                    <th>Total Revenue</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sellerOrdersTable">
+                                <tr><td colspan="6" style="text-align:center;">Loading orders...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/customer/seller-stats');
+                if (response.ok) {
+                    const stats = await response.json();
+                    
+                    document.getElementById('sellerTotalProd').textContent = stats.totalProducts;
+                    document.getElementById('sellerPendingProd').textContent = `${stats.pendingProducts} pending approval`;
+                    document.getElementById('sellerTotalFollowers').textContent = stats.followerCount;
+                    document.getElementById('sellerAvgRating').textContent = stats.averageRating > 0 ? `${stats.averageRating.toFixed(1)} / 5.0` : 'No ratings';
+                    document.getElementById('sellerReviewCount').textContent = `${stats.reviewCount} total reviews`;
+                    
+                    const sym = window.siteSettings.currency_symbol || "৳";
+                    document.getElementById('sellerRevenue').textContent = `${sym}${stats.totalRevenue.toFixed(2)}`;
+                    document.getElementById('sellerItemsSold').textContent = `${stats.totalItemsSold} units sold total`;
+                    
+                    const tbody = document.getElementById('sellerOrdersTable');
+                    if (!stats.orders || stats.orders.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding: 24px;">No orders containing your products have been placed yet.</td></tr>`;
+                    } else {
+                        tbody.innerHTML = stats.orders.map(o => {
+                            const itemsHtml = o.sellerItems.map(i => `
+                                <div style="font-size:12px; border-bottom:1px solid #f1f5f9; padding:4px 0;">
+                                    <strong>${i.Name}</strong><br/>
+                                    Qty: ${i.Qty} × ${sym}${i.Price.toFixed(2)}
+                                </div>
+                            `).join('');
+                            
+                            return `
+                                <tr>
+                                    <td><strong>${o.orderNumber}</strong><br/><span style="font-size:11px; color:var(--text-secondary);">${o.paymentMethod}</span></td>
+                                    <td>
+                                        <strong>${o.customerName}</strong><br/>
+                                        <span style="font-size:11px; color:var(--text-secondary);">${o.customerEmail}</span><br/>
+                                        <span style="font-size:11px; color:var(--text-muted);">${o.shippingAddress}</span>
+                                    </td>
+                                    <td>${itemsHtml}</td>
+                                    <td>${new Date(o.orderDate).toLocaleDateString()}</td>
+                                    <td style="font-weight:700; color:var(--color-primary);">${sym}${o.sellerTotal.toFixed(2)}</td>
+                                    <td><span class="badge" style="background:#e0f2fe; color:#0369a1; padding:4px 8px; border-radius:4px; font-weight:600;">${o.status}</span></td>
+                                </tr>
+                            `;
+                        }).join('');
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function loadSellerFollowers() {
+            const pane = document.getElementById('dashboardDataPane');
+            pane.innerHTML = `
+                <h3 style="font-size:20px; font-weight:700; margin-bottom:24px;">Store Followers</h3>
+                <p style="color:var(--text-secondary); font-size:13px; margin-bottom:20px;">The following buyers are following your store to receive updates and view catalog listings.</p>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Buyer Username</th>
+                                <th>Contact Email</th>
+                                <th>Phone / Contact Info</th>
+                                <th>Followed Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sellerFollowersTable">
+                            <tr><td colspan="4" style="text-align:center;">Loading followers...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/customer/seller-followers');
+                if (response.ok) {
+                    const followers = await response.json();
+                    const tbody = document.getElementById('sellerFollowersTable');
+                    
+                    if (followers.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:24px;">No buyers are following your store yet.</td></tr>`;
+                        return;
+                    }
+
+                    tbody.innerHTML = followers.map(f => `
+                        <tr>
+                            <td><strong>${f.username}</strong></td>
+                            <td>${f.email}</td>
+                            <td>${f.contactInfo || '-'}</td>
+                            <td>${new Date(f.followedAt).toLocaleDateString()}</td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function loadSellerReviews() {
+            const pane = document.getElementById('dashboardDataPane');
+            pane.innerHTML = `
+                <h3 style="font-size:20px; font-weight:700; margin-bottom:24px;">Customer Reviews & Feedback</h3>
+                
+                <div style="display:grid; grid-template-columns: 1fr 2fr; gap:32px; margin-bottom:32px;">
+                    <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:24px; text-align:center; box-shadow:var(--shadow-sm);">
+                        <h4 style="font-size:16px; margin:0 0 12px 0;">Average Rating</h4>
+                        <div id="sellerAvgStars" style="font-size:48px; font-weight:800; color:#d97706; margin-bottom:12px;">0.0</div>
+                        <div id="sellerAvgStarsRender" style="font-size:24px; color:#d97706; margin-bottom:12px;"></div>
+                        <span id="sellerTotalReviewsCount" style="font-size:13px; color:var(--text-muted);">0 customer reviews</span>
+                    </div>
+                    
+                    <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:24px; box-shadow:var(--shadow-sm);">
+                        <h4 style="font-size:16px; margin:0 0 16px 0;">Rating Breakdown</h4>
+                        <div id="sellerRatingBreakout" style="display:flex; flex-direction:column; gap:8px;">
+                            <!-- Will render progress bars -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reviews-list" id="sellerReviewsList">
+                    <p style="text-align:center; color:var(--text-muted);">Loading reviews...</p>
+                </div>
+            `;
+
+            try {
+                const statsResponse = await fetch(`/api/customer/reviews/stats/${window.currentUser.id}`);
+                const reviewsResponse = await fetch(`/api/customer/reviews/seller/${window.currentUser.id}`);
+                
+                if (statsResponse.ok && reviewsResponse.ok) {
+                    const stats = await statsResponse.json();
+                    const reviews = await reviewsResponse.json();
+                    
+                    document.getElementById('sellerAvgStars').textContent = stats.averageRating > 0 ? stats.averageRating.toFixed(1) : "0.0";
+                    document.getElementById('sellerTotalReviewsCount').textContent = `${stats.reviewCount} customer reviews`;
+                    
+                    let starsHtml = '';
+                    const fullStars = Math.floor(stats.averageRating);
+                    for (let i = 0; i < 5; i++) {
+                        starsHtml += i < fullStars ? '★' : '☆';
+                    }
+                    document.getElementById('sellerAvgStarsRender').innerHTML = starsHtml;
+
+                    const breakoutContainer = document.getElementById('sellerRatingBreakout');
+                    breakoutContainer.innerHTML = [5, 4, 3, 2, 1].map(stars => {
+                        const count = stats.ratingBreakout[stars] || 0;
+                        const pct = stats.reviewCount > 0 ? (count / stats.reviewCount) * 100 : 0;
+                        return `
+                            <div style="display:flex; align-items:center; gap:12px; font-size:13px;">
+                                <div style="width:50px; font-weight:600; color:var(--text-primary); text-align:right;">${stars} Stars</div>
+                                <div style="flex:1; height:8px; background:#f1f5f9; border-radius:4px; overflow:hidden;">
+                                    <div style="width:${pct}%; height:100%; background:#d97706; border-radius:4px;"></div>
+                                </div>
+                                <div style="width:40px; color:var(--text-muted); text-align:left;">${count}</div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    const listContainer = document.getElementById('sellerReviewsList');
+                    if (reviews.length === 0) {
+                        listContainer.innerHTML = `<div style="text-align:center; padding: 40px; color:var(--text-muted); background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-md);">No feedback reviews have been posted for your store yet.</div>`;
+                        return;
+                    }
+
+                    listContainer.innerHTML = reviews.map(r => {
+                        let rStars = '';
+                        for (let i = 0; i < 5; i++) {
+                            rStars += i < r.rating ? '★' : '☆';
+                        }
+                        return `
+                            <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:20px; margin-bottom:16px; box-shadow:var(--shadow-sm);">
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                                    <strong>${r.buyerName}</strong>
+                                    <span style="font-size:12px; color:var(--text-muted);">${new Date(r.createdAt).toLocaleDateString()}</span>
+                                </div>
+                                <div style="color:#d97706; font-size:16px; margin-bottom:8px;">${rStars}</div>
+                                <p style="color:var(--text-secondary); margin:0; line-height:1.5;">${r.comment}</p>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        let editingProductId = null;
+
+        async function loadSellerListings() {
+            const pane = document.getElementById('dashboardDataPane');
+            pane.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
+                    <h3 style="font-size:20px; font-weight:700;">My Product Listings</h3>
+                    <button class="btn btn-primary" onclick="openCreateProductModal()">+ Create Listing</button>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product Item</th>
+                                <th>Category</th>
+                                <th>Stock & MOQ</th>
+                                <th>Status</th>
+                                <th>Price</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sellerListingsTable">
+                            <tr><td colspan="6" style="text-align:center;">Loading your listings...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            try {
+                const response = await fetch(`/api/product?sellerId=${window.currentUser.id}`);
+                if (response.ok) {
+                    const products = await response.json();
+                    const tbody = document.getElementById('sellerListingsTable');
+
+                    if (products.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted)">You don't have any listings yet. Upload one!</td></tr>`;
+                        return;
+                    }
+
+                    tbody.innerHTML = products.map(p => {
+                        const sym = window.siteSettings.currency_symbol || "৳";
+                        let pricingStr = `${sym}${p.price.toFixed(2)}`;
+                        if (p.discountPrice && p.discountPrice > 0) {
+                            pricingStr = `<span style="color:#d97706; font-weight:700;">${sym}${p.discountPrice.toFixed(2)}</span> <del style="color:var(--text-muted); font-size:11px; margin-left:4px;">${sym}${p.price.toFixed(2)}</del>`;
+                        }
+
+                        return `
+                            <tr>
+                                <td>
+                                    <div style="display:flex; align-items:center; gap:12px;">
+                                        <div style="width:40px; height:40px; background-size:cover; background-position:center; border-radius:4px; background-image:url('${p.imageUrl || '/images/placeholder.png'}')"></div>
+                                        <strong style="color:var(--text-primary)">${p.name}</strong>
+                                    </div>
+                                </td>
+                                <td>${p.category}</td>
+                                <td>
+                                    <div style="display:flex; flex-direction:column; gap:4px;">
+                                        <div style="display:flex; align-items:center; gap:6px;">
+                                            <span style="font-weight:600; font-size:13px; color:var(--text-primary);">Stock:</span>
+                                            <input type="number" id="inlineStock_${p.id}" value="${p.stock}" min="0" style="width:70px; padding:4px 6px; border:1px solid var(--border-color); border-radius:4px; font-weight:600; font-size:12px; text-align:center; background-color:#fff;" />
+                                            <button onclick="updateInlineStock(${p.id})" style="background:var(--color-primary); color:#fff; padding:4px 8px; border-radius:4px; font-size:11px; font-weight:700; cursor:pointer;" title="Save stock count">Save</button>
+                                        </div>
+                                        <span style="font-size:11px; color:var(--text-secondary);">MOQ: ${p.minOrderQuantity} units</span>
+                                        ${p.stock < p.minOrderQuantity ? `<span style="font-size:10px; font-weight:700; background:#ffebee; color:#d32f2f; padding:2px 6px; border-radius:4px; border:1px solid #ffcdd2; align-self:flex-start; margin-top:2px;">⚠️ Low Stock (Below MOQ)</span>` : ''}
+                                    </div>
+                                </td>
+                                <td>
+                                    ${p.isApproved 
+                                        ? '<span style="background-color:#dcfce7; color:#16a34a; padding:4px 8px; border-radius:4px; font-size:12px; font-weight:700;">Live / Approved</span>' 
+                                        : '<span style="background-color:#fef3c7; color:#d97706; padding:4px 8px; border-radius:4px; font-size:12px; font-weight:700;">Pending Approval</span>'}
+                                </td>
+                                <td style="font-size:12px; color:var(--text-secondary); max-width: 250px; overflow:hidden; text-overflow:ellipsis;">${pricingStr}</td>
+                                <td>
+                                    <div style="display:flex; gap:8px;">
+                                        <button onclick="editListing(${p.id})" class="btn btn-secondary" style="padding:6px 12px; font-size:12px;">Edit</button>
+                                        <button onclick="deleteListing(${p.id})" class="btn btn-danger" style="padding:6px 12px; font-size:12px;">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function updateInlineStock(productId) {
+            const val = document.getElementById(`inlineStock_${productId}`).value;
+            if (val === "" || isNaN(val)) {
+                showToast("Please enter a valid stock number", true);
+                return;
+            }
+            const stock = parseInt(val);
+            try {
+                const response = await fetch(`/api/product/${productId}/stock`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ stock })
+                });
+                
+                if (response.ok) {
+                    showToast("Inventory stock updated successfully!");
+                    loadSellerListings();
+                    loadSellerDashboard(); 
+                } else {
+                    const data = await response.json();
+                    showToast(data.message || "Failed to update stock", true);
+                }
+            } catch(e) {
+                console.error(e);
+                showToast("Error updating stock", true);
+            }
+        }
+
+        function loadSellerProfileTab() {
+            const pane = document.getElementById('dashboardDataPane');
+            pane.innerHTML = `
+                <h3 style="font-size:20px; font-weight:700; margin-bottom:24px;">Manage Seller Profile</h3>
+                <div style="background:#fff; border:1px solid var(--border-color); padding:32px; border-radius:var(--radius-md); box-shadow:var(--shadow-sm); max-width:800px;">
+                    <form id="editSellerProfileForm" onsubmit="handleSellerProfileSubmit(event)">
+                        <h4 style="border-bottom:1px solid var(--border-color); padding-bottom:8px; margin-bottom:20px; color:var(--color-primary); font-size:15px; font-weight:700;">Company Registration Info</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="sellerProfCompanyName">Company Registered Name *</label>
+                                <input type="text" id="sellerProfCompanyName" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="sellerProfYearEstablished">Established Year</label>
+                                <input type="text" id="sellerProfYearEstablished" class="form-control" placeholder="e.g. 2015">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="sellerProfBusinessType">Business Type</label>
+                                <select id="sellerProfBusinessType" class="form-control" style="background-color:#fff;">
+                                    <option value="Manufacturer">Manufacturer</option>
+                                    <option value="Wholesaler">Wholesaler</option>
+                                    <option value="Partner">Partner</option>
+                                    <option value="Trader">Trader</option>
+                                    <option value="Exporter">Exporter</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <h4 style="border-bottom:1px solid var(--border-color); padding-bottom:8px; margin-top:20px; margin-bottom:20px; color:var(--color-primary); font-size:15px; font-weight:700;">Contact Details</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="sellerProfContact">Business Phone *</label>
+                                <input type="text" id="sellerProfContact" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="sellerProfWhatsApp">WhatsApp Number *</label>
+                                <input type="text" id="sellerProfWhatsApp" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="sellerProfEmail">Business Email *</label>
+                                <input type="email" id="sellerProfEmail" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="sellerProfGmail">Alternate Email (Gmail)</label>
+                                <input type="email" id="sellerProfGmail" class="form-control">
+                            </div>
+                        </div>
+
+                        <h4 style="border-bottom:1px solid var(--border-color); padding-bottom:8px; margin-top:20px; margin-bottom:20px; color:var(--color-primary); font-size:15px; font-weight:700;">Legal & Web Directory</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="sellerProfTax">Tax / BIN ID Number</label>
+                                <input type="text" id="sellerProfTax" class="form-control" placeholder="e.g. 123456789">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="sellerProfWebsite">Company Website URL</label>
+                                <input type="text" id="sellerProfWebsite" class="form-control" placeholder="e.g. https://apextech.com">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="sellerProfAddress">Company Address / Factory Location *</label>
+                            <textarea id="sellerProfAddress" class="form-control" rows="3" required></textarea>
+                        </div>
+
+                        <h4 style="border-bottom:1px solid var(--border-color); padding-bottom:8px; margin-top:20px; margin-bottom:20px; color:var(--color-primary); font-size:15px; font-weight:700;">Account Credentials</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="sellerProfUsername">Account Username *</label>
+                                <input type="text" id="sellerProfUsername" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="margin-top:16px; padding: 12px 24px; font-size:15px; font-weight:700; cursor:pointer;">Save Supplier Profile</button>
+                    </form>
+                </div>
+            `;
+
+            document.getElementById('sellerProfCompanyName').value = window.currentUser.companyName || "";
+            document.getElementById('sellerProfYearEstablished').value = window.currentUser.yearEstablished || "";
+            document.getElementById('sellerProfBusinessType').value = window.currentUser.businessType || "Manufacturer";
+            document.getElementById('sellerProfContact').value = window.currentUser.contactInfo || "";
+            document.getElementById('sellerProfWhatsApp').value = window.currentUser.whatsAppNumber || "";
+            document.getElementById('sellerProfEmail').value = window.currentUser.email || "";
+            document.getElementById('sellerProfGmail').value = window.currentUser.alternateEmail || "";
+            document.getElementById('sellerProfTax').value = window.currentUser.taxNumber || "";
+            document.getElementById('sellerProfWebsite').value = window.currentUser.websiteUrl || "";
+            document.getElementById('sellerProfAddress').value = window.currentUser.companyAddress || "";
+            document.getElementById('sellerProfUsername').value = window.currentUser.username || "";
+        }
+
+        async function handleSellerProfileSubmit(e) {
+            e.preventDefault();
+            const companyName = document.getElementById('sellerProfCompanyName').value;
+            const yearEstablished = document.getElementById('sellerProfYearEstablished').value;
+            const businessType = document.getElementById('sellerProfBusinessType').value;
+            const contactInfo = document.getElementById('sellerProfContact').value;
+            const whatsAppNumber = document.getElementById('sellerProfWhatsApp').value;
+            const email = document.getElementById('sellerProfEmail').value;
+            const alternateEmail = document.getElementById('sellerProfGmail').value;
+            const taxNumber = document.getElementById('sellerProfTax').value;
+            const websiteUrl = document.getElementById('sellerProfWebsite').value;
+            const companyAddress = document.getElementById('sellerProfAddress').value;
+            const username = document.getElementById('sellerProfUsername').value;
+
+            try {
+                const response = await fetch('/api/auth/profile', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username, email, companyName, contactInfo, 
+                        whatsAppNumber, alternateEmail, taxNumber, 
+                        companyAddress, yearEstablished, websiteUrl, businessType
+                    })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    showToast("Seller profile updated successfully!");
+                    window.currentUser = data; 
+                    updateNavigation();
+                    initializeDashboard(); 
+                    loadSellerProfileTab(); 
+                } else {
+                    showToast(data.message || "Failed to update seller profile", true);
+                }
+            } catch (err) {
+                console.error(err);
+                showToast("An error occurred updating profile", true);
+            }
+        }
+
+        async function loadSellerOrdersTab() {
+            const pane = document.getElementById('dashboardDataPane');
+            pane.innerHTML = `
+                <h3 style="font-size:20px; font-weight:700; margin-bottom:12px;">Manage Wholesale Orders</h3>
+                <p style="color:var(--text-secondary); font-size:13px; margin-bottom:24px;">View customer orders for your listings, track shipments, and update progress status.</p>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order #</th>
+                                <th>Buyer Details</th>
+                                <th>Items Ordered</th>
+                                <th>Total Revenue</th>
+                                <th>Status Tracker</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sellerOrdersTabTable">
+                            <tr><td colspan="5" style="text-align:center;">Loading orders...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/customer/seller-stats');
+                if (response.ok) {
+                    const stats = await response.json();
+                    const tbody = document.getElementById('sellerOrdersTabTable');
+                    
+                    if (!stats.orders || stats.orders.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding: 24px;">No wholesale orders have been received yet.</td></tr>`;
+                        return;
+                    }
+                    
+                    const sym = window.siteSettings.currency_symbol || "৳";
+                    tbody.innerHTML = stats.orders.map(o => {
+                        const itemsHtml = o.sellerItems.map(i => `
+                            <div style="font-size:12px; border-bottom:1px solid #f1f5f9; padding:4px 0;">
+                                <strong>${i.Name}</strong><br/>
+                                Qty: ${i.Qty} × ${sym}${i.Price.toFixed(2)}
+                            </div>
+                        `).join('');
+
+                        const statuses = ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"];
+                        const selectOptions = statuses.map(s => {
+                            const selected = o.status === s ? 'selected' : '';
+                            return `<option value="${s}" ${selected}>${s}</option>`;
+                        }).join('');
+
+                        return `
+                            <tr>
+                                <td>
+                                    <strong>#${o.orderNumber}</strong><br/>
+                                    <span style="font-size:11px; color:var(--text-secondary);">${new Date(o.orderDate).toLocaleDateString()}</span><br/>
+                                    <span style="font-size:11px; color:var(--text-muted);">${o.paymentMethod}</span>
+                                </td>
+                                <td>
+                                    <strong>${o.customerName}</strong><br/>
+                                    <span style="font-size:11px; color:var(--text-secondary);">${o.customerEmail}</span><br/>
+                                    <span style="font-size:11px; color:var(--text-muted); max-width:200px; display:inline-block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${o.shippingAddress}">Address: ${o.shippingAddress}</span>
+                                </td>
+                                <td>${itemsHtml}</td>
+                                <td style="font-weight:700; color:var(--color-primary);">${sym}${o.sellerTotal.toFixed(2)}</td>
+                                <td>
+                                    <select onchange="updateSellerOrderStatus(${o.id}, this.value)" class="form-control" style="font-size:13px; padding:6px 10px; border-radius:4px; min-width:130px; background-color:#fff; border:1px solid var(--border-color); font-weight:600; cursor:pointer;">
+                                        ${selectOptions}
+                                    </select>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        async function updateSellerOrderStatus(orderId, newStatus) {
+            try {
+                const response = await fetch(`/api/customer/orders/${orderId}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                
+                if (response.ok) {
+                    showToast(`Order status updated to "${newStatus}"!`);
+                    loadSellerOrdersTab();
+                } else {
+                    showToast("Failed to update status", true);
+                }
+            } catch(err) {
+                console.error(err);
+                showToast("Error updating order status", true);
+            }
+        }
+
+        function openCreateProductModal() {
+            editingProductId = null;
+            document.getElementById('addProductForm').reset();
+            document.getElementById('prodStock').value = 100;
+            document.getElementById('prodLeadTime').value = 3;
+            document.getElementById('addProductModalTitle').textContent = "Create Product Listing";
+            document.getElementById('addProductSubmitBtn').textContent = "Publish Listing";
+            renderDynamicSpecs();
+            handleProductMediaChange();
+            openModal('addProductModal');
+        }
+
+        async function editListing(productId) {
+            editingProductId = productId;
+            try {
+                const response = await fetch(`/api/product/${productId}`);
+                if (!response.ok) {
+                    showToast("Product not found", true);
+                    return;
+                }
+                const p = await response.json();
+                
+                document.getElementById('prodName').value = p.name || '';
+                document.getElementById('prodCategory').value = p.category || 'Home';
+                document.getElementById('prodMOQ').value = p.minOrderQuantity || 1;
+                document.getElementById('prodPrice').value = p.price || '';
+                document.getElementById('prodDiscountPrice').value = p.discountPrice && p.discountPrice > 0 ? p.discountPrice : '';
+                document.getElementById('prodDescription').value = p.description || '';
+                document.getElementById('prodStock').value = p.stock !== undefined ? p.stock : 100;
+                document.getElementById('prodLeadTime').value = p.leadTimeDays !== undefined ? p.leadTimeDays : 3;
+                existingImageUrl = p.imageUrl || '/images/placeholder.png';
+                existingMediaJson = p.mediaJson || '[]';
+
+                // Render dynamic specs template first
+                renderDynamicSpecs();
+
+                // Prefill specs
+                if (p.specificationsJson) {
+                    try {
+                        const specs = JSON.parse(p.specificationsJson);
+                        Object.keys(specs).forEach(k => {
+                            const input = document.querySelector(`#prodSpecsFields [data-spec="${k}"]`);
+                            if (input) {
+                                input.value = specs[k];
+                            }
+                        });
+                    } catch(e) {}
+                }
+
+                // Pre-fill image/video preview list if mediaJson exists
+                const previewContainer = document.getElementById('prodMediaPreviews');
+                if (previewContainer) {
+                    previewContainer.innerHTML = '';
+                    let mediaList = [];
+                    try {
+                        if (p.mediaJson) {
+                            mediaList = JSON.parse(p.mediaJson);
+                        }
+                    } catch(e){}
+                    if (mediaList.length === 0 && p.imageUrl) {
+                        mediaList.push({ url: p.imageUrl, type: 'image' });
+                    }
+                    mediaList.forEach(m => {
+                        const item = document.createElement('div');
+                        item.className = 'preview-item' + (m.type === 'video' ? ' preview-item-video' : '');
+                        if (m.type === 'video') {
+                            item.innerHTML = `<span class="play-icon">▶</span><span>Video</span><span style="font-size:8px; opacity:0.7; max-width:70px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">Existing Video</span>`;
+                        } else {
+                            item.style.backgroundImage = `url('${m.url}')`;
+                        }
+                        previewContainer.appendChild(item);
+                    });
+                }
+
+                document.getElementById('addProductModalTitle').textContent = "Edit Product Listing";
+                document.getElementById('addProductSubmitBtn').textContent = "Save Changes";
+                openModal('addProductModal');
+            } catch (err) {
+                console.error(err);
+                showToast("Error retrieving product details", true);
+            }
+        }
+
+        function renderDynamicSpecs() {
+            const cat = document.getElementById('prodCategory').value;
+            const container = document.getElementById('prodSpecsContainer');
+            const fieldsContainer = document.getElementById('prodSpecsFields');
+            
+            if (!container || !fieldsContainer) return;
+            
+            fieldsContainer.innerHTML = '';
+            
+            let fieldsHtml = '';
+            
+            if (cat === 'Mobiles & Tabs') {
+                fieldsHtml = `
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;"><label class="form-label">Brand</label><input type="text" data-spec="Brand" class="form-control" placeholder="e.g. Apple, Samsung" required></div>
+                        <div class="form-group" style="flex:1;"><label class="form-label">Model</label><input type="text" data-spec="Model" class="form-control" placeholder="e.g. Galaxy S24" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;"><label class="form-label">RAM</label><input type="text" data-spec="RAM" class="form-control" placeholder="e.g. 8GB" required></div>
+                        <div class="form-group" style="flex:1;"><label class="form-label">Storage</label><input type="text" data-spec="Storage" class="form-control" placeholder="e.g. 128GB" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;"><label class="form-label">Battery Capacity</label><input type="text" data-spec="Battery Capacity" class="form-control" placeholder="e.g. 5000 mAh" required></div>
+                        <div class="form-group" style="flex:1;"><label class="form-label">Camera Specs</label><input type="text" data-spec="Camera Specs" class="form-control" placeholder="e.g. 50MP + 12MP" required></div>
+                    </div>
+                `;
+            } else if (cat === 'Men Clothing & Fashion' || cat === "Women's World" || cat === "Men's Collection") {
+                fieldsHtml = `
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;"><label class="form-label">Brand</label><input type="text" data-spec="Brand" class="form-control" placeholder="e.g. Fabrilife" required></div>
+                        <div class="form-group" style="flex:1;"><label class="form-label">Material / Fabric</label><input type="text" data-spec="Material" class="form-control" placeholder="e.g. 100% Organic Cotton" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;"><label class="form-label">Size Options</label><input type="text" data-spec="Size Options" class="form-control" placeholder="e.g. S, M, L, XL" required></div>
+                        <div class="form-group" style="flex:1;"><label class="form-label">Color Options</label><input type="text" data-spec="Color Options" class="form-control" placeholder="e.g. Black, Navy, White" required></div>
+                    </div>
+                    <div class="form-group"><label class="form-label">Fit Type</label><input type="text" data-spec="Fit Type" class="form-control" placeholder="e.g. Slim Fit, Regular Fit" required></div>
+                `;
+            } else if (cat === 'Bikes & Vehicles') {
+                fieldsHtml = `
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;"><label class="form-label">Brand</label><input type="text" data-spec="Brand" class="form-control" placeholder="e.g. Yamaha, Suzuki" required></div>
+                        <div class="form-group" style="flex:1;"><label class="form-label">Engine Displacement</label><input type="text" data-spec="Engine Displacement" class="form-control" placeholder="e.g. 150 cc" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;"><label class="form-label">Mileage</label><input type="text" data-spec="Mileage" class="form-control" placeholder="e.g. 45 km/l" required></div>
+                        <div class="form-group" style="flex:1;"><label class="form-label">Transmission</label><input type="text" data-spec="Transmission" class="form-control" placeholder="e.g. 5-Speed Manual" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;"><label class="form-label">Brake Type</label><input type="text" data-spec="Brake Type" class="form-control" placeholder="e.g. Double Disc, ABS" required></div>
+                        <div class="form-group" style="flex:1;"><label class="form-label">Fuel Type</label><input type="text" data-spec="Fuel Type" class="form-control" placeholder="e.g. Octane / Petrol" required></div>
+                    </div>
+                `;
+            } else if (cat === 'Eco-Friendly Products' || cat === 'Bamboo Based Product' || cat === 'Eco-Friendly Home Decor & Accessories') {
+                fieldsHtml = `
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;"><label class="form-label">Material</label><input type="text" data-spec="Material" class="form-control" placeholder="e.g. Organic Jute / Raw Bamboo" required></div>
+                        <div class="form-group" style="flex:1;"><label class="form-label">Weight</label><input type="text" data-spec="Weight" class="form-control" placeholder="e.g. 350 grams" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;">
+                            <label class="form-label">Is Biodegradable?</label>
+                            <select data-spec="Biodegradable" class="form-control" style="background-color: var(--bg-main)">
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex:1;"><label class="form-label">Country of Origin</label><input type="text" data-spec="Country of Origin" class="form-control" value="Bangladesh" required></div>
+                    </div>
+                `;
+            } else {
+                fieldsHtml = `
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;"><label class="form-label">Brand / Manufacturer</label><input type="text" data-spec="Brand" class="form-control" placeholder="e.g. Generic / Custom" required></div>
+                        <div class="form-group" style="flex:1;"><label class="form-label">Material</label><input type="text" data-spec="Material" class="form-control" placeholder="e.g. Steel, Plastic, Wood" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;"><label class="form-label">Dimensions</label><input type="text" data-spec="Dimensions" class="form-control" placeholder="e.g. 12x12x6 inches" required></div>
+                        <div class="form-group" style="flex:1;"><label class="form-label">Weight</label><input type="text" data-spec="Weight" class="form-control" placeholder="e.g. 1.2 kg" required></div>
+                    </div>
+                `;
+            }
+            
+            fieldsContainer.innerHTML = fieldsHtml;
+            container.style.display = 'block';
+        }
+
+        async function deleteListing(productId) {
+            if (!confirm("Delete this listing?")) return;
+            try {
+                const response = await fetch(`/api/product/${productId}`, { method: 'DELETE' });
+                if (response.ok) {
+                    showToast("Listing deleted successfully!");
+                    loadSellerListings();
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        function handleProductMediaChange() {
+            const previewContainer = document.getElementById('prodMediaPreviews');
+            if (!previewContainer) return;
+            
+            previewContainer.innerHTML = '';
+            
+            const imageInput = document.getElementById('prodImagesInput');
+            const videoInput = document.getElementById('prodVideoInput');
+            
+            let hasMedia = false;
+            
+            if (imageInput && imageInput.files) {
+                Array.from(imageInput.files).forEach(file => {
+                    hasMedia = true;
+                    const url = URL.createObjectURL(file);
+                    const item = document.createElement('div');
+                    item.className = 'preview-item';
+                    item.style.backgroundImage = `url('${url}')`;
+                    previewContainer.appendChild(item);
+                });
+            }
+            
+            if (videoInput && videoInput.files && videoInput.files.length > 0) {
+                hasMedia = true;
+                const file = videoInput.files[0];
+                const item = document.createElement('div');
+                item.className = 'preview-item preview-item-video';
+                item.innerHTML = `
+                    <span class="play-icon">▶</span>
+                    <span>Video</span>
+                    <span style="font-size:8px; opacity:0.7; max-width:70px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${file.name}</span>
+                `;
+                previewContainer.appendChild(item);
+            }
+            
+            if (!hasMedia) {
+                previewContainer.innerHTML = `<div class="upload-placeholder-text">Selected product pictures and videos will be previewed here.</div>`;
+            }
+        }
+
+        let existingImageUrl = '/images/placeholder.png';
+        let existingMediaJson = '[]';
+
+        async function handleAddProductSubmit(e) {
+            e.preventDefault();
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn ? submitBtn.innerHTML : "Publish Listing";
+            
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = "⌛ Uploading Media & Publishing...";
+            }
+            
+            const name = document.getElementById('prodName').value;
+            const category = document.getElementById('prodCategory').value;
+            const minOrderQuantity = parseInt(document.getElementById('prodMOQ').value);
+            const price = parseFloat(document.getElementById('prodPrice').value);
+            const discountPriceVal = document.getElementById('prodDiscountPrice').value;
+            const discountPrice = discountPriceVal ? parseFloat(discountPriceVal) : 0;
+            const stock = parseInt(document.getElementById('prodStock').value);
+            const leadTimeDays = parseInt(document.getElementById('prodLeadTime').value);
+            const description = document.getElementById('prodDescription').value;
+
+            try {
+                // 1. Upload files first
+                const imageInput = document.getElementById('prodImagesInput');
+                const videoInput = document.getElementById('prodVideoInput');
+                
+                let imageUrl = editingProductId ? existingImageUrl : '/images/placeholder.png';
+                let mediaJson = editingProductId ? existingMediaJson : '[]';
+                
+                // Collect files to upload
+                const formData = new FormData();
+                let hasFiles = false;
+                
+                if (imageInput && imageInput.files && imageInput.files.length > 0) {
+                    Array.from(imageInput.files).forEach(file => {
+                        formData.append('files', file);
+                    });
+                    hasFiles = true;
+                }
+                
+                if (videoInput && videoInput.files && videoInput.files.length > 0) {
+                    formData.append('files', videoInput.files[0]);
+                    hasFiles = true;
+                }
+                
+                if (hasFiles) {
+                    const uploadResponse = await fetch('/api/product/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (uploadResponse.ok) {
+                        const uploadResult = await uploadResponse.json();
+                        const urls = uploadResult.urls || [];
+                        
+                        let fileIndex = 0;
+                        let mediaArray = [];
+                        
+                        if (imageInput && imageInput.files && imageInput.files.length > 0) {
+                            Array.from(imageInput.files).forEach(() => {
+                                if (fileIndex < urls.length) {
+                                    const url = urls[fileIndex];
+                                    if (fileIndex === 0) {
+                                        imageUrl = url;
+                                    }
+                                    mediaArray.push({ url: url, type: 'image' });
+                                    fileIndex++;
+                                }
+                            });
+                        }
+                        
+                        if (videoInput && videoInput.files && videoInput.files.length > 0) {
+                            if (fileIndex < urls.length) {
+                                const url = urls[fileIndex];
+                                mediaArray.push({ url: url, type: 'video' });
+                                fileIndex++;
+                            }
+                        }
+                        mediaJson = JSON.stringify(mediaArray);
+                    } else {
+                        showToast("Media upload failed, saving without new files.", true);
+                    }
+                }
+
+                // Collect specifications
+                const specInputs = document.querySelectorAll('#prodSpecsFields [data-spec]');
+                const specs = {};
+                specInputs.forEach(input => {
+                    const key = input.getAttribute('data-spec');
+                    specs[key] = input.value;
+                });
+                const specificationsJson = JSON.stringify(specs);
+
+                // 2. Publish or Update product
+                const url = editingProductId ? `/api/product/${editingProductId}` : '/api/product';
+                const method = editingProductId ? 'PUT' : 'POST';
+                const successMsg = editingProductId 
+                    ? "Product updated successfully. It will go live once verified by admin!"
+                    : "Product listing submitted successfully. It will go live once verified by admin!";
+
+                const response = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name, category, minOrderQuantity, price, discountPrice, stock, leadTimeDays, imageUrl, mediaJson, description, specificationsJson
+                    })
+                });
+
+                if (response.ok) {
+                    showToast(successMsg);
+                    closeModal('addProductModal');
+                    document.getElementById('addProductForm').reset();
+                    editingProductId = null;
+                    renderDynamicSpecs();
+                    handleProductMediaChange(); 
+                    loadSellerDashboard();
+                    loadSellerListings();
+                } else {
+                    const data = await response.json();
+                    showToast(data.message || "Failed to save listing", true);
+                }
+            } catch(err) {
+                showToast("Error saving listing", true);
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                }
+            }
+        }
+
+        async function loadSellerQuotes() {
+            const pane = document.getElementById('dashboardDataPane');
+            pane.innerHTML = `
+                <h3 style="font-size:20px; font-weight:700; margin-bottom:24px;">My Submitted RFQ Bids</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>RFQ Sourcing Target</th>
+                                <th>Proposed Price</th>
+                                <th>Lead Time</th>
+                                <th>Proposal Notes</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sellerQuotesTable">
+                            <tr><td colspan="5" style="text-align:center;">Loading your bids...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/rfq/my-quotes');
+                if (response.ok) {
+                    const quotes = await response.json();
+                    const tbody = document.getElementById('sellerQuotesTable');
+
+                    if (quotes.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted)">You haven't bid on any active RFQs yet.</td></tr>`;
+                        return;
+                    }
+
+                    tbody.innerHTML = quotes.map(q => {
+                        let statusBadge = '';
+                        if (q.status === 0) statusBadge = '<span class="badge badge-pending">Pending</span>';
+                        else if (q.status === 1) statusBadge = '<span class="badge badge-success">Accepted</span>';
+                        else statusBadge = '<span class="badge badge-danger">Declined</span>';
+
+                        return `
+                            <tr>
+                                <td><strong style="color:var(--text-primary); font-size:14px;">${q.rfqTitle}</strong></td>
+                                <td style="color:var(--color-primary); font-weight:700;">${window.siteSettings.currency_symbol || "৳"}${q.proposedPrice.toFixed(2)}/unit</td>
+                                <td>${q.deliveryTimeDays} days</td>
+                                <td style="font-size:12px; max-width:250px; overflow:hidden; text-overflow:ellipsis;">${q.notes}</td>
+                                <td>${statusBadge}</td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        // ================= ADMIN ACTIONS =================
+        async function loadAdminSellers(verifiedOnly) {
+            const pane = document.getElementById('dashboardDataPane');
+            const title = verifiedOnly ? "Verified Suppliers Directory" : "Pending Supplier KYC Registrations";
+            
+            pane.innerHTML = `
+                <h3 style="font-size:20px; font-weight:700; margin-bottom:24px;">${title}</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Seller Contact</th>
+                                <th>Company Details</th>
+                                <th>WhatsApp & Phone</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminSellersTable">
+                            <tr><td colspan="4" style="text-align:center;">Loading sellers...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            try {
+                const response = await fetch(`/api/admin/sellers?verifiedOnly=${verifiedOnly}`);
+                if (response.ok) {
+                    const sellers = await response.json();
+                    const tbody = document.getElementById('adminSellersTable');
+
+                    if (sellers.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted)">No suppliers.</td></tr>`;
+                        return;
+                    }
+
+                    tbody.innerHTML = sellers.map(s => {
+                        const actionBtn = verifiedOnly 
+                            ? `<button onclick="toggleVerification(${s.id}, false)" class="btn btn-danger" style="padding:6px 12px; font-size:12px;">Revoke Verification</button>`
+                            : `<button onclick="toggleVerification(${s.id}, true)" class="btn btn-primary" style="padding:6px 12px; font-size:12px;">Verify Manufacturer</button>`;
+
+                        const websiteLink = s.websiteUrl ? `<br/><a href="${s.websiteUrl}" target="_blank" style="font-size:12px; color:var(--color-primary); text-decoration:underline;">${s.websiteUrl}</a>` : '';
+                        const altEmail = s.alternateEmail ? `<br/><span style="font-size:11px; color:var(--text-secondary)">Gmail: ${s.alternateEmail}</span>` : '';
+                        const taxInfo = s.taxNumber ? ` | Tax ID: ${s.taxNumber}` : '';
+                        const estYear = s.yearEstablished ? ` | Est: ${s.yearEstablished}` : '';
+
+                        return `
+                            <tr>
+                                <td>
+                                    <strong>${s.username}</strong><br/>
+                                    <span style="font-size:11px; color:var(--text-muted)">${s.email}</span>
+                                    ${altEmail}
+                                </td>
+                                <td>
+                                    <strong>${s.companyName || '-'}</strong><br/>
+                                    <span style="font-size:12px; color:var(--text-muted)">
+                                        Address: ${s.companyAddress || '-'}
+                                        ${estYear}
+                                        ${taxInfo}
+                                    </span>
+                                    ${websiteLink}
+                                </td>
+                                <td>
+                                    <span style="font-size:13px;">Phone: ${s.contactInfo || '-'}</span><br/>
+                                    <span style="font-size:13px; color:var(--color-primary); font-weight:600;">WhatsApp: ${s.whatsAppNumber || '-'}</span>
+                                </td>
+                                <td>${actionBtn}</td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+            } catch(err) {
+                console.error(err);
+            }
+        }
+
+        async function toggleVerification(sellerId, isVerified) {
+            try {
+                const response = await fetch(`/api/admin/sellers/${sellerId}/verify`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ isVerified })
+                });
+
+                if (response.ok) {
+                    showToast(isVerified ? "Seller verified!" : "Verification revoked.");
+                    switchTab(isVerified ? 'admin_pending' : 'admin_verified');
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        // NEW ADMIN FUNCTION: BANNER MANAGEMENT
+        async function loadAdminBanners() {
+            const pane = document.getElementById('dashboardDataPane');
+            pane.innerHTML = `
+                <h3 style="font-size:20px; font-weight:700; margin-bottom:24px;">Manage Promotional Banners</h3>
+                
+                <!-- Add Banner Form -->
+                <div style="background: #f8fafc; border: 1px solid var(--border-color); padding: 24px; border-radius: var(--radius-md); margin-bottom: 32px;">
+                    <h4 style="margin-bottom: 16px; font-size:15px; font-weight:700;">Add New Banner</h4>
+                    <form id="addBannerForm" onsubmit="handleAddBannerSubmit(event)">
+                        <div class="form-group">
+                            <label class="form-label" for="banTitle">Banner Title / Caption</label>
+                            <input type="text" id="banTitle" class="form-control" placeholder="e.g. Premium Cotton Textiles Sourcing" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="banImageUrl">Image URL</label>
+                                <input type="url" id="banImageUrl" class="form-control" placeholder="https://images.unsplash.com/photo-..." required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="banLinkUrl">Redirect Link URL (Optional)</label>
+                                <input type="text" id="banLinkUrl" class="form-control" placeholder="/product.html?category=..." value="/product.html">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="banPosition">Placement Position</label>
+                            <select id="banPosition" class="form-control" style="background-color:#fff;">
+                                <option value="1">Top Banner Slider (Unlimited, Carousel)</option>
+                                <option value="2">Middle Accent Banner (Shows single most recent)</option>
+                                <option value="3">Right Hero Side Banner (Shows single most recent)</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Banner</button>
+                    </form>
+                </div>
+
+                <!-- Banners List -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Preview</th>
+                                <th>Caption</th>
+                                <th>Target Position</th>
+                                <th>Link Route</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminBannersTable">
+                            <tr><td colspan="5" style="text-align:center;">Loading banners...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/content/banners');
+                if (response.ok) {
+                    const banners = await response.json();
+                    const tbody = document.getElementById('adminBannersTable');
+                    
+                    if (banners.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted)">No banners configured. Add one above!</td></tr>`;
+                        return;
+                    }
+
+                    tbody.innerHTML = banners.map(b => `
+                        <tr>
+                            <td>
+                                <div style="width: 80px; height: 45px; background-size:cover; background-position:center; border-radius:4px; background-image:url('${b.imageUrl}')"></div>
+                            </td>
+                            <td><strong>${b.title}</strong></td>
+                            <td>${b.position === 1 ? 'Top Slider' : b.position === 2 ? 'Middle Banner' : 'Right Side Banner'}</td>
+                            <td><span style="font-size:12px; color:var(--text-secondary)">${b.linkUrl || '-'}</span></td>
+                            <td>
+                                <button onclick="deleteBanner(${b.id})" class="btn btn-danger" style="padding:4px 8px; font-size:11px;">Remove</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        async function handleAddBannerSubmit(e) {
+            e.preventDefault();
+            const title = document.getElementById('banTitle').value;
+            const imageUrl = document.getElementById('banImageUrl').value;
+            const linkUrl = document.getElementById('banLinkUrl').value;
+            const position = parseInt(document.getElementById('banPosition').value);
+
+            try {
+                const response = await fetch('/api/content/banners', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, imageUrl, linkUrl, position })
+                });
+
+                if (response.ok) {
+                    showToast("Banner added successfully!");
+                    loadAdminBanners();
+                } else {
+                    showToast("Failed to add banner", true);
+                }
+            } catch(err) {
+                console.error(err);
+            }
+        }
+
+        async function deleteBanner(id) {
+            if (!confirm("Delete this banner?")) return;
+            try {
+                const response = await fetch(`/api/content/banners/${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    showToast("Banner removed!");
+                    loadAdminBanners();
+                }
+            } catch(e) { console.error(e); }
+        }
+
+        // NEW ADMIN FUNCTION: HOT CATEGORY MANAGEMENT
+        async function loadAdminHotCategories() {
+            const pane = document.getElementById('dashboardDataPane');
+            pane.innerHTML = `
+                <h3 style="font-size:20px; font-weight:700; margin-bottom:24px;">Manage Featured Hot Categories</h3>
+                
+                <!-- Add Form -->
+                <div style="background: #f8fafc; border: 1px solid var(--border-color); padding: 24px; border-radius: var(--radius-md); margin-bottom: 32px;">
+                    <h4 style="margin-bottom: 16px; font-size:15px; font-weight:700;">Add Featured Hot Category</h4>
+                    <form id="addHotCatForm" onsubmit="handleAddHotCatSubmit(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="hcName">Category Name</label>
+                                <input type="text" id="hcName" class="form-control" placeholder="e.g. Chemicals & Raw Materials" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="hcImageUrl">Category Illustration / Picture URL</label>
+                                <input type="url" id="hcImageUrl" class="form-control" placeholder="https://images.unsplash.com/photo-..." required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Publish Category</button>
+                    </form>
+                </div>
+
+                <!-- Categories list -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Preview</th>
+                                <th>Category Title</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminHotCatsTable">
+                            <tr><td colspan="3" style="text-align:center;">Loading hot categories...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/content/hot-categories');
+                if (response.ok) {
+                    const cats = await response.json();
+                    const tbody = document.getElementById('adminHotCatsTable');
+                    
+                    if (cats.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted)">No hot categories configured. Add one above!</td></tr>`;
+                        return;
+                    }
+
+                    tbody.innerHTML = cats.map(c => `
+                        <tr>
+                            <td>
+                                <div style="width: 50px; height: 50px; background-size:cover; background-position:center; border-radius:6px; background-image:url('${c.imageUrl}')"></div>
+                            </td>
+                            <td><strong>${c.name}</strong></td>
+                            <td>
+                                <button onclick="deleteHotCat(${c.id})" class="btn btn-danger" style="padding:4px 8px; font-size:11px;">Remove</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        async function handleAddHotCatSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('hcName').value;
+            const imageUrl = document.getElementById('hcImageUrl').value;
+
+            try {
+                const response = await fetch('/api/content/hot-categories', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, imageUrl })
+                });
+
+                if (response.ok) {
+                    showToast("Hot category added successfully!");
+                    loadAdminHotCategories();
+                } else {
+                    showToast("Failed to add category", true);
+                }
+            } catch(err) {
+                console.error(err);
+            }
+        }
+
+        async function deleteHotCat(id) {
+            if (!confirm("Delete this category?")) return;
+            try {
+                const response = await fetch(`/api/content/hot-categories/${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    showToast("Category removed!");
+                    loadAdminHotCategories();
+                }
+            } catch(e) { console.error(e); }
+        }
+
+        // NEW ADMIN FUNCTION: PRODUCT FLAGS BADGING & MODERATION
+        async function loadAdminProducts() {
+            const pane = document.getElementById('dashboardDataPane');
+            pane.innerHTML = `
+                <h3 style="font-size:20px; font-weight:700; margin-bottom:24px;">Manage Homepage Product Badges</h3>
+                <p style="color:var(--text-secondary); font-size:13px; margin-bottom:20px;">Use the checkboxes below to flag products to show up in the specific Featured, Best Selling, or Today's Deals columns on the homepage.</p>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product Listing</th>
+                                <th>Category</th>
+                                <th>Featured</th>
+                                <th>Best Seller</th>
+                                <th>Today's Deal</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminProductsTable">
+                            <tr><td colspan="6" style="text-align:center;">Loading products list...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/product');
+                if (response.ok) {
+                    const products = await response.json();
+                    const tbody = document.getElementById('adminProductsTable');
+                    
+                    if (products.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted)">No wholesale listings in database.</td></tr>`;
+                        return;
+                    }
+
+                    tbody.innerHTML = products.map(p => `
+                        <tr>
+                            <td>
+                                <strong>${p.name}</strong><br/>
+                                <span style="font-size:11px; color:var(--text-muted)">Supplier: ${p.sellerCompany}</span>
+                            </td>
+                            <td>${p.category}</td>
+                            <td>
+                                <input type="checkbox" id="flag_feat_${p.id}" ${p.isFeatured ? 'checked' : ''} onclick="updateProductFlag(${p.id})">
+                            </td>
+                            <td>
+                                <input type="checkbox" id="flag_best_${p.id}" ${p.isBestSeller ? 'checked' : ''} onclick="updateProductFlag(${p.id})">
+                            </td>
+                            <td>
+                                <input type="checkbox" id="flag_deal_${p.id}" ${p.isTodayDeal ? 'checked' : ''} onclick="updateProductFlag(${p.id})">
+                            </td>
+                            <td>
+                                <button onclick="deleteAdminProduct(${p.id})" class="btn btn-danger" style="padding:4px 8px; font-size:11px;">Delete</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        async function updateProductFlag(id) {
+            const isFeatured = document.getElementById(`flag_feat_${id}`).checked;
+            const isBestSeller = document.getElementById(`flag_best_${id}`).checked;
+            const isTodayDeal = document.getElementById(`flag_deal_${id}`).checked;
+
+            try {
+                const response = await fetch(`/api/admin/products/${id}/flags`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ isFeatured, isBestSeller, isTodayDeal })
+                });
+
+                if (response.ok) {
+                    showToast("Product badges updated!");
+                } else {
+                    showToast("Failed to update flags", true);
+                    loadAdminProducts();
+                }
+            } catch(err) {
+                console.error(err);
+                loadAdminProducts();
+            }
+        }
+
+        async function deleteAdminProduct(productId) {
+            if (!confirm("Are you sure you want to delete this product listing?")) return;
+            try {
+                const response = await fetch(`/api/product/${productId}`, { method: 'DELETE' });
+                if (response.ok) {
+                    showToast("Product listing deleted successfully!");
+                    loadAdminProducts();
+                } else {
+                    showToast("Failed to delete listing", true);
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        // NEW ADMIN FUNCTION: RFQ MODERATION
+        async function loadAdminRfqs() {
+            const pane = document.getElementById('dashboardDataPane');
+            pane.innerHTML = `
+                <h3 style="font-size:20px; font-weight:700; margin-bottom:24px;">Moderate Sourcing RFQs</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>RFQ Title</th>
+                                <th>Buyer Company</th>
+                                <th>Quantity</th>
+                                <th>Target Budget</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminRfqsTable">
+                            <tr><td colspan="6" style="text-align:center;">Loading RFQs...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/rfq');
+                if (response.ok) {
+                    const rfqs = await response.json();
+                    const tbody = document.getElementById('adminRfqsTable');
+                    const sym = window.siteSettings.currency_symbol || "৳";
+
+                    if (rfqs.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted)">No active RFQs in database.</td></tr>`;
+                        return;
+                    }
+
+                    tbody.innerHTML = rfqs.map(r => `
+                        <tr>
+                            <td><span style="font-size:11px; font-weight:600; color:var(--color-primary);">${r.category}</span></td>
+                            <td>
+                                <strong>${r.title}</strong><br/>
+                                <span style="font-size:12px; color:var(--text-secondary)">${r.description.substring(0, 80)}...</span>
+                            </td>
+                            <td><strong>${r.buyerCompany}</strong></td>
+                            <td>${r.quantity} ${r.unit}</td>
+                            <td style="color:var(--color-primary); font-weight:700;">${sym}${r.budgetPrice.toFixed(2)}</td>
+                            <td>
+                                <button onclick="deleteAdminRfq(${r.id})" class="btn btn-danger" style="padding:6px 12px; font-size:12px;">Delete</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch(err) {
+                console.error(err);
+            }
+        }
+
+        async function deleteAdminRfq(id) {
+            if (!confirm("Are you sure you want to delete this RFQ? This will delete all submitted bids as well.")) return;
+            try {
+                const response = await fetch(`/api/rfq/${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    showToast("RFQ deleted successfully!");
+                    loadAdminRfqs();
+                } else {
+                    showToast("Failed to delete RFQ", true);
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        // NEW ADMIN FUNCTION: SYSTEM SETTINGS
+        async function loadAdminSettings() {
+            const pane = document.getElementById('dashboardDataPane');
+            pane.innerHTML = `
+                <h3 style="font-size:20px; font-weight:700; margin-bottom:24px;">Configure Portal Settings & Policies</h3>
+                <div style="background: #f8fafc; border: 1px solid var(--border-color); padding: 24px; border-radius: var(--radius-md); max-width:800px; margin-bottom: 40px;">
+                    <form id="adminSettingsForm" onsubmit="handleUpdateSettingsSubmit(event)">
+                        <h4 style="border-bottom:1px solid var(--border-color); padding-bottom:8px; margin-bottom:16px; color:var(--color-primary);">Portal Branding</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="setSiteTitle">Site Title / Slogan</label>
+                                <input type="text" id="setSiteTitle" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="setCurrencySymbol">Currency Symbol</label>
+                                <input type="text" id="setCurrencySymbol" class="form-control" placeholder="e.g. ৳" required>
+                            </div>
+                        </div>
+
+                        <h4 style="border-bottom:1px solid var(--border-color); padding-bottom:8px; margin-top:24px; margin-bottom:16px; color:var(--color-primary);">Contact Information</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="setContactPhone">Support Phone</label>
+                                <input type="text" id="setContactPhone" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="setContactEmail">Support Email</label>
+                                <input type="email" id="setContactEmail" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="setContactAddress">Office Address</label>
+                            <input type="text" id="setContactAddress" class="form-control" required>
+                        </div>
+
+                        <h4 style="border-bottom:1px solid var(--border-color); padding-bottom:8px; margin-top:24px; margin-bottom:16px; color:var(--color-primary);">Dynamic Policies (HTML Allowed)</h4>
+                        <div class="form-group">
+                            <label class="form-label" for="setPolicyTerms">Terms & Conditions Policy</label>
+                            <textarea id="setPolicyTerms" class="form-control" rows="5" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="setPolicyReturn">Return & Settlement Policy</label>
+                            <textarea id="setPolicyReturn" class="form-control" rows="5" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="setPolicySupport">Support Policy</label>
+                            <textarea id="setPolicySupport" class="form-control" rows="5" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="setPolicyPrivacy">Privacy & Data Security Policy</label>
+                            <textarea id="setPolicyPrivacy" class="form-control" rows="5" required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="margin-top:16px; padding: 12px 24px; font-size:15px; font-weight:700;">Save Platform Settings</button>
+                    </form>
+                </div>
+            `;
+
+            document.getElementById('setSiteTitle').value = window.siteSettings.site_title || "";
+            document.getElementById('setCurrencySymbol').value = window.siteSettings.currency_symbol || "";
+            document.getElementById('setContactPhone').value = window.siteSettings.contact_phone || "";
+            document.getElementById('setContactEmail').value = window.siteSettings.contact_email || "";
+            document.getElementById('setContactAddress').value = window.siteSettings.contact_address || "";
+            document.getElementById('setPolicyTerms').value = window.siteSettings.policy_terms || "";
+            document.getElementById('setPolicyReturn').value = window.siteSettings.policy_return || "";
+            document.getElementById('setPolicySupport').value = window.siteSettings.policy_support || "";
+            document.getElementById('setPolicyPrivacy').value = window.siteSettings.policy_privacy || "";
+        }
+
+        async function handleUpdateSettingsSubmit(e) {
+            e.preventDefault();
+            const payload = {
+                site_title: document.getElementById('setSiteTitle').value,
+                currency_symbol: document.getElementById('setCurrencySymbol').value,
+                contact_phone: document.getElementById('setContactPhone').value,
+                contact_email: document.getElementById('setContactEmail').value,
+                contact_address: document.getElementById('setContactAddress').value,
+                policy_terms: document.getElementById('setPolicyTerms').value,
+                policy_return: document.getElementById('setPolicyReturn').value,
+                policy_support: document.getElementById('setPolicySupport').value,
+                policy_privacy: document.getElementById('setPolicyPrivacy').value
+            };
+
+            try {
+                const response = await fetch('/api/admin/settings', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    showToast("Platform settings saved successfully!");
+                    await loadSiteSettings();
+                    loadAdminSettings();
+                } else {
+                    showToast("Failed to save settings", true);
+                }
+            } catch(err) {
+                console.error(err);
+                showToast("Error updating settings", true);
+            }
+        }
+    </script>
+</body>
+</html>
