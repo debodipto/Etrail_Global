@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flash Deals | EtrailGlobal B2B Wholesale Marketplace</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .deal-header-banner {
+            background: linear-gradient(135deg, var(--color-primary), #0f5132);
+            color: white;
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+            box-shadow: var(--shadow-md);
+        }
+        .deal-title-area h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin: 0 0 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .deal-title-area p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 15px;
+        }
+        .countdown-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .countdown-label {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .countdown-timer {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .time-block {
+            display: flex;
+            gap: 2px;
+        }
+        .time-block span {
+            background: white;
+            color: var(--color-primary);
+            font-weight: 800;
+            font-size: 20px;
+            padding: 6px 10px;
+            border-radius: var(--radius-sm);
+            min-width: 28px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+        .colon {
+            font-weight: 800;
+            font-size: 20px;
+            color: white;
+        }
+        .flash-card {
+            position: relative;
+        }
+        .flash-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: var(--color-danger);
+            color: white;
+            font-weight: 700;
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            z-index: 2;
+            box-shadow: var(--shadow-sm);
+        }
+        .deal-progress-container {
+            margin-top: 12px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .deal-progress-bar {
+            background: var(--border-color);
+            border-radius: 10px;
+            height: 6px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+        .deal-progress-fill {
+            background: linear-gradient(90deg, var(--color-danger), #ff8a00);
+            height: 100%;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="market-home">
+
+    <!-- Header -->
+    <header class="market-header">
+        <div class="container market-topbar">
+            <a href="index.html" class="logo market-logo">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                EtrailGlobal
+            </a>
+
+            <div class="market-search">
+                <select id="heroCategorySelect" aria-label="Category">
+                    <option value="All">All categories</option>
+                    <option value="Home">Home</option>
+                    <option value="Women's World">Women's World</option>
+                    <option value="Men's Collection">Men's Collection</option>
+                    <option value="Accessories">Accessories</option>
+                    <option value="Mobiles & Tabs">Mobiles & Tabs</option>
+                    <option value="Alarm">Alarm</option>
+                    <option value="Sinks and kitchen taps">Sinks and kitchen taps</option>
+                    <option value="Paper & Plastic">Paper & Plastic</option>
+                    <option value="Men Clothing & Fashion">Men Clothing & Fashion</option>
+                    <option value="Eco-Friendly Products">Eco-Friendly Products</option>
+                    <option value="Eco-Friendly Home Decor & Accessories">Eco-Friendly Home Decor & Accessories</option>
+                    <option value="Bamboo Based Product">Bamboo Based Product</option>
+                </select>
+                <input type="text" id="heroSearchInput" placeholder="Search products, suppliers, or categories">
+                <button onclick="triggerHeroSearch()" class="btn btn-primary">Search</button>
+            </div>
+
+            <div class="auth-nav" id="authNav">
+                <button class="btn btn-secondary" style="opacity: 0.5;">Loading...</button>
+            </div>
+        </div>
+
+        <div class="container market-nav-row">
+            <nav class="market-links">
+                <a href="index.html">Home</a>
+                <a href="product.html">All Products</a>
+                <a href="flash-deals.html" class="active">Flash Deals</a>
+                <a href="best-sellers.html">Best Sellers</a>
+            </nav>
+            <button class="seller-cta" onclick="openModal('sellerRegisterModal')">Become a Seller</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container" style="margin-top: 40px; min-height: 600px;">
+        
+        <!-- Flash Deals Header Banner -->
+        <div class="deal-header-banner">
+            <div class="deal-title-area">
+                <h1>⚡ Flash Deals</h1>
+                <p>Exclusive, limited-time wholesale discounts direct from verified manufacturers.</p>
+            </div>
+            <div class="countdown-container">
+                <span class="countdown-label">Ends In:</span>
+                <div class="countdown-timer" id="dealCountdown">
+                    <div style="color: white; font-weight: 700;">Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Catalog Grid -->
+        <div class="grid" id="dealsGrid">
+            <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary);">
+                Loading flash deals catalog...
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="market-footer" style="border-top: 1px solid var(--border-color); padding: 48px 0; background: #ffffff; color: var(--text-secondary); font-size: 14px; margin-top: 64px;">
+        <div class="container footer-grid">
+            <div>
+                <div class="logo" style="margin-bottom:12px;">EtrailGlobal</div>
+                <p>Green and white wholesale sourcing marketplace for products, suppliers, and direct B2B conversations.</p>
+                <p class="footer-contact">
+                    <span id="footerAddress">Gulshan-2, Dhaka, Bangladesh</span>
+                    <span id="footerPhone">+880-9612-ETRAIL</span>
+                    <span id="footerEmail">support@etrail.com.bd</span>
+                </p>
+            </div>
+            <div>
+                <h4>Marketplace</h4>
+                <a href="product.html">All Products</a>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact Us</a>
+                <a href="dashboard.html">Dashboard</a>
+            </div>
+            <div>
+                <h4>Seller Zone</h4>
+                <button onclick="openModal('sellerRegisterModal')" class="btn btn-primary">Apply Now</button>
+                <button onclick="openModal('sellerLoginModal')" class="btn btn-secondary">Seller Login</button>
+            </div>
+        </div>
+        <div class="container" style="border-top:1px solid var(--border-color); padding-top:24px; margin-top:32px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+            <p style="font-size:13px; color:var(--text-muted); margin:0;">© 2026 EtrailGlobal. All rights reserved.</p>
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                <span style="font-size:12px; color:var(--text-muted); font-weight:600;">We Accept:</span>
+                <span style="font-size:11px; font-weight:700; background:#fff; border:1px solid var(--border-color); padding:4px 8px; border-radius:4px; color:#1a1f71; display:inline-block;">VISA</span>
+                <span style="font-size:11px; font-weight:700; background:#fff; border:1px solid var(--border-color); padding:4px 8px; border-radius:4px; color:#eb001b; display:inline-block;">Mastercard</span>
+                <span style="font-size:11px; font-weight:700; background:#e2125d; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">bKash</span>
+                <span style="font-size:11px; font-weight:700; background:#ff6b00; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">Nagad</span>
+                <span style="font-size:11px; font-weight:700; background:#8c3494; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">Rocket</span>
+                <span style="font-size:11px; font-weight:700; background:#005c2d; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">DBBL</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Customer Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+         <div class="modal">
+             <span class="modal-close" onclick="closeModal('loginModal')">&times;</span>
+             <h2 class="modal-title">Sign In to Etrail Bangladesh</h2>
+             <form id="loginForm">
+                 <div class="form-group">
+                     <label class="form-label" for="loginEmail">Email Address</label>
+                     <input type="email" id="loginEmail" class="form-control" placeholder="enter customer@etrailglobal.com" required>
+                 </div>
+                 <div class="form-group">
+                     <label class="form-label" for="loginPassword">Password</label>
+                     <input type="password" id="loginPassword" class="form-control" placeholder="enter Customer123" required>
+                 </div>
+                 <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Sign In</button>
+             </form>
+             <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                 Don't have an account? <a href="javascript:void(0)" onclick="closeModal('loginModal'); openModal('registerModal');" style="color: var(--color-primary); font-weight:600;">Register Here</a>
+             </p>
+         </div>
+     </div>
+
+     <!-- Customer Register Modal -->
+     <div class="modal-overlay" id="registerModal">
+         <div class="modal" style="max-width: 600px;">
+             <span class="modal-close" onclick="closeModal('registerModal')">&times;</span>
+             <h2 class="modal-title">Create Customer Account</h2>
+             <form id="registerForm">
+                 <div class="form-group">
+                     <label class="form-label" for="regUsername">Username</label>
+                     <input type="text" id="regUsername" class="form-control" placeholder="e.g. companyrep" required>
+                 </div>
+                 <div class="form-group">
+                     <label class="form-label" for="regEmail">Email Address</label>
+                     <input type="email" id="regEmail" class="form-control" placeholder="name@example.com" required>
+                 </div>
+                 <div class="form-group">
+                     <label class="form-label" for="regPassword">Password</label>
+                     <input type="password" id="regPassword" class="form-control" placeholder="Minimum 6 characters" required>
+                 </div>
+                 <div class="form-group">
+                     <label class="form-label" for="regContactInfo">Phone / Contact Number</label>
+                     <input type="text" id="regContactInfo" class="form-control" placeholder="e.g. +880-1xxxxxxxxx" required>
+                 </div>
+                 <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Complete Registration</button>
+             </form>
+             <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                 Already registered? <a href="javascript:void(0)" onclick="closeModal('registerModal'); openModal('loginModal');" style="color: var(--color-primary); font-weight:600;">Sign In</a>
+             </p>
+         </div>
+     </div>
+
+    <!-- Seller Login Modal -->
+    <div class="modal-overlay" id="sellerLoginModal">
+        <div class="modal">
+            <span class="modal-close" onclick="closeModal('sellerLoginModal')">&times;</span>
+            <h2 class="modal-title">Sign In - Seller Portal</h2>
+            <form id="sellerLoginForm">
+                <div class="form-group">
+                    <label class="form-label" for="sellerLoginEmail">Email Address</label>
+                    <input type="email" id="sellerLoginEmail" class="form-control" placeholder="enter seller@etrailglobal.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerLoginPassword">Password</label>
+                    <input type="password" id="sellerLoginPassword" class="form-control" placeholder="enter Seller123" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Login to Seller Panel</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Apply for a supplier account? <a href="javascript:void(0)" onclick="closeModal('sellerLoginModal'); openModal('sellerRegisterModal');" style="color: var(--color-primary); font-weight:600;">Apply Now</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Seller Register Modal -->
+    <div class="modal-overlay" id="sellerRegisterModal">
+        <div class="modal" style="max-width: 600px;">
+            <span class="modal-close" onclick="closeModal('sellerRegisterModal')">&times;</span>
+            <h2 class="modal-title">Become a Seller / Supplier Application</h2>
+            <form id="sellerRegisterForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegUsername">Username *</label>
+                        <input type="text" id="sellerRegUsername" class="form-control" placeholder="e.g. factoryrep" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegEmail">Business Email *</label>
+                        <input type="email" id="sellerRegEmail" class="form-control" placeholder="sales@factory.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerRegPassword">Password *</label>
+                    <input type="password" id="sellerRegPassword" class="form-control" placeholder="Minimum 6 characters" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegCompanyName">Company Registered Name *</label>
+                        <input type="text" id="sellerRegCompanyName" class="form-control" placeholder="e.g. Apex Tech Textiles Ltd" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegYearEstablished">Established Year</label>
+                        <input type="text" id="sellerRegYearEstablished" class="form-control" placeholder="e.g. 2015">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegContactInfo">Business Phone *</label>
+                        <input type="text" id="sellerRegContactInfo" class="form-control" placeholder="e.g. +880-1xxxxxxxxx" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegWhatsApp">WhatsApp Number *</label>
+                        <input type="text" id="sellerRegWhatsApp" class="form-control" placeholder="e.g. +880-1xxxxxxxxx" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegGmail">Alternate Email (Gmail)</label>
+                        <input type="email" id="sellerRegGmail" class="form-control" placeholder="e.g. alternate@gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegTax">Tax / BIN Number</label>
+                        <input type="text" id="sellerRegTax" class="form-control" placeholder="e.g. 123456789">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerRegCompanyAddress">Company Address / Factory Location *</label>
+                    <input type="text" id="sellerRegCompanyAddress" class="form-control" placeholder="e.g. Plot 12, Gazipur Industrial Zone" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerRegWebsite">Company Website</label>
+                    <input type="text" id="sellerRegWebsite" class="form-control" placeholder="e.g. https://apextech.com">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Submit Seller Application</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Already have a seller account? <a href="javascript:void(0)" onclick="closeModal('sellerRegisterModal'); openModal('sellerLoginModal');" style="color: var(--color-primary); font-weight:600;">Sign In</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initCountdown();
+            loadFlashDeals();
+        });
+
+        function triggerHeroSearch() {
+            const keyword = document.getElementById('heroSearchInput').value;
+            const category = document.getElementById('heroCategorySelect').value;
+            window.location.href = `/product.html?search=${encodeURIComponent(keyword)}&category=${encodeURIComponent(category)}`;
+        }
+
+        function initCountdown() {
+            const countdownEl = document.getElementById('dealCountdown');
+            if (!countdownEl) return;
+            
+            function updateTime() {
+                const now = new Date();
+                const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+                const diff = tomorrow - now;
+                
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                
+                const hStr = String(hours).padStart(2, '0');
+                const mStr = String(minutes).padStart(2, '0');
+                const sStr = String(seconds).padStart(2, '0');
+                
+                countdownEl.innerHTML = `
+                    <div class="time-block"><span>${hStr[0]}</span><span>${hStr[1]}</span></div><span class="colon">:</span>
+                    <div class="time-block"><span>${mStr[0]}</span><span>${mStr[1]}</span></div><span class="colon">:</span>
+                    <div class="time-block"><span>${sStr[0]}</span><span>${sStr[1]}</span></div>
+                `;
+            }
+            
+            updateTime();
+            setInterval(updateTime, 1000);
+        }
+
+        async function loadFlashDeals() {
+            const grid = document.getElementById('dealsGrid');
+            try {
+                const response = await fetch('/api/product?isTodayDeal=true');
+                if (response.ok) {
+                    const products = await response.json();
+                    if (products.length === 0) {
+                        grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);">No active flash deals at the moment. Check back soon!</div>`;
+                        return;
+                    }
+                    grid.innerHTML = products.map(p => renderFlashDealCard(p)).join('');
+                } else {
+                    grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:var(--color-danger);">Failed to load flash deals.</div>`;
+                }
+            } catch(e) {
+                console.error(e);
+                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:var(--color-danger);">Failed to load flash deals.</div>`;
+            }
+        }
+
+        function renderFlashDealCard(p) {
+            const sym = window.siteSettings.currency_symbol || "৳";
+            const hasDiscount = p.discountPrice && p.discountPrice > 0 && p.discountPrice < p.price;
+            const activePrice = hasDiscount ? p.discountPrice : p.price;
+            const priceText = `${sym}${activePrice.toFixed(2)}`;
+            const originalPriceHtml = hasDiscount ? `<span style="text-decoration: line-through; color: var(--text-muted); font-size: 12px; font-weight: normal; margin-left: 6px;">${sym}${p.price.toFixed(2)}</span>` : '';
+            const discountPercent = hasDiscount ? Math.round(((p.price - p.discountPrice) / p.price) * 100) : 0;
+            const discountBadgeHtml = hasDiscount ? `<span style="background: var(--color-danger); color: white; padding: 2px 4px; border-radius: 4px; font-size: 9px; font-weight: bold; margin-left: 6px;">-${discountPercent}%</span>` : '';
+
+            // Dynamic claimed calculation based on ID to look premium and authentic
+            const claimSeed = (p.id * 17) % 35 + 50; // Claim rate between 50% and 85%
+
+            return `
+                <div class="card flash-card">
+                    <div class="flash-badge">⚡ Deal -${discountPercent}%</div>
+                    <div class="card-img" style="background-image: url('${p.imageUrl || '/images/placeholder.png'}')">
+                        ${p.sellerVerified ? '<span class="card-badge">✓ Verified Seller</span>' : ''}
+                    </div>
+                    <div class="card-body">
+                        <span style="font-size:11px; font-weight:600; color:var(--color-secondary); text-transform:uppercase; margin-bottom:4px;">${p.category}</span>
+                        <h3 class="card-title">${escapeHtml(p.name)}</h3>
+                        <p class="card-desc">${escapeHtml(p.description)}</p>
+                        
+                        <!-- Claim progress bar -->
+                        <div class="deal-progress-container">
+                            <div style="display: flex; justify-content: space-between; font-weight: 600;">
+                                <span>⚡ Hot Deal</span>
+                                <span>${claimSeed}% Claimed</span>
+                            </div>
+                            <div class="deal-progress-bar">
+                                <div class="deal-progress-fill" style="width: ${claimSeed}%"></div>
+                            </div>
+                        </div>
+
+                        <div class="card-meta" style="margin-top: 16px;">
+                            <div>
+                                <div class="price-tag">${priceText}${originalPriceHtml}${discountBadgeHtml}</div>
+                            </div>
+                            <button onclick="viewDetails(${p.id})" class="btn btn-primary" style="padding: 6px 12px; font-size:12px; font-weight: 700; background-color: var(--color-danger); border-color: var(--color-danger);">Buy Now</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function viewDetails(productId) {
+            window.location.href = `/product.html?id=${productId}`;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>

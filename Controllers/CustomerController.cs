@@ -717,6 +717,176 @@ public class CustomerController : ControllerBase
 
         return Ok(new { message = "Order status updated successfully", status = order.Status });
     }
+
+    [AllowAnonymous]
+    [HttpGet("seller/{id}")]
+    public async Task<IActionResult> GetSellerDetails(int id)
+    {
+        var seller = await _context.Users.FindAsync(id);
+        if (seller == null || seller.Role != UserRole.Seller)
+        {
+            return NotFound(new { message = "Seller not found" });
+        }
+
+        return Ok(new
+        {
+            seller.Id,
+            seller.Username,
+            seller.Email,
+            seller.CompanyName,
+            seller.BusinessType,
+            seller.ContactInfo,
+            seller.WhatsAppNumber,
+            seller.AlternateEmail,
+            seller.TaxNumber,
+            seller.CompanyAddress,
+            seller.YearEstablished,
+            seller.WebsiteUrl,
+            seller.IsVerified
+        });
+    }
+
+    [AllowAnonymous]
+    [HttpGet("reviews/product/{productId}")]
+    public async Task<IActionResult> GetProductReviews(int productId)
+    {
+        var reviews = await _context.ProductReviews
+            .Where(r => r.ProductId == productId)
+            .Include(r => r.Buyer)
+            .OrderByDescending(r => r.CreatedAt)
+            .Select(r => new
+            {
+                r.Id,
+                r.BuyerId,
+                BuyerName = r.Buyer != null ? r.Buyer.Username : "Anonymous",
+                r.ProductId,
+                r.Rating,
+                r.Comment,
+                r.CreatedAt
+            })
+            .ToListAsync();
+        return Ok(reviews);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("reviews/product/stats/{productId}")]
+    public async Task<IActionResult> GetProductStats(int productId)
+    {
+        var reviews = await _context.ProductReviews.Where(r => r.ProductId == productId).ToListAsync();
+        var total = reviews.Count;
+        var average = total > 0 ? reviews.Average(r => r.Rating) : 0.0;
+        return Ok(new
+        {
+            productId,
+            reviewCount = total,
+            averageRating = Math.Round(average, 1)
+        });
+    }
+
+    [HttpPost("reviews/product")]
+    public async Task<IActionResult> AddProductReview([FromBody] CreateProductReviewRequest request)
+    {
+        try
+        {
+            int buyerId = GetCurrentUserId();
+            var product = await _context.Products.FindAsync(request.ProductId);
+            if (product == null)
+            {
+                return NotFound(new { message = "Product not found" });
+            }
+
+            if (request.Rating < 1 || request.Rating > 5)
+            {
+                return BadRequest(new { message = "Rating must be between 1 and 5 stars." });
+            }
+
+            var existing = await _context.ProductReviews
+                .FirstOrDefaultAsync(r => r.BuyerId == buyerId && r.ProductId == request.ProductId);
+
+            if (existing != null)
+            {
+                existing.Rating = request.Rating;
+                existing.Comment = request.Comment;
+                existing.CreatedAt = DateTime.UtcNow;
+                _context.ProductReviews.Update(existing);
+            }
+            else
+            {
+                var review = new ProductReview
+                {
+                    BuyerId = buyerId,
+                    ProductId = request.ProductId,
+                    Rating = request.Rating,
+                    Comment = request.Comment,
+                    CreatedAt = DateTime.UtcNow
+                };
+                _context.ProductReviews.Add(review);
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok(new { message = "Product review submitted successfully" });
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Unauthorized();
+        }
+    }
+
+    [AllowAnonymous]
+    [HttpGet("sellers")]
+    public async Task<IActionResult> GetSellers()
+    {
+        var sellers = await _context.Users
+            .Where(u => u.Role == UserRole.Seller)
+            .Select(u => new
+            {
+                u.Id,
+                u.Username,
+                u.CompanyName,
+                u.CompanyAddress,
+                u.YearEstablished,
+                u.WebsiteUrl,
+                u.IsVerified
+            })
+            .ToListAsync();
+
+        var result = new List<object>();
+        foreach (var s in sellers)
+        {
+            var reviews = await _context.SellerReviews.Where(r => r.SellerId == s.Id).ToListAsync();
+            var total = reviews.Count;
+            var average = total > 0 ? reviews.Average(r => r.Rating) : 0.0;
+            var followerCount = await _context.FollowedSellers.CountAsync(f => f.SellerId == s.Id);
+
+            result.Add(new
+            {
+                s.Id,
+                s.Username,
+                s.CompanyName,
+                s.CompanyAddress,
+                s.YearEstablished,
+                s.WebsiteUrl,
+                s.IsVerified,
+                AverageRating = Math.Round(average, 1),
+                ReviewCount = total,
+                FollowerCount = followerCount
+            });
+        }
+
+        var sorted = result
+            .OrderByDescending(r => (double)((dynamic)r).AverageRating)
+            .ThenByDescending(r => (int)((dynamic)r).FollowerCount)
+            .ToList();
+
+        return Ok(sorted);
+    }
+}
+
+public class CreateProductReviewRequest
+{
+    public int ProductId { get; set; }
+    public int Rating { get; set; }
+    public string Comment { get; set; } = string.Empty;
 }
 
 public class UpdateOrderStatusRequest

@@ -45,8 +45,8 @@
             <nav class="market-links">
                 <a href="index.html" class="active">Home</a>
                 <a href="product.html">All Products</a>
-                <a href="product.html?isTodayDeal=true">Flash Deals</a>
-                <a href="product.html?isBestSeller=true">Best Sellers</a>
+                <a href="flash-deals.html">Flash Deals</a>
+                <a href="best-sellers.html">Best Sellers</a>
             </nav>
             <button class="seller-cta" onclick="openModal('sellerRegisterModal')">Become a Seller</button>
         </div>
@@ -117,7 +117,7 @@
                         <div class="countdown-unit" id="timerSec">12</div>
                     </div>
                 </div>
-                <a href="product.html?isTodayDeal=true" style="color:white; font-weight:800; font-size:14px; text-decoration:underline;">SHOP ALL DEALS</a>
+                <a href="flash-deals.html" style="color:white; font-weight:800; font-size:14px; text-decoration:underline;">SHOP ALL DEALS</a>
             </div>
             <div class="deal-items-container" id="flashDealsContainer">
                 <div class="market-loading">Loading flash deals...</div>
@@ -144,7 +144,7 @@
                         <span>Limited picks</span>
                         <h2>Today's Deals</h2>
                     </div>
-                    <a href="product.html?isTodayDeal=true">More</a>
+                    <a href="flash-deals.html">More</a>
                 </div>
                 <div class="deal-list" id="todaysDealsGrid">
                     <div class="market-loading">Loading deals...</div>
@@ -157,7 +157,7 @@
                         <span>Popular orders</span>
                         <h2>Best Selling</h2>
                     </div>
-                    <a href="product.html?isBestSeller=true">More</a>
+                    <a href="best-sellers.html">More</a>
                 </div>
                 <div class="deal-list" id="bestSellingGrid">
                     <div class="market-loading">Loading best sellers...</div>
@@ -641,7 +641,7 @@
             return `
                 <a class="market-product-card" href="/product.html?id=${p.id}">
                     <div class="market-product-img" style="background-image: url('${p.imageUrl || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=600&q=80'}')">
-                        ${p.sellerVerified ? '<span>Audited</span>' : ''}
+                        ${p.sellerVerified ? '<span>Verified Seller</span>' : ''}
                     </div>
                     <div class="market-product-body">
                         <small>${p.category}</small>
@@ -649,7 +649,6 @@
                         <p>${p.description}</p>
                         <div class="market-product-meta">
                             <strong>${priceText}${originalPriceHtml}${discountBadgeHtml}</strong>
-                            <em>MOQ ${p.minOrderQuantity}</em>
                         </div>
                         <div class="seller-line">${p.sellerCompany || p.sellerName || 'Supplier'}</div>
                     </div>
@@ -664,7 +663,7 @@
                     <section>
                         <small>${p.category}</small>
                         <strong>${p.name}</strong>
-                        <span>${getPriceText(p.price, p.discountPrice)} / MOQ ${p.minOrderQuantity}</span>
+                        <span>${getPriceText(p.price, p.discountPrice)}</span>
                     </section>
                 </a>
             `;

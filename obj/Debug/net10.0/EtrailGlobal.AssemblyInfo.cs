@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EtrailGlobal")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+18dbea419538c70dd7ad5b8e8a21729c07849a86")]
 [assembly: System.Reflection.AssemblyProductAttribute("EtrailGlobal")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EtrailGlobal")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

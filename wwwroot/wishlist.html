@@ -73,7 +73,9 @@
             </a>
             <nav class="nav-links">
                 <a href="index.html" class="nav-link">Home</a>
-                <a href="product.html" class="nav-link">Products</a>
+                <a href="product.html" class="nav-link">All Products</a>
+                <a href="flash-deals.html" class="nav-link">Flash Deals</a>
+                <a href="best-sellers.html" class="nav-link">Best Sellers</a>
             </nav>
             <div class="auth-nav" id="authNav">
                 <button class="btn btn-secondary" style="opacity: 0.5;">Loading...</button>
@@ -219,13 +221,12 @@
                             </div>
                             
                             <div style="font-size:12px; color:var(--text-secondary); margin-top: 4px; display:flex; flex-direction:column; gap:4px;">
-                                <div>MOQ: <strong>${item.minOrderQuantity} units</strong></div>
                                 <div>Status: ${stockHtml}</div>
                                 <div>Lead Time: <strong>${item.leadTimeDays || 3} Days</strong></div>
                             </div>
 
                             <div style="display:grid; grid-template-columns: 2fr 1fr; gap:8px; margin-top:16px;">
-                                <button onclick="addToCartFromWishlist(${item.productId}, ${item.minOrderQuantity})" class="btn btn-primary" style="justify-content:center; padding:10px; font-size:12px; font-weight:700;" ${item.stock <= 0 ? 'disabled style="opacity:0.5; pointer-events:none;"' : ''}>
+                                <button onclick="addToCartFromWishlist(${item.productId}, 1)" class="btn btn-primary" style="justify-content:center; padding:10px; font-size:12px; font-weight:700;" ${item.stock <= 0 ? 'disabled style="opacity:0.5; pointer-events:none;"' : ''}>
                                     🛒 Sourced Cart
                                 </button>
                                 <button onclick="removeWishlistItem(${item.productId})" class="btn btn-danger" style="background:#fff; color:var(--color-danger); border:1px solid var(--color-danger); justify-content:center; padding:10px; font-size:12px; font-weight:600; cursor:pointer;">

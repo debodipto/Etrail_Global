@@ -216,3 +216,24 @@ function applySiteSettings() {
     if (emailEl) emailEl.textContent = window.siteSettings.contact_email || "";
 }
 
+async function handleLogout() {
+    try {
+        const response = await fetch('/api/auth/logout', {
+            method: 'POST'
+        });
+        if (response.ok) {
+            showToast("Logged out successfully");
+            window.currentUser = null;
+            updateNavigation();
+            setTimeout(() => {
+                window.location.href = '/index.html';
+            }, 1000);
+        } else {
+            showToast("Failed to logout", true);
+        }
+    } catch (e) {
+        console.error("Logout failed", e);
+        showToast("Error during logout", true);
+    }
+}
+

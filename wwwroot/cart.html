@@ -95,7 +95,9 @@
             </a>
             <nav class="nav-links">
                 <a href="index.html" class="nav-link">Home</a>
-                <a href="product.html" class="nav-link">Products</a>
+                <a href="product.html" class="nav-link">All Products</a>
+                <a href="flash-deals.html" class="nav-link">Flash Deals</a>
+                <a href="best-sellers.html" class="nav-link">Best Sellers</a>
             </nav>
             <div class="auth-nav" id="authNav">
                 <button class="btn btn-secondary" style="opacity: 0.5;">Loading...</button>
@@ -109,7 +111,7 @@
         <div style="margin-top: 40px;">
             <span class="badge badge-verified" style="margin-bottom: 8px; font-weight: 700; font-size:11px;">B2B Sourcing</span>
             <h1 style="font-size: 28px; font-weight: 800; color: var(--text-primary);">Sourced Cart Overview</h1>
-            <p style="color: var(--text-muted); font-size: 14px;">Review items, adjust quantities matching supplier Minimum Order Quantities (MOQ), and finalize corporate invoices.</p>
+            <p style="color: var(--text-muted); font-size: 14px;">Review items, adjust quantities, and finalize corporate invoices.</p>
         </div>
 
         <div id="cartContentWrapper" class="cart-layout" style="display: none;">
@@ -298,15 +300,14 @@
                                     <span>Unit Price: </span>
                                     <strong style="color:var(--color-primary);">${sym}${activePrice.toFixed(2)}</strong>${originalPriceHtml}
                                 </div>
-                                <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">Min Order Qty (MOQ): ${item.minOrderQuantity} units</div>
                             </div>
                         </div>
 
                         <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
                             <div class="qty-controller">
-                                <button type="button" class="qty-btn" onclick="adjustQty(${item.productId}, -1, ${item.minOrderQuantity})">-</button>
-                                <input type="number" class="qty-input" id="qtyInput_${item.productId}" value="${item.quantity}" min="${item.minOrderQuantity}" onchange="handleQtyChange(${item.productId}, this, ${item.minOrderQuantity})" />
-                                <button type="button" class="qty-btn" onclick="adjustQty(${item.productId}, 1, ${item.minOrderQuantity})">+</button>
+                                <button type="button" class="qty-btn" onclick="adjustQty(${item.productId}, -1, 1)">-</button>
+                                <input type="number" class="qty-input" id="qtyInput_${item.productId}" value="${item.quantity}" min="1" onchange="handleQtyChange(${item.productId}, this, 1)" />
+                                <button type="button" class="qty-btn" onclick="adjustQty(${item.productId}, 1, 1)">+</button>
                             </div>
                             
                             <div style="text-align:right; min-width: 100px;">

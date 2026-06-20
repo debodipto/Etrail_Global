@@ -64,6 +64,7 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
+    db.Database.EnsureDeleted();
     db.Database.EnsureCreated(); // PostgreSQL Database Creation & Tables Creation
 
     DbSeeder.Seed(db);

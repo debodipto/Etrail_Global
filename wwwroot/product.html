@@ -17,7 +17,9 @@
             </a>
             <nav class="nav-links">
                 <a href="index.html" class="nav-link">Home</a>
-                <a href="product.html" class="nav-link active">Products</a>
+                <a href="product.html" class="nav-link active">All Products</a>
+                <a href="flash-deals.html" class="nav-link">Flash Deals</a>
+                <a href="best-sellers.html" class="nav-link">Best Sellers</a>
             </nav>
             <div class="auth-nav" id="authNav">
                 <button class="btn btn-secondary" style="opacity: 0.5;">Loading...</button>
@@ -72,7 +74,7 @@
         <div id="detailSection" style="display: none;">
             <div style="margin-bottom: 24px;">
                 <a href="javascript:void(0)" onclick="goBackToCatalog()" style="color: var(--color-secondary); font-weight:500; display:inline-flex; align-items:center; gap:8px;">
-                    &larr; Back to Wholesale Catalog
+                    &larr; Back
                 </a>
             </div>
 
@@ -99,10 +101,7 @@
                             <!-- Dynamic single price and discount info -->
                         </div>
                         <div style="margin-top: 12px; font-size:13px; color:var(--text-muted); display:flex; flex-direction:column; gap:8px;">
-                            <div>
-                                <span>Minimum Order Quantity (MOQ): </span>
-                                <strong id="detailMOQ" style="color:var(--text-primary)">1</strong> units
-                            </div>
+                            <span id="detailMOQ" style="display:none;"></span>
                             <div>
                                 <span>Stock Status: </span>
                                 <strong id="detailStock" style="color:var(--text-primary)">Loading stock...</strong>
@@ -143,7 +142,9 @@
                     <div style="display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
                         <div style="font-size: 32px;">🏢</div>
                         <div>
-                            <h3 id="sellerCardName" style="font-size: 18px; font-weight: 700; color: var(--text-primary); margin: 0;">Loading Supplier...</h3>
+                            <h3 style="font-size: 18px; font-weight: 700; color: var(--text-primary); margin: 0;">
+                                <a id="sellerCardNameLink" href="#" style="color: inherit; text-decoration: none; font-weight: 700;">Loading Supplier...</a>
+                            </h3>
                             <span id="sellerCardVerified" class="badge badge-verified" style="margin-top: 4px; font-size:11px; display:none;">Verified Seller</span>
                         </div>
                     </div>
@@ -171,11 +172,20 @@
                 
                 <!-- Ratings & Customer Reviews Panel -->
                 <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 28px; box-shadow: var(--shadow-sm);">
-                    <h3 style="font-size: 20px; font-weight: 700; margin-top:0; margin-bottom: 20px; color: var(--text-primary);">Customer Feedback & Reviews</h3>
                     
+                    <!-- Tabs Header -->
+                    <div style="display: flex; border-bottom: 2px solid var(--border-color); margin-bottom: 20px; gap: 20px;">
+                        <button type="button" id="tabProductReviews" onclick="switchReviewTab('product')" style="background: transparent; border: none; font-size: 16px; font-weight: 700; padding: 10px 0; color: var(--color-primary); border-bottom: 2px solid var(--color-primary); cursor: pointer; transition: all var(--transition-fast);">
+                            🛒 Product Reviews
+                        </button>
+                        <button type="button" id="tabStoreReviews" onclick="switchReviewTab('store')" style="background: transparent; border: none; font-size: 16px; font-weight: 600; padding: 10px 0; color: var(--text-secondary); border-bottom: 2px solid transparent; cursor: pointer; transition: all var(--transition-fast);">
+                            🏢 Store Reviews
+                        </button>
+                    </div>
+
                     <!-- Write a Review Form -->
                     <div id="writeReviewContainer" style="display: none; border-bottom: 1px solid var(--border-color); padding-bottom: 24px; margin-bottom: 24px;">
-                        <h4 style="margin-top: 0; margin-bottom: 12px; font-size: 15px; font-weight: 700;">Share Your Experience</h4>
+                        <h4 id="writeReviewHeader" style="margin-top: 0; margin-bottom: 12px; font-size: 15px; font-weight: 700;">Share Your Product Experience</h4>
                         <form id="submitReviewForm" onsubmit="handleReviewSubmit(event)">
                             <div class="form-group" style="margin-bottom:12px;">
                                 <label class="form-label" style="margin-bottom:6px;">Your Rating</label>
@@ -190,9 +200,9 @@
                             </div>
                             <div class="form-group" style="margin-bottom:12px;">
                                 <label class="form-label" for="reviewComment">Comment / Feedback</label>
-                                <textarea id="reviewComment" class="form-control" rows="3" placeholder="Describe the quality of goods, shipping, communication..." required></textarea>
+                                <textarea id="reviewComment" class="form-control" rows="3" placeholder="Describe the quality, performance, material, fitting..." required></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary" style="padding: 10px 20px;">Submit Store Review</button>
+                            <button type="submit" id="submitReviewBtn" class="btn btn-primary" style="padding: 10px 20px;">Submit Product Review</button>
                         </form>
                     </div>
 
@@ -202,6 +212,16 @@
                     </div>
                 </div>
                 
+            </div>
+
+            <!-- Similar Products Section -->
+            <div style="margin-top: 50px; border-top: 1px solid var(--border-color); padding-top: 40px;" id="similarProductsSection">
+                <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 24px; color: var(--text-primary);">Similar Products</h3>
+                <div class="grid" id="similarProductsGrid">
+                    <div style="grid-column: 1/-1; text-align: center; padding: 20px; color: var(--text-secondary);">
+                        Loading similar products...
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -470,6 +490,39 @@
                 Already have a seller account? <a href="javascript:void(0)" onclick="closeModal('sellerRegisterModal'); openModal('sellerLoginModal');" style="color: var(--color-primary); font-weight:600;">Sign In</a>
             </p>
         </div>
+     </div>
+
+    <!-- Connect Seller Modal -->
+    <div class="modal-overlay" id="connectSellerModal">
+        <div class="modal" style="max-width: 450px;">
+            <span class="modal-close" onclick="closeModal('connectSellerModal')">&times;</span>
+            <h2 class="modal-title" id="connectSellerTitle" style="display: flex; align-items: center; gap: 8px;">
+                🤝 Connect with Seller
+            </h2>
+            <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 16px;">
+                <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.5; margin: 0;">
+                    Get in touch with the supplier directly via WhatsApp or email to discuss bulk pricing, custom specifications, or order placement.
+                </p>
+                <div style="background: rgba(var(--color-primary-rgb), 0.05); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--border-color); padding-bottom: 10px;">
+                        <span style="font-weight: 600; color: var(--text-secondary);">WhatsApp</span>
+                        <a id="connectWhatsAppBtn" href="#" target="_blank" class="btn btn-secondary" style="font-size: 13px; font-weight: 700; padding: 6px 12px; background: #25D366; color: white; border: none; border-radius: var(--radius-sm); text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                            💬 WhatsApp Chat
+                        </a>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 4px;">
+                        <span style="font-weight: 600; color: var(--text-secondary);">Email Address</span>
+                        <a id="connectEmailBtn" href="#" class="btn btn-secondary" style="font-size: 13px; font-weight: 700; padding: 6px 12px; border-radius: var(--radius-sm); text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                            ✉️ Send Email
+                        </a>
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--text-muted); text-align: center;">
+                    <span id="connectWhatsAppNumber" style="font-weight: 600;"></span>
+                    <span id="connectEmailAddress" style="font-weight: 600;"></span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Scripts -->
@@ -551,34 +604,27 @@
                         return;
                     }
 
-                    grid.innerHTML = products.map(p => {
-                        const sym = window.siteSettings.currency_symbol || "৳";
-                        const hasDiscount = p.discountPrice && p.discountPrice > 0 && p.discountPrice < p.price;
-                        const activePrice = hasDiscount ? p.discountPrice : p.price;
-                        const priceText = `${sym}${activePrice.toFixed(2)}`;
-                        const originalPriceHtml = hasDiscount ? `<span style="text-decoration: line-through; color: var(--text-muted); font-size: 12px; font-weight: normal; margin-left: 6px;">${sym}${p.price.toFixed(2)}</span>` : '';
-                        const discountBadgeHtml = hasDiscount ? `<span style="background: var(--color-danger); color: white; padding: 2px 4px; border-radius: 4px; font-size: 9px; font-weight: bold; margin-left: 6px;">-${Math.round(((p.price - p.discountPrice) / p.price) * 100)}%</span>` : '';
+                    // Group products by category
+                    const grouped = {};
+                    products.forEach(p => {
+                        const cat = p.category || 'Other Products';
+                        if (!grouped[cat]) {
+                            grouped[cat] = [];
+                        }
+                        grouped[cat].push(p);
+                    });
 
-                        return `
-                            <div class="card">
-                                <div class="card-img" style="background-image: url('${p.imageUrl || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=600&q=80'}')">
-                                    ${p.sellerVerified ? '<span class="card-badge">✓ Audited</span>' : ''}
-                                </div>
-                                <div class="card-body">
-                                    <span style="font-size:11px; font-weight:600; color:var(--color-secondary); text-transform:uppercase; margin-bottom:4px;">${p.category}</span>
-                                    <h3 class="card-title">${p.name}</h3>
-                                    <p class="card-desc">${p.description}</p>
-                                    <div class="card-meta">
-                                        <div>
-                                            <div class="price-tag">${priceText}${originalPriceHtml}${discountBadgeHtml}</div>
-                                            <div class="moq-tag">MOQ: ${p.minOrderQuantity} units</div>
-                                        </div>
-                                        <button onclick="viewDetails(${p.id})" class="btn btn-secondary" style="padding: 6px 12px; font-size:12px;">View Details</button>
-                                    </div>
-                                </div>
+                    let html = '';
+                    for (const cat in grouped) {
+                        html += `
+                            <div class="category-header-row" style="grid-column: 1 / -1; margin-top: 24px; border-bottom: 2px solid var(--color-primary); padding-bottom: 8px; display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                                <h2 style="font-size: 20px; font-weight: 800; color: var(--color-primary); margin: 0;">${escapeHtml(cat)}</h2>
+                                <span style="font-size: 13px; font-weight: 600; color: var(--text-muted); background: var(--bg-body); padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border-color);">${grouped[cat].length} ${grouped[cat].length === 1 ? 'Product' : 'Products'}</span>
                             </div>
                         `;
-                    }).join('');
+                        html += grouped[cat].map(p => renderProductCard(p)).join('');
+                    }
+                    grid.innerHTML = html;
                 }
             } catch (err) {
                 console.error(err);
@@ -761,7 +807,11 @@
                 }
 
                 // Render Seller Profile Card
-                document.getElementById('sellerCardName').textContent = data.sellerCompany || data.sellerName || "Supplier";
+                const sellerNameLink = document.getElementById('sellerCardNameLink');
+                if (sellerNameLink) {
+                    sellerNameLink.textContent = data.sellerCompany || data.sellerName || "Supplier";
+                    sellerNameLink.href = `/seller.html?id=${data.sellerId}`;
+                }
                 document.getElementById('sellerCardAddress').innerHTML = `📍 Address: ${data.sellerAddress || 'Dhaka, Bangladesh'}`;
                 document.getElementById('sellerCardEstablished').innerHTML = `📅 Established: ${data.sellerYearEstablished || '2018'}`;
                 
@@ -781,26 +831,21 @@
 
                 // Load reviews, rating stats, and follow state
                 await loadSellerCardDetailsAndReviews(data.sellerId);
+                await loadReviewsList();
+                await loadSimilarProducts(data.category, data.id);
 
                 // Update dynamic action panel based on login status
                 const actionPanel = document.getElementById('detailActionPanel');
                 if (actionPanel) {
                     if (window.currentUser) {
                         // User is logged in! Hide Send Message in seller card, show Cart/Wishlist/Compare panel.
-                        setTimeout(() => {
-                            const sendMsgBtnInCard = document.querySelector('button[onclick="contactSupplier()"]');
-                            if (sendMsgBtnInCard) {
-                                sendMsgBtnInCard.style.display = 'none';
-                            }
-                        }, 200);
-                        
                         actionPanel.innerHTML = `
                             <div style="display:flex; flex-direction:column; gap:12px; background: rgba(21, 128, 61, 0.02); border: 1px solid var(--border-color); padding: 20px; border-radius: var(--radius-md);">
                                 <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
                                     <span style="font-weight:600; font-size:14px; color:var(--text-secondary); margin-bottom: 0;">Order Quantity:</span>
                                     <div style="display:flex; align-items:center; border:1px solid var(--border-color); border-radius: var(--radius-sm); overflow:hidden; background:#fff;">
                                         <button type="button" onclick="adjustOrderQty(-1)" style="padding: 6px 12px; font-weight:700; background:#f8fafc; cursor:pointer; font-size: 16px; border:none; outline:none; color:var(--text-primary);">-</button>
-                                        <input type="number" id="detailOrderQtyInput" value="${data.minOrderQuantity}" min="${data.minOrderQuantity}" style="width: 70px; text-align:center; font-weight:700; padding:6px 0; border:none; outline:none; color:var(--text-primary);" />
+                                        <input type="number" id="detailOrderQtyInput" value="1" min="1" style="width: 70px; text-align:center; font-weight:700; padding:6px 0; border:none; outline:none; color:var(--text-primary);" />
                                         <button type="button" onclick="adjustOrderQty(1)" style="padding: 6px 12px; font-weight:700; background:#f8fafc; cursor:pointer; font-size: 16px; border:none; outline:none; color:var(--text-primary);">+</button>
                                     </div>
                                 </div>
@@ -815,14 +860,28 @@
                                         🔄 Compare
                                     </button>
                                 </div>
+                                <button type="button" onclick="openConnectSellerModal()" class="btn btn-secondary" style="width: 100%; justify-content: center; padding: 12px; font-weight: 700; border: 2px solid var(--color-primary); color: var(--color-primary); margin-top: 8px;">
+                                    📞 Connect with ${escapeHtml(data.sellerCompany || data.sellerName || 'Supplier')}
+                                </button>
                             </div>
                         `;
+                        setTimeout(() => {
+                            const sendMsgBtnInCard = document.querySelector('button[onclick="contactSupplier()"]');
+                            if (sendMsgBtnInCard) {
+                                sendMsgBtnInCard.style.display = 'none';
+                            }
+                        }, 50);
                     } else {
                         // User is NOT logged in! Show "Contact Supplier / Inquire Now" button.
                         actionPanel.innerHTML = `
-                            <button onclick="contactSupplier()" class="btn btn-primary" style="width:100%; justify-content:center; padding: 14px; font-weight: 700;">
-                                💬 Contact Supplier / Inquire Now
-                            </button>
+                            <div style="display:flex; flex-direction:column; gap:12px;">
+                                <button onclick="contactSupplier()" class="btn btn-primary" style="width:100%; justify-content:center; padding: 14px; font-weight: 700;">
+                                    💬 Contact Supplier / Inquire Now
+                                </button>
+                                <button type="button" onclick="openConnectSellerModal()" class="btn btn-secondary" style="width: 100%; justify-content: center; padding: 12px; font-weight: 700; border: 2px solid var(--color-primary); color: var(--color-primary);">
+                                    📞 Connect with ${escapeHtml(data.sellerCompany || data.sellerName || 'Supplier')}
+                                </button>
+                            </div>
                         `;
                     }
                 }
@@ -899,16 +958,7 @@
                                     </div>
                                     <div style="color:#d97706; font-size:14px; margin-bottom:4px;">${rStars}</div>
                                     <p style="color:var(--text-secondary); margin:0; font-size:13px; line-height:1.4;">${escapeHtml(r.comment)}</p>
-                                </div>
-                            `;
-                        }).join('');
-                    }
-                }
-            } catch (err) {
-                console.error("Error loading reviews:", err);
-            }
-
-            // 3. Check follow state and display appropriate button text
+            // 2. Check follow state and display appropriate button text
             isFollowingSeller = false;
             const followBtn = document.getElementById('btnFollowSeller');
             if (window.currentUser) {
@@ -1002,37 +1052,253 @@
             }
         }
 
+        let activeReviewTab = 'product'; // default to product reviews tab
+        
+        async function switchReviewTab(tabType) {
+            activeReviewTab = tabType;
+            
+            const tabProduct = document.getElementById('tabProductReviews');
+            const tabStore = document.getElementById('tabStoreReviews');
+            const submitBtn = document.getElementById('submitReviewBtn');
+            const commentTextarea = document.getElementById('reviewComment');
+            
+            if (tabType === 'product') {
+                tabProduct.style.color = 'var(--color-primary)';
+                tabProduct.style.borderBottom = '2px solid var(--color-primary)';
+                tabProduct.style.fontWeight = '700';
+                
+                tabStore.style.color = 'var(--text-secondary)';
+                tabStore.style.borderBottom = '2px solid transparent';
+                tabStore.style.fontWeight = '600';
+                
+                document.getElementById('writeReviewHeader').textContent = 'Share Your Product Experience';
+                submitBtn.textContent = 'Submit Product Review';
+                commentTextarea.placeholder = 'Describe the product quality, performance, material, fitting...';
+            } else {
+                tabStore.style.color = 'var(--color-primary)';
+                tabStore.style.borderBottom = '2px solid var(--color-primary)';
+                tabStore.style.fontWeight = '700';
+                
+                tabProduct.style.color = 'var(--text-secondary)';
+                tabProduct.style.borderBottom = '2px solid transparent';
+                tabProduct.style.fontWeight = '600';
+                
+                document.getElementById('writeReviewHeader').textContent = 'Share Your Store Experience';
+                submitBtn.textContent = 'Submit Store Review';
+                commentTextarea.placeholder = 'Describe the store service, communication, shipping speed, packaging...';
+            }
+            
+            // Reload reviews list for the active tab
+            await loadReviewsList();
+        }
+
+        async function loadReviewsList() {
+            if (!currentDetailProduct) return;
+            const listContainer = document.getElementById('productReviewsList');
+            if (!listContainer) return;
+            
+            listContainer.innerHTML = `<p style="text-align: center; color: var(--text-muted); padding: 24px;">Loading reviews...</p>`;
+            
+            try {
+                let url = '';
+                if (activeReviewTab === 'product') {
+                    url = `/api/customer/reviews/product/${currentDetailProduct.id}`;
+                } else {
+                    url = `/api/customer/reviews/seller/${currentDetailProduct.sellerId}`;
+                }
+                
+                const response = await fetch(url);
+                if (response.ok) {
+                    const reviews = await response.json();
+                    if (reviews.length === 0) {
+                        listContainer.innerHTML = `<div style="text-align:center; padding: 40px; color:var(--text-muted);">No reviews have been posted for this ${activeReviewTab === 'product' ? 'product' : 'store'} yet.</div>`;
+                    } else {
+                        listContainer.innerHTML = reviews.map(r => {
+                            let rStars = '';
+                            for (let i = 0; i < 5; i++) {
+                                rStars += i < r.rating ? '★' : '☆';
+                            }
+                            const formattedDate = new Date(r.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+                            return `
+                                <div style="border-bottom: 1px solid var(--border-color); padding-bottom:12px; margin-bottom:12px;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                                        <strong>${escapeHtml(r.buyerName)}</strong>
+                                        <span style="color:#d97706; font-size:14px;">${rStars}</span>
+                                    </div>
+                                    <p style="font-size:13px; color:var(--text-secondary); margin: 0 0 4px 0; line-height: 1.4;">${escapeHtml(r.comment)}</p>
+                                    <small style="color:var(--text-muted); font-size:11px;">Posted on ${formattedDate}</small>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                }
+            } catch (err) {
+                console.error("Error loading reviews:", err);
+                listContainer.innerHTML = `<div style="text-align:center; padding: 20px; color:var(--color-danger);">Failed to load reviews.</div>`;
+            }
+        }
+
         async function handleReviewSubmit(e) {
             e.preventDefault();
             if (!window.currentUser) {
                 showToast("Please log in to leave reviews", true);
+                openModal('loginModal');
                 return;
             }
 
-            const sellerId = currentDetailProduct.sellerId;
+            const comment = document.getElementById('reviewComment').value.trim();
             const rating = selectedReviewStars;
-            const comment = document.getElementById('reviewComment').value;
+
+            if (!comment) {
+                showToast("Please enter a comment.", true);
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitReviewBtn');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = "⌛ Submitting...";
 
             try {
-                const response = await fetch('/api/customer/reviews', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ sellerId, rating, comment })
-                });
-
-                if (response.ok) {
-                    showToast("Review submitted successfully!");
-                    document.getElementById('reviewComment').value = '';
-                    // Reload ratings and reviews list
-                    await loadSellerCardDetailsAndReviews(sellerId);
+                let res;
+                if (activeReviewTab === 'product') {
+                    res = await fetch('/api/customer/reviews/product', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            productId: currentDetailProduct.id,
+                            rating: rating,
+                            comment: comment
+                        })
+                    });
                 } else {
-                    const errData = await response.json();
-                    showToast(errData.message || "Failed to submit review", true);
+                    res = await fetch('/api/customer/reviews', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            sellerId: currentDetailProduct.sellerId,
+                            rating: rating,
+                            comment: comment
+                        })
+                    });
+                }
+
+                if (res.ok) {
+                    showToast(`${activeReviewTab === 'product' ? 'Product' : 'Store'} review submitted successfully!`);
+                    document.getElementById('reviewComment').value = '';
+                    setStarRating(5);
+                    // Reload reviews and stats
+                    await loadReviewsList();
+                    if (activeReviewTab === 'store') {
+                        await loadSellerCardDetailsAndReviews(currentDetailProduct.sellerId);
+                    }
+                } else {
+                    const data = await res.json();
+                    showToast(data.message || "Failed to submit review", true);
                 }
             } catch (err) {
                 console.error(err);
                 showToast("Error submitting review", true);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
             }
+        }
+
+        async function loadSimilarProducts(category, currentProductId) {
+            const grid = document.getElementById('similarProductsGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 20px; color: var(--text-secondary);">Loading similar products...</div>`;
+            
+            try {
+                const res = await fetch('/api/product');
+                if (res.ok) {
+                    const products = await res.json();
+                    
+                    // Filter: same category, approved, not current product
+                    const similar = products.filter(p => p.category === category && p.id !== currentProductId && p.isApproved);
+                    
+                    if (similar.length === 0) {
+                        grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 20px; color: var(--text-secondary);">No similar products found.</div>`;
+                    } else {
+                        grid.innerHTML = similar.slice(0, 4).map(p => renderProductCard(p)).join('');
+                    }
+                }
+            } catch (err) {
+                console.error("Error loading similar products:", err);
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 20px; color: var(--color-danger);">Failed to load similar products.</div>`;
+            }
+        }
+
+        function openConnectSellerModal() {
+            if (!currentDetailProduct) return;
+            const companyName = currentDetailProduct.sellerCompany || currentDetailProduct.sellerName || 'Supplier';
+            document.getElementById('connectSellerTitle').innerHTML = `🤝 Connect with ${escapeHtml(companyName)}`;
+            
+            const whatsapp = currentDetailProduct.sellerWhatsApp || '';
+            const email = currentDetailProduct.sellerEmail || '';
+            
+            const waBtn = document.getElementById('connectWhatsAppBtn');
+            const waText = document.getElementById('connectWhatsAppNumber');
+            if (whatsapp) {
+                const cleanWa = whatsapp.replace(/[^\d+]/g, '');
+                let waLink = cleanWa;
+                if (cleanWa.startsWith('01')) {
+                    waLink = '88' + cleanWa;
+                } else if (cleanWa.startsWith('+8801')) {
+                    waLink = cleanWa.replace('+', '');
+                }
+                waBtn.href = `https://wa.me/${waLink}`;
+                waBtn.style.display = 'inline-flex';
+                waText.textContent = `WhatsApp: ${whatsapp}`;
+                waText.style.display = 'block';
+            } else {
+                waBtn.style.display = 'none';
+                waText.style.display = 'none';
+            }
+            
+            const emailBtn = document.getElementById('connectEmailBtn');
+            const emailText = document.getElementById('connectEmailAddress');
+            if (email) {
+                emailBtn.href = `mailto:${email}?subject=Inquiry%20regarding%20${encodeURIComponent(currentDetailProduct.name)}`;
+                emailBtn.style.display = 'inline-flex';
+                emailText.textContent = `Email: ${email}`;
+                emailText.style.display = 'block';
+            } else {
+                emailBtn.style.display = 'none';
+                emailText.style.display = 'none';
+            }
+            
+            openModal('connectSellerModal');
+        }
+
+        function renderProductCard(p) {
+            const sym = window.siteSettings.currency_symbol || "৳";
+            const hasDiscount = p.discountPrice && p.discountPrice > 0 && p.discountPrice < p.price;
+            const activePrice = hasDiscount ? p.discountPrice : p.price;
+            const priceText = `${sym}${activePrice.toFixed(2)}`;
+            const originalPriceHtml = hasDiscount ? `<span style="text-decoration: line-through; color: var(--text-muted); font-size: 12px; font-weight: normal; margin-left: 6px;">${sym}${p.price.toFixed(2)}</span>` : '';
+            const discountBadgeHtml = hasDiscount ? `<span style="background: var(--color-danger); color: white; padding: 2px 4px; border-radius: 4px; font-size: 9px; font-weight: bold; margin-left: 6px;">-${Math.round(((p.price - p.discountPrice) / p.price) * 100)}%</span>` : '';
+
+            return `
+                <div class="card">
+                    <div class="card-img" style="background-image: url('${p.imageUrl || '/images/placeholder.png'}')">
+                        ${p.sellerVerified ? '<span class="card-badge">✓ Verified Seller</span>' : ''}
+                    </div>
+                    <div class="card-body">
+                        <span style="font-size:11px; font-weight:600; color:var(--color-secondary); text-transform:uppercase; margin-bottom:4px;">${p.category}</span>
+                        <h3 class="card-title">${escapeHtml(p.name)}</h3>
+                        <p class="card-desc">${escapeHtml(p.description)}</p>
+                        <div class="card-meta">
+                            <div>
+                                <div class="price-tag">${priceText}${originalPriceHtml}${discountBadgeHtml}</div>
+                            </div>
+                            <button onclick="viewDetails(${p.id})" class="btn btn-secondary" style="padding: 6px 12px; font-size:12px;">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
         function setMainGalleryMedia(url, type, thumbEl) {

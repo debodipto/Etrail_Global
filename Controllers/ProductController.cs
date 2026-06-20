@@ -205,7 +205,8 @@ public class ProductController : ControllerBase
             SellerWhatsApp = product.Seller?.WhatsAppNumber ?? string.Empty,
             SellerAddress = product.Seller?.CompanyAddress ?? string.Empty,
             SellerYearEstablished = product.Seller?.YearEstablished ?? string.Empty,
-            SellerWebsiteUrl = product.Seller?.WebsiteUrl ?? string.Empty
+            SellerWebsiteUrl = product.Seller?.WebsiteUrl ?? string.Empty,
+            SellerEmail = product.Seller?.AlternateEmail ?? product.Seller?.Email ?? string.Empty
         });
     }
 

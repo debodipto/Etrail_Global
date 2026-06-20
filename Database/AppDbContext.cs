@@ -25,6 +25,7 @@ public class AppDbContext : DbContext
     public DbSet<FollowedSeller> FollowedSellers { get; set; }
     public DbSet<SupportTicket> SupportTickets { get; set; }
     public DbSet<SellerReview> SellerReviews { get; set; }
+    public DbSet<ProductReview> ProductReviews { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -130,5 +131,17 @@ public class AppDbContext : DbContext
             .WithMany()
             .HasForeignKey(sr => sr.SellerId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<ProductReview>()
+            .HasOne(pr => pr.Buyer)
+            .WithMany()
+            .HasForeignKey(pr => pr.BuyerId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ProductReview>()
+            .HasOne(pr => pr.Product)
+            .WithMany()
+            .HasForeignKey(pr => pr.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

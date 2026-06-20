@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Best Sellers | EtrailGlobal B2B Wholesale Marketplace</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .seller-list-container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .seller-row-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+            transition: var(--transition-normal);
+            box-shadow: var(--shadow-sm);
+        }
+        .seller-row-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-md);
+        }
+        .seller-info-col {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+        .seller-name-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .seller-name-row h2 {
+            font-size: 22px;
+            font-weight: 800;
+            margin: 0;
+            color: var(--text-primary);
+        }
+        .seller-badge-verified {
+            background: rgba(22, 163, 74, 0.1);
+            color: var(--color-primary);
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .seller-meta-line {
+            font-size: 14px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .seller-stats-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+        }
+        .seller-action-col {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 180px;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body class="market-home">
+
+    <!-- Header -->
+    <header class="market-header">
+        <div class="container market-topbar">
+            <a href="index.html" class="logo market-logo">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                EtrailGlobal
+            </a>
+
+            <div class="market-search">
+                <select id="heroCategorySelect" aria-label="Category">
+                    <option value="All">All categories</option>
+                    <option value="Home">Home</option>
+                    <option value="Women's World">Women's World</option>
+                    <option value="Men's Collection">Men's Collection</option>
+                    <option value="Accessories">Accessories</option>
+                    <option value="Mobiles & Tabs">Mobiles & Tabs</option>
+                    <option value="Alarm">Alarm</option>
+                    <option value="Sinks and kitchen taps">Sinks and kitchen taps</option>
+                    <option value="Paper & Plastic">Paper & Plastic</option>
+                    <option value="Men Clothing & Fashion">Men Clothing & Fashion</option>
+                    <option value="Eco-Friendly Products">Eco-Friendly Products</option>
+                    <option value="Eco-Friendly Home Decor & Accessories">Eco-Friendly Home Decor & Accessories</option>
+                    <option value="Bamboo Based Product">Bamboo Based Product</option>
+                </select>
+                <input type="text" id="heroSearchInput" placeholder="Search products, suppliers, or categories">
+                <button onclick="triggerHeroSearch()" class="btn btn-primary">Search</button>
+            </div>
+
+            <div class="auth-nav" id="authNav">
+                <button class="btn btn-secondary" style="opacity: 0.5;">Loading...</button>
+            </div>
+        </div>
+
+        <div class="container market-nav-row">
+            <nav class="market-links">
+                <a href="index.html">Home</a>
+                <a href="product.html">All Products</a>
+                <a href="flash-deals.html">Flash Deals</a>
+                <a href="best-sellers.html" class="active">Best Sellers</a>
+            </nav>
+            <button class="seller-cta" onclick="openModal('sellerRegisterModal')">Become a Seller</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container" style="margin-top: 40px; min-height: 600px;">
+        
+        <div style="margin-bottom: 32px; text-align: center;">
+            <h1 style="font-size: 32px; font-weight: 800; color: var(--text-primary); margin-bottom: 8px;">Top Wholesale Suppliers</h1>
+            <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto; font-size: 15px;">Discover highly-rated B2B manufacturers and verified wholesalers sequentially sorted by their review rating and follower base.</p>
+        </div>
+
+        <!-- Supplier List Container -->
+        <div class="seller-list-container" id="sellersList">
+            <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                Loading wholesale suppliers...
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="market-footer" style="border-top: 1px solid var(--border-color); padding: 48px 0; background: #ffffff; color: var(--text-secondary); font-size: 14px; margin-top: 64px;">
+        <div class="container footer-grid">
+            <div>
+                <div class="logo" style="margin-bottom:12px;">EtrailGlobal</div>
+                <p>Green and white wholesale sourcing marketplace for products, suppliers, and direct B2B conversations.</p>
+                <p class="footer-contact">
+                    <span id="footerAddress">Gulshan-2, Dhaka, Bangladesh</span>
+                    <span id="footerPhone">+880-9612-ETRAIL</span>
+                    <span id="footerEmail">support@etrail.com.bd</span>
+                </p>
+            </div>
+            <div>
+                <h4>Marketplace</h4>
+                <a href="product.html">All Products</a>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact Us</a>
+                <a href="dashboard.html">Dashboard</a>
+            </div>
+            <div>
+                <h4>Seller Zone</h4>
+                <button onclick="openModal('sellerRegisterModal')" class="btn btn-primary">Apply Now</button>
+                <button onclick="openModal('sellerLoginModal')" class="btn btn-secondary">Seller Login</button>
+            </div>
+        </div>
+        <div class="container" style="border-top:1px solid var(--border-color); padding-top:24px; margin-top:32px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+            <p style="font-size:13px; color:var(--text-muted); margin:0;">© 2026 EtrailGlobal. All rights reserved.</p>
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                <span style="font-size:12px; color:var(--text-muted); font-weight:600;">We Accept:</span>
+                <span style="font-size:11px; font-weight:700; background:#fff; border:1px solid var(--border-color); padding:4px 8px; border-radius:4px; color:#1a1f71; display:inline-block;">VISA</span>
+                <span style="font-size:11px; font-weight:700; background:#fff; border:1px solid var(--border-color); padding:4px 8px; border-radius:4px; color:#eb001b; display:inline-block;">Mastercard</span>
+                <span style="font-size:11px; font-weight:700; background:#e2125d; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">bKash</span>
+                <span style="font-size:11px; font-weight:700; background:#ff6b00; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">Nagad</span>
+                <span style="font-size:11px; font-weight:700; background:#8c3494; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">Rocket</span>
+                <span style="font-size:11px; font-weight:700; background:#005c2d; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">DBBL</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Customer Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+         <div class="modal">
+             <span class="modal-close" onclick="closeModal('loginModal')">&times;</span>
+             <h2 class="modal-title">Sign In to Etrail Bangladesh</h2>
+             <form id="loginForm">
+                 <div class="form-group">
+                     <label class="form-label" for="loginEmail">Email Address</label>
+                     <input type="email" id="loginEmail" class="form-control" placeholder="enter customer@etrailglobal.com" required>
+                 </div>
+                 <div class="form-group">
+                     <label class="form-label" for="loginPassword">Password</label>
+                     <input type="password" id="loginPassword" class="form-control" placeholder="enter Customer123" required>
+                 </div>
+                 <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Sign In</button>
+             </form>
+             <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                 Don't have an account? <a href="javascript:void(0)" onclick="closeModal('loginModal'); openModal('registerModal');" style="color: var(--color-primary); font-weight:600;">Register Here</a>
+             </p>
+         </div>
+     </div>
+
+     <!-- Customer Register Modal -->
+     <div class="modal-overlay" id="registerModal">
+         <div class="modal" style="max-width: 600px;">
+             <span class="modal-close" onclick="closeModal('registerModal')">&times;</span>
+             <h2 class="modal-title">Create Customer Account</h2>
+             <form id="registerForm">
+                 <div class="form-group">
+                     <label class="form-label" for="regUsername">Username</label>
+                     <input type="text" id="regUsername" class="form-control" placeholder="e.g. companyrep" required>
+                 </div>
+                 <div class="form-group">
+                     <label class="form-label" for="regEmail">Email Address</label>
+                     <input type="email" id="regEmail" class="form-control" placeholder="name@example.com" required>
+                 </div>
+                 <div class="form-group">
+                     <label class="form-label" for="regPassword">Password</label>
+                     <input type="password" id="regPassword" class="form-control" placeholder="Minimum 6 characters" required>
+                 </div>
+                 <div class="form-group">
+                     <label class="form-label" for="regContactInfo">Phone / Contact Number</label>
+                     <input type="text" id="regContactInfo" class="form-control" placeholder="e.g. +880-1xxxxxxxxx" required>
+                 </div>
+                 <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Complete Registration</button>
+             </form>
+             <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                 Already registered? <a href="javascript:void(0)" onclick="closeModal('registerModal'); openModal('loginModal');" style="color: var(--color-primary); font-weight:600;">Sign In</a>
+             </p>
+         </div>
+     </div>
+
+    <!-- Seller Login Modal -->
+    <div class="modal-overlay" id="sellerLoginModal">
+        <div class="modal">
+            <span class="modal-close" onclick="closeModal('sellerLoginModal')">&times;</span>
+            <h2 class="modal-title">Sign In - Seller Portal</h2>
+            <form id="sellerLoginForm">
+                <div class="form-group">
+                    <label class="form-label" for="sellerLoginEmail">Email Address</label>
+                    <input type="email" id="sellerLoginEmail" class="form-control" placeholder="enter seller@etrailglobal.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerLoginPassword">Password</label>
+                    <input type="password" id="sellerLoginPassword" class="form-control" placeholder="enter Seller123" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Login to Seller Panel</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Apply for a supplier account? <a href="javascript:void(0)" onclick="closeModal('sellerLoginModal'); openModal('sellerRegisterModal');" style="color: var(--color-primary); font-weight:600;">Apply Now</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Seller Register Modal -->
+    <div class="modal-overlay" id="sellerRegisterModal">
+        <div class="modal" style="max-width: 600px;">
+            <span class="modal-close" onclick="closeModal('sellerRegisterModal')">&times;</span>
+            <h2 class="modal-title">Become a Seller / Supplier Application</h2>
+            <form id="sellerRegisterForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegUsername">Username *</label>
+                        <input type="text" id="sellerRegUsername" class="form-control" placeholder="e.g. factoryrep" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegEmail">Business Email *</label>
+                        <input type="email" id="sellerRegEmail" class="form-control" placeholder="sales@factory.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerRegPassword">Password *</label>
+                    <input type="password" id="sellerRegPassword" class="form-control" placeholder="Minimum 6 characters" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegCompanyName">Company Registered Name *</label>
+                        <input type="text" id="sellerRegCompanyName" class="form-control" placeholder="e.g. Apex Tech Textiles Ltd" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegYearEstablished">Established Year</label>
+                        <input type="text" id="sellerRegYearEstablished" class="form-control" placeholder="e.g. 2015">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegContactInfo">Business Phone *</label>
+                        <input type="text" id="sellerRegContactInfo" class="form-control" placeholder="e.g. +880-1xxxxxxxxx" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegWhatsApp">WhatsApp Number *</label>
+                        <input type="text" id="sellerRegWhatsApp" class="form-control" placeholder="e.g. +880-1xxxxxxxxx" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegGmail">Alternate Email (Gmail)</label>
+                        <input type="email" id="sellerRegGmail" class="form-control" placeholder="e.g. alternate@gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegTax">Tax / BIN Number</label>
+                        <input type="text" id="sellerRegTax" class="form-control" placeholder="e.g. 123456789">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerRegCompanyAddress">Company Address / Factory Location *</label>
+                    <input type="text" id="sellerRegCompanyAddress" class="form-control" placeholder="e.g. Plot 12, Gazipur Industrial Zone" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerRegWebsite">Company Website</label>
+                    <input type="text" id="sellerRegWebsite" class="form-control" placeholder="e.g. https://apextech.com">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Submit Seller Application</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Already have a seller account? <a href="javascript:void(0)" onclick="closeModal('sellerRegisterModal'); openModal('sellerLoginModal');" style="color: var(--color-primary); font-weight:600;">Sign In</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        let followedSellerIds = new Set();
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Wait briefly for checkAuth in main.js to run or run checkAuth directly
+            setTimeout(async () => {
+                await loadFollowedSellers();
+                await loadSellers();
+            }, 300);
+        });
+
+        function triggerHeroSearch() {
+            const keyword = document.getElementById('heroSearchInput').value;
+            const category = document.getElementById('heroCategorySelect').value;
+            window.location.href = `/product.html?search=${encodeURIComponent(keyword)}&category=${encodeURIComponent(category)}`;
+        }
+
+        async function loadFollowedSellers() {
+            if (window.currentUser) {
+                try {
+                    const res = await fetch('/api/customer/followed-sellers');
+                    if (res.ok) {
+                        const list = await res.json();
+                        followedSellerIds = new Set(list.map(f => f.sellerId));
+                    }
+                } catch(e) {
+                    console.error("Failed to load followed sellers", e);
+                }
+            }
+        }
+
+        async function loadSellers() {
+            const listContainer = document.getElementById('sellersList');
+            try {
+                const response = await fetch('/api/customer/sellers');
+                if (response.ok) {
+                    const sellers = await response.json();
+                    if (sellers.length === 0) {
+                        listContainer.innerHTML = `<div style="text-align:center; padding:40px; color:var(--text-muted);">No suppliers registered yet.</div>`;
+                        return;
+                    }
+                    listContainer.innerHTML = sellers.map(s => renderSellerCard(s)).join('');
+                } else {
+                    listContainer.innerHTML = `<div style="text-align:center; color:var(--color-danger); padding:40px;">Failed to load suppliers.</div>`;
+                }
+            } catch(e) {
+                console.error(e);
+                listContainer.innerHTML = `<div style="text-align:center; color:var(--color-danger); padding:40px;">Failed to load suppliers.</div>`;
+            }
+        }
+
+        function renderSellerCard(s) {
+            const isSelf = window.currentUser && window.currentUser.id === s.id;
+            const isSellerUser = window.currentUser && window.currentUser.role === 'Seller';
+            const showFollow = !isSelf && !isSellerUser;
+            const isFollowing = followedSellerIds.has(s.id);
+            
+            // Rating stars
+            let starsHtml = '';
+            const rating = s.averageRating || 0;
+            const fullStars = Math.floor(rating);
+            const hasHalf = (rating - fullStars) >= 0.3;
+            for (let i = 1; i <= 5; i++) {
+                if (i <= fullStars) {
+                    starsHtml += '<span style="color:#fb2; font-size:16px;">★</span>';
+                } else if (i === fullStars + 1 && hasHalf) {
+                    starsHtml += '<span style="color:#fb2; font-size:16px; position:relative; display:inline-block; width:8px; overflow:hidden;">★</span><span style="color:#ccc; font-size:16px; margin-left:-8px;">★</span>';
+                } else {
+                    starsHtml += '<span style="color:#ccc; font-size:16px;">★</span>';
+                }
+            }
+
+            const followBtnHtml = showFollow ? `
+                <button id="follow-btn-${s.id}" onclick="toggleFollowSeller(${s.id})" class="btn" style="padding:8px 16px; font-size:13px; font-weight:700; width:100%; justify-content:center; ${isFollowing ? 'background:var(--color-primary); color:white; border-color:var(--color-primary);' : 'background:transparent; color:var(--color-primary); border-color:var(--color-primary);'}">
+                    ${isFollowing ? '✓ Following' : '➕ Follow'}
+                </button>
+            ` : '';
+
+            return `
+                <div class="seller-row-card">
+                    <div class="seller-info-col">
+                        <div class="seller-name-row">
+                            <h2>${escapeHtml(s.companyName || s.username)}</h2>
+                            ${s.isVerified ? '<span class="seller-badge-verified">✓ Verified Seller</span>' : ''}
+                        </div>
+                        <div class="seller-meta-line" style="margin-top: 4px;">
+                            <span>📍 ${escapeHtml(s.companyAddress || 'Dhaka, Bangladesh')}</span>
+                            ${s.yearEstablished ? `<span>📅 Estd: ${escapeHtml(s.yearEstablished)}</span>` : ''}
+                            ${s.websiteUrl ? `<span>🌐 <a href="${escapeHtml(s.websiteUrl)}" target="_blank" style="color: var(--color-secondary); text-decoration:none;">Website</a></span>` : ''}
+                        </div>
+                        <div class="seller-meta-line" style="margin-top: 8px;">
+                            <span class="seller-stats-badge" style="color:#fb2; display: inline-flex; align-items: center; gap: 4px;">
+                                ${starsHtml} <strong style="color:var(--text-primary); margin-left:4px;">${s.averageRating.toFixed(1)}</strong> <span style="font-weight:normal; color:var(--text-muted); font-size:12px;">(${s.reviewCount} ${s.reviewCount === 1 ? 'Review' : 'Reviews'})</span>
+                            </span>
+                            <span style="color: var(--border-color);">|</span>
+                            <span class="seller-stats-badge" style="color: var(--color-primary);">
+                                👥 <strong id="follower-count-${s.id}">${s.followerCount}</strong> Followers
+                            </span>
+                        </div>
+                    </div>
+                    <div class="seller-action-col">
+                        <a href="/seller.html?id=${s.id}" class="btn btn-primary" style="padding:8px 16px; font-size:13px; font-weight:700; justify-content:center; width:100%;">Visit Storefront</a>
+                        ${followBtnHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        async function toggleFollowSeller(sellerId) {
+            if (!window.currentUser) {
+                showToast("Please log in first.");
+                openModal('loginModal');
+                return;
+            }
+            
+            const btn = document.getElementById(`follow-btn-${sellerId}`);
+            const followerCountEl = document.getElementById(`follower-count-${sellerId}`);
+            if (!btn || !followerCountEl) return;
+            
+            btn.disabled = true;
+            const isFollowing = followedSellerIds.has(sellerId);
+            
+            try {
+                if (isFollowing) {
+                    const res = await fetch(`/api/customer/followed-sellers/${sellerId}`, {
+                        method: 'DELETE'
+                    });
+                    if (res.ok) {
+                        showToast("Unfollowed seller.");
+                        followedSellerIds.delete(sellerId);
+                        btn.innerText = "➕ Follow";
+                        btn.style.background = "transparent";
+                        btn.style.color = "var(--color-primary)";
+                        
+                        let currentCount = parseInt(followerCountEl.textContent) || 0;
+                        followerCountEl.textContent = Math.max(0, currentCount - 1);
+                    } else {
+                        showToast("Failed to unfollow", true);
+                    }
+                } else {
+                    const res = await fetch('/api/customer/followed-sellers', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ sellerId: sellerId })
+                    });
+                    if (res.ok) {
+                        showToast("Following seller!");
+                        followedSellerIds.add(sellerId);
+                        btn.innerText = "✓ Following";
+                        btn.style.background = "var(--color-primary)";
+                        btn.style.color = "white";
+                        
+                        let currentCount = parseInt(followerCountEl.textContent) || 0;
+                        followerCountEl.textContent = currentCount + 1;
+                    } else {
+                        showToast("Failed to follow", true);
+                    }
+                }
+            } catch(e) {
+                console.error(e);
+                showToast("Error updating follow state", true);
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>

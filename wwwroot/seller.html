@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplier Storefront | EtrailGlobal</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .seller-profile-layout {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 40px;
+            margin-top: 32px;
+        }
+        @media (max-width: 992px) {
+            .seller-profile-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        .seller-sidebar-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 28px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: fit-content;
+        }
+        .seller-tabs-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 32px;
+            box-shadow: var(--shadow-sm);
+        }
+        .seller-tab-btn {
+            background: transparent;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 12px 0;
+            color: var(--text-secondary);
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .seller-tab-btn.active {
+            color: var(--color-primary);
+            border-bottom: 2px solid var(--color-primary);
+            font-weight: 700;
+        }
+        .seller-tab-content {
+            display: none;
+            margin-top: 24px;
+        }
+        .seller-tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-primary)"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                EtrailGlobal
+            </a>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="product.html" class="nav-link">All Products</a>
+                <a href="flash-deals.html" class="nav-link">Flash Deals</a>
+                <a href="best-sellers.html" class="nav-link">Best Sellers</a>
+            </nav>
+            <div class="auth-nav" id="authNav">
+                <button class="btn btn-secondary" style="opacity: 0.5;">Loading...</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container" style="margin-top: 40px; min-height: 650px;">
+        <div style="margin-bottom: 24px;">
+            <a href="javascript:history.back()" style="color: var(--color-secondary); font-weight:500; display:inline-flex; align-items:center; gap:8px;">
+                &larr; Back
+            </a>
+        </div>
+
+        <div class="seller-profile-layout">
+            <!-- Sidebar: Supplier Info -->
+            <div>
+                <div class="seller-sidebar-card">
+                    <div style="display: flex; align-items: center; gap: 14px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px;">
+                        <div style="font-size: 40px;">🏢</div>
+                        <div>
+                            <h2 id="sidebarCompanyName" style="font-size: 20px; font-weight: 800; color: var(--text-primary); margin: 0;">Loading Company...</h2>
+                            <span id="sidebarVerifiedBadge" class="badge badge-verified" style="margin-top: 6px; font-size:11px; display:none;">✓ Verified Seller</span>
+                        </div>
+                    </div>
+                    
+                    <div style="font-size: 14px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 12px;">
+                        <div>👤 Contact Person: <strong id="sidebarSellerName" style="color: var(--text-primary);">-</strong></div>
+                        <div>👥 Followers: <strong id="sidebarFollowers" style="color: var(--text-primary);">0</strong></div>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            Rating:
+                            <span style="color:#d97706; font-size:18px;" id="sidebarStars">★★★★★</span>
+                            <span id="sidebarRatingText" style="font-weight: 600; color: var(--text-primary);">(0.0)</span>
+                        </div>
+                        <div id="sidebarEstablished">📅 Established: -</div>
+                        <div id="sidebarAddress">📍 Address: -</div>
+                        <div id="sidebarWebsite" style="display:none;">🌐 Website: <a href="#" target="_blank" id="sidebarWebsiteLink" style="color:var(--color-primary); font-weight:600; text-decoration:underline;">Visit Website</a></div>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
+                        <button id="btnFollowSeller" onclick="handleFollowSellerClick()" class="btn" style="width:100%; justify-content:center; padding: 12px; font-size: 14px; font-weight: 700; border: 1px solid var(--color-primary); background: transparent; color: var(--color-primary); cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                            ➕ Follow Seller
+                        </button>
+                        <button onclick="openConnectSellerModal()" class="btn btn-primary" style="width:100%; justify-content:center; padding: 12px; font-size: 14px; font-weight: 700;">
+                            📞 Connect with Seller
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabbed Catalog and Reviews Section -->
+            <div>
+                <div class="seller-tabs-container">
+                    <div style="display: flex; border-bottom: 2px solid var(--border-color); gap: 32px;">
+                        <button type="button" id="tabBtnProducts" class="seller-tab-btn active" onclick="switchSellerTab('products')">
+                            📦 Product Catalog
+                        </button>
+                        <button type="button" id="tabBtnReviews" class="seller-tab-btn" onclick="switchSellerTab('reviews')">
+                            ⭐️ Store Reviews & Rating
+                        </button>
+                    </div>
+
+                    <!-- Products Tab Content -->
+                    <div id="tabContentProducts" class="seller-tab-content active">
+                        <div class="grid" id="sellerProductsGrid">
+                            <!-- Populated dynamically -->
+                            <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-secondary);">
+                                Loading catalog products...
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reviews Tab Content -->
+                    <div id="tabContentReviews" class="seller-tab-content">
+                        <!-- Write a Review Form -->
+                        <div id="writeReviewContainer" style="display: none; border-bottom: 1px solid var(--border-color); padding-bottom: 24px; margin-bottom: 24px;">
+                            <h4 style="margin-top: 0; margin-bottom: 12px; font-size: 16px; font-weight: 700; color: var(--text-primary);">Submit Store Review</h4>
+                            <form id="submitReviewForm" onsubmit="handleStoreReviewSubmit(event)">
+                                <div class="form-group" style="margin-bottom:16px;">
+                                    <label class="form-label" style="margin-bottom:6px;">Your Star Rating</label>
+                                    <div style="display: flex; gap: 8px; font-size: 28px; color: #cbd5e1; cursor: pointer;" id="starRatingSelector">
+                                        <span data-star="1" onclick="setStarRating(1)" style="transition: color 0.15s;">★</span>
+                                        <span data-star="2" onclick="setStarRating(2)" style="transition: color 0.15s;">★</span>
+                                        <span data-star="3" onclick="setStarRating(3)" style="transition: color 0.15s;">★</span>
+                                        <span data-star="4" onclick="setStarRating(4)" style="transition: color 0.15s;">★</span>
+                                        <span data-star="5" onclick="setStarRating(5)" style="transition: color 0.15s;">★</span>
+                                    </div>
+                                    <input type="hidden" id="selectedStarValue" value="5" required>
+                                </div>
+                                <div class="form-group" style="margin-bottom:16px;">
+                                    <label class="form-label" for="reviewComment">Review Text / Comments</label>
+                                    <textarea id="reviewComment" class="form-control" rows="4" placeholder="Share your experience regarding customer service, dispatch speeds, product quality, communication..." required></textarea>
+                                </div>
+                                <button type="submit" id="submitReviewBtn" class="btn btn-primary" style="padding: 12px 24px; font-weight: 700;">Submit Store Review</button>
+                            </form>
+                        </div>
+
+                        <!-- Reviews List -->
+                        <div id="sellerReviewsList" style="display: flex; flex-direction: column; gap: 20px;">
+                            <p style="text-align: center; color: var(--text-secondary); padding: 24px;">Loading reviews...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Connect Seller Modal -->
+    <div class="modal-overlay" id="connectSellerModal">
+        <div class="modal" style="max-width: 450px;">
+            <span class="modal-close" onclick="closeModal('connectSellerModal')">&times;</span>
+            <h2 class="modal-title" id="connectSellerTitle" style="display: flex; align-items: center; gap: 8px;">
+                🤝 Connect with Seller
+            </h2>
+            <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 16px;">
+                <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.5; margin: 0;">
+                    Get in touch with the supplier directly via WhatsApp or email to discuss bulk pricing, custom specifications, or order placement.
+                </p>
+                <div style="background: rgba(var(--color-primary-rgb), 0.05); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--border-color); padding-bottom: 10px;">
+                        <span style="font-weight: 600; color: var(--text-secondary);">WhatsApp</span>
+                        <a id="connectWhatsAppBtn" href="#" target="_blank" class="btn btn-secondary" style="font-size: 13px; font-weight: 700; padding: 6px 12px; background: #25D366; color: white; border: none; border-radius: var(--radius-sm); text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                            💬 WhatsApp Chat
+                        </a>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 4px;">
+                        <span style="font-weight: 600; color: var(--text-secondary);">Email Address</span>
+                        <a id="connectEmailBtn" href="#" class="btn btn-secondary" style="font-size: 13px; font-weight: 700; padding: 6px 12px; border-radius: var(--radius-sm); text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                            ✉️ Send Email
+                        </a>
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--text-muted); text-align: center;">
+                    <span id="connectWhatsAppNumber" style="font-weight: 600;"></span>
+                    <span id="connectEmailAddress" style="font-weight: 600;"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 8: FOOTER SECTION -->
+    <footer class="market-footer" style="border-top: 1px solid var(--border-color); padding: 48px 0; background: #ffffff; color: var(--text-secondary); font-size: 14px; margin-top: 64px;">
+        <div class="container footer-grid">
+            <div>
+                <div class="logo" style="margin-bottom:12px;">EtrailGlobal</div>
+                <p>Green and white wholesale sourcing marketplace for products, suppliers, and direct B2B conversations.</p>
+                <p class="footer-contact">
+                    <span id="footerAddress">Gulshan-2, Dhaka, Bangladesh</span>
+                    <span id="footerPhone">+880-9612-ETRAIL</span>
+                    <span id="footerEmail">support@etrail.com.bd</span>
+                </p>
+            </div>
+            <div>
+                <h4>Marketplace</h4>
+                <a href="product.html">All Products</a>
+                <a href="about.html">About Us</a>
+                <a href="contact.html">Contact Us</a>
+                <a href="dashboard.html">Dashboard</a>
+            </div>
+            <div>
+                <h4>Seller Zone</h4>
+                <button onclick="openModal('sellerRegisterModal')" class="btn btn-primary">Apply Now</button>
+                <button onclick="openModal('sellerLoginModal')" class="btn btn-secondary">Seller Login</button>
+            </div>
+        </div>
+        <div class="container" style="border-top:1px solid var(--border-color); padding-top:24px; margin-top:32px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+            <p style="font-size:13px; color:var(--text-muted); margin:0;">© 2026 EtrailGlobal. All rights reserved.</p>
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                <span style="font-size:12px; color:var(--text-muted); font-weight:600;">We Accept:</span>
+                <span style="font-size:11px; font-weight:700; background:#fff; border:1px solid var(--border-color); padding:4px 8px; border-radius:4px; color:#1a1f71; display:inline-block;">VISA</span>
+                <span style="font-size:11px; font-weight:700; background:#fff; border:1px solid var(--border-color); padding:4px 8px; border-radius:4px; color:#eb001b; display:inline-block;">Mastercard</span>
+                <span style="font-size:11px; font-weight:700; background:#e2125d; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">bKash</span>
+                <span style="font-size:11px; font-weight:700; background:#ff6b00; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">Nagad</span>
+                <span style="font-size:11px; font-weight:700; background:#8c3494; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">Rocket</span>
+                <span style="font-size:11px; font-weight:700; background:#005c2d; color:#fff; padding:4px 8px; border-radius:4px; display:inline-block;">DBBL</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Customer Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+         <div class="modal">
+             <span class="modal-close" onclick="closeModal('loginModal')">&times;</span>
+             <h2 class="modal-title">Sign In to EtrailGlobal</h2>
+             <form id="loginForm">
+                 <div class="form-group">
+                     <label class="form-label" for="loginEmail">Email Address</label>
+                     <input type="email" id="loginEmail" class="form-control" placeholder="buyer@etrailglobal.com" required>
+                 </div>
+                 <div class="form-group">
+                     <label class="form-label" for="loginPassword">Password</label>
+                     <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
+                 </div>
+                 <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Sign In</button>
+             </form>
+             <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                 Don't have an account? <a href="javascript:void(0)" onclick="closeModal('loginModal'); openModal('registerModal');" style="color: var(--color-primary); font-weight:600;">Register Here</a>
+             </p>
+         </div>
+    </div>
+
+    <!-- Customer Register Modal -->
+    <div class="modal-overlay" id="registerModal">
+        <div class="modal">
+            <span class="modal-close" onclick="closeModal('registerModal')">&times;</span>
+            <h2 class="modal-title">Create Buyer Account</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label class="form-label" for="regUsername">Full Name / Username</label>
+                    <input type="text" id="regUsername" class="form-control" placeholder="e.g. Sourcing Representative" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="regEmail">Corporate Email</label>
+                    <input type="email" id="regEmail" class="form-control" placeholder="buyer@etrailglobal.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="regPassword">Password</label>
+                    <input type="password" id="regPassword" class="form-control" placeholder="Minimum 6 characters" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Create Account</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Already registered? <a href="javascript:void(0)" onclick="closeModal('registerModal'); openModal('loginModal');" style="color: var(--color-primary); font-weight:600;">Sign In</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Seller Login Modal -->
+    <div class="modal-overlay" id="sellerLoginModal">
+        <div class="modal">
+            <span class="modal-close" onclick="closeModal('sellerLoginModal')">&times;</span>
+            <h2 class="modal-title">Supplier / Seller Portal Login</h2>
+            <form id="sellerLoginForm">
+                <div class="form-group">
+                    <label class="form-label" for="sellerEmail">Registered Email</label>
+                    <input type="email" id="sellerEmailInput" class="form-control" placeholder="sales@apextextiles.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerPassword">Password</label>
+                    <input type="password" id="sellerPasswordInput" class="form-control" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Sign In to Seller Dashboard</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Apply for a supplier account? <a href="javascript:void(0)" onclick="closeModal('sellerLoginModal'); openModal('sellerRegisterModal');" style="color: var(--color-primary); font-weight:600;">Apply Now</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Seller Register Modal -->
+    <div class="modal-overlay" id="sellerRegisterModal">
+        <div class="modal" style="max-width: 600px;">
+            <span class="modal-close" onclick="closeModal('sellerRegisterModal')">&times;</span>
+            <h2 class="modal-title">Become a Seller / Supplier Application</h2>
+            <form id="sellerRegisterForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegUsername">Username *</label>
+                        <input type="text" id="sellerRegUsername" class="form-control" placeholder="e.g. factoryrep" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegEmail">Business Email *</label>
+                        <input type="email" id="sellerRegEmail" class="form-control" placeholder="sales@factory.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerRegPassword">Password *</label>
+                    <input type="password" id="sellerRegPassword" class="form-control" placeholder="Minimum 6 characters" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegCompanyName">Company Registered Name *</label>
+                        <input type="text" id="sellerRegCompanyName" class="form-control" placeholder="e.g. Apex Tech Textiles Ltd" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegYearEstablished">Established Year</label>
+                        <input type="text" id="sellerRegYearEstablished" class="form-control" placeholder="e.g. 2015">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegContactInfo">Business Phone *</label>
+                        <input type="text" id="sellerRegContactInfo" class="form-control" placeholder="e.g. +880-1xxxxxxxxx" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegWhatsApp">WhatsApp Number *</label>
+                        <input type="text" id="sellerRegWhatsApp" class="form-control" placeholder="e.g. +880-1xxxxxxxxx" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegGmail">Alternate Email (Gmail)</label>
+                        <input type="email" id="sellerRegGmail" class="form-control" placeholder="e.g. alternate@gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sellerRegTax">Tax / BIN Number</label>
+                        <input type="text" id="sellerRegTax" class="form-control" placeholder="e.g. 123456789">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerRegCompanyAddress">Company Address / Factory Location *</label>
+                    <input type="text" id="sellerRegCompanyAddress" class="form-control" placeholder="e.g. Plot 12, Gazipur Industrial Zone" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="sellerRegWebsite">Company Website</label>
+                    <input type="text" id="sellerRegWebsite" class="form-control" placeholder="e.g. https://apextech.com">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 12px; padding: 12px;">Submit Seller Application</button>
+            </form>
+            <p style="text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-secondary);">
+                Already have a seller account? <a href="javascript:void(0)" onclick="closeModal('sellerRegisterModal'); openModal('sellerLoginModal');" style="color: var(--color-primary); font-weight:600;">Sign In</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        let currentSellerId = null;
+        let currentSellerData = null;
+        let isFollowingSeller = false;
+        let selectedReviewStars = 5;
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            currentSellerId = parseInt(urlParams.get('id'));
+
+            if (!currentSellerId || isNaN(currentSellerId)) {
+                showToast("Invalid Seller Profile", true);
+                setTimeout(() => { window.location.href = 'product.html'; }, 2000);
+                return;
+            }
+
+            // Load profile data
+            await loadSellerProfile();
+            await loadSellerProducts();
+            await loadSellerReviews();
+        });
+
+        async function loadSellerProfile() {
+            try {
+                const res = await fetch(`/api/customer/seller/${currentSellerId}`);
+                if (!res.ok) {
+                    showToast("Seller storefront not found", true);
+                    setTimeout(() => { window.location.href = 'product.html'; }, 2000);
+                    return;
+                }
+
+                const data = await res.json();
+                currentSellerData = data;
+
+                // Update Profile Info
+                document.title = `${data.companyName || 'Supplier'} Storefront | EtrailGlobal`;
+                document.getElementById('sidebarCompanyName').textContent = data.companyName || data.username || "Supplier";
+                document.getElementById('sidebarSellerName').textContent = data.username || "-";
+                document.getElementById('sidebarAddress').innerHTML = `📍 Address: ${data.companyAddress || 'Dhaka, Bangladesh'}`;
+                document.getElementById('sidebarEstablished').innerHTML = `📅 Established: ${data.yearEstablished || '2018'}`;
+                
+                const webLink = document.getElementById('sidebarWebsiteLink');
+                const webContainer = document.getElementById('sidebarWebsite');
+                if (webLink && webContainer && data.websiteUrl) {
+                    webLink.href = data.websiteUrl.startsWith('http') ? data.websiteUrl : `https://${data.websiteUrl}`;
+                    webContainer.style.display = 'block';
+                } else if (webContainer) {
+                    webContainer.style.display = 'none';
+                }
+
+                const verifiedBadge = document.getElementById('sidebarVerifiedBadge');
+                if (verifiedBadge) {
+                    verifiedBadge.style.display = data.isVerified ? 'inline-block' : 'none';
+                }
+
+                // Load Stats & Follow state
+                await loadSellerStatsAndFollowState();
+
+            } catch (err) {
+                console.error("Error loading seller profile:", err);
+                showToast("Failed to load seller profile details", true);
+            }
+        }
+
+        async function loadSellerStatsAndFollowState() {
+            // Stats
+            try {
+                const statsRes = await fetch(`/api/customer/reviews/stats/${currentSellerId}`);
+                if (statsRes.ok) {
+                    const stats = await statsRes.json();
+                    document.getElementById('sidebarFollowers').textContent = stats.followerCount;
+                    document.getElementById('sidebarRatingText').textContent = `(${stats.averageRating.toFixed(1)})`;
+                    
+                    let starsHtml = '';
+                    const fullStars = Math.floor(stats.averageRating);
+                    for (let i = 0; i < 5; i++) {
+                        starsHtml += i < fullStars ? '★' : '☆';
+                    }
+                    document.getElementById('sidebarStars').textContent = starsHtml;
+                }
+            } catch (err) {
+                console.error("Error fetching seller stats:", err);
+            }
+
+            // Follower State
+            isFollowingSeller = false;
+            const followBtn = document.getElementById('btnFollowSeller');
+            if (window.currentUser) {
+                if (window.currentUser.id === currentSellerId || window.currentUser.role === 'Seller') {
+                    followBtn.style.display = 'none';
+                    document.getElementById('writeReviewContainer').style.display = 'none';
+                } else {
+                    followBtn.style.display = 'block';
+                    try {
+                        const followRes = await fetch('/api/customer/followed-sellers');
+                        if (followRes.ok) {
+                            const followed = await followRes.json();
+                            isFollowingSeller = followed.some(f => f.sellerId === currentSellerId);
+                            updateFollowButtonUI();
+                        }
+                    } catch (e) {
+                        console.error(e);
+                    }
+                    document.getElementById('writeReviewContainer').style.display = 'block';
+                    setStarRating(5);
+                }
+            } else {
+                followBtn.style.display = 'block';
+                updateFollowButtonUI();
+                document.getElementById('writeReviewContainer').style.display = 'none';
+            }
+        }
+
+        function updateFollowButtonUI() {
+            const btn = document.getElementById('btnFollowSeller');
+            if (!btn) return;
+            if (isFollowingSeller) {
+                btn.innerHTML = `✓ Following Seller`;
+                btn.style.background = 'var(--color-primary)';
+                btn.style.color = '#fff';
+            } else {
+                btn.innerHTML = `➕ Follow Seller`;
+                btn.style.background = 'transparent';
+                btn.style.color = 'var(--color-primary)';
+            }
+        }
+
+        async function handleFollowSellerClick() {
+            if (!window.currentUser) {
+                showToast("Please log in to follow sellers", true);
+                openModal('loginModal');
+                return;
+            }
+
+            const followBtn = document.getElementById('btnFollowSeller');
+            followBtn.disabled = true;
+
+            try {
+                if (isFollowingSeller) {
+                    const res = await fetch(`/api/customer/followed-sellers/${currentSellerId}`, {
+                        method: 'DELETE'
+                    });
+                    if (res.ok) {
+                        showToast("Unfollowed seller.");
+                        isFollowingSeller = false;
+                    }
+                } else {
+                    const res = await fetch('/api/customer/followed-sellers', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ sellerId: currentSellerId })
+                    });
+                    if (res.ok) {
+                        showToast("Following seller!");
+                        isFollowingSeller = true;
+                    }
+                }
+                updateFollowButtonUI();
+                await loadSellerStatsAndFollowState();
+            } catch (err) {
+                console.error(err);
+            } finally {
+                followBtn.disabled = false;
+            }
+        }
+
+        async function loadSellerProducts() {
+            const grid = document.getElementById('sellerProductsGrid');
+            try {
+                const res = await fetch(`/api/product?sellerId=${currentSellerId}&isApproved=true`);
+                if (res.ok) {
+                    const products = await res.json();
+                    if (products.length === 0) {
+                        grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);">This supplier has no uploaded products in catalog yet.</div>`;
+                    } else {
+                        grid.innerHTML = products.map(p => renderProductCard(p)).join('');
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:var(--color-danger);">Failed to load seller catalog.</div>`;
+            }
+        }
+
+        async function loadSellerReviews() {
+            const listContainer = document.getElementById('sellerReviewsList');
+            listContainer.innerHTML = `<p style="text-align: center; color: var(--text-muted); padding: 24px;">Loading reviews...</p>`;
+            
+            try {
+                const res = await fetch(`/api/customer/reviews/seller/${currentSellerId}`);
+                if (res.ok) {
+                    const reviews = await res.json();
+                    if (reviews.length === 0) {
+                        listContainer.innerHTML = `<div style="text-align:center; padding: 40px; color:var(--text-muted);">No reviews have been posted for this store yet.</div>`;
+                    } else {
+                        listContainer.innerHTML = reviews.map(r => {
+                            let rStars = '';
+                            for (let i = 0; i < 5; i++) {
+                                rStars += i < r.rating ? '★' : '☆';
+                            }
+                            const formattedDate = new Date(r.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+                            return `
+                                <div style="border-bottom: 1px solid var(--border-color); padding-bottom:16px;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                                        <strong>${escapeHtml(r.buyerName)}</strong>
+                                        <span style="color:#d97706; font-size:14px;">${rStars}</span>
+                                    </div>
+                                    <p style="font-size:13px; color:var(--text-secondary); margin: 0 0 4px 0; line-height: 1.4;">${escapeHtml(r.comment)}</p>
+                                    <small style="color:var(--text-muted); font-size:11px;">Posted on ${formattedDate}</small>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                }
+            } catch (err) {
+                console.error("Error loading seller reviews:", err);
+                listContainer.innerHTML = `<div style="text-align:center; padding: 20px; color:var(--color-danger);">Failed to load reviews.</div>`;
+            }
+        }
+
+        async function handleStoreReviewSubmit(e) {
+            e.preventDefault();
+            if (!window.currentUser) {
+                showToast("Please log in to submit a review", true);
+                openModal('loginModal');
+                return;
+            }
+
+            const comment = document.getElementById('reviewComment').value.trim();
+            const rating = selectedReviewStars;
+
+            if (!comment) {
+                showToast("Please enter a comment.", true);
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitReviewBtn');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = "⌛ Submitting...";
+
+            try {
+                const res = await fetch('/api/customer/reviews', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        sellerId: currentSellerId,
+                        rating: rating,
+                        comment: comment
+                    })
+                });
+
+                if (res.ok) {
+                    showToast("Store review submitted successfully!");
+                    document.getElementById('reviewComment').value = '';
+                    setStarRating(5);
+                    // Reload reviews and stats
+                    await loadSellerReviews();
+                    await loadSellerStatsAndFollowState();
+                } else {
+                    const data = await res.json();
+                    showToast(data.message || "Failed to submit review", true);
+                }
+            } catch (err) {
+                console.error(err);
+                showToast("Error submitting review", true);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        }
+
+        function switchSellerTab(tabType) {
+            const btnProducts = document.getElementById('tabBtnProducts');
+            const btnReviews = document.getElementById('tabBtnReviews');
+            const contentProducts = document.getElementById('tabContentProducts');
+            const contentReviews = document.getElementById('tabContentReviews');
+
+            if (tabType === 'products') {
+                btnProducts.classList.add('active');
+                btnReviews.classList.remove('active');
+                contentProducts.classList.add('active');
+                contentReviews.classList.remove('active');
+            } else {
+                btnReviews.classList.add('active');
+                btnProducts.classList.remove('active');
+                contentReviews.classList.add('active');
+                contentProducts.classList.remove('active');
+            }
+        }
+
+        function setStarRating(stars) {
+            selectedReviewStars = stars;
+            document.getElementById('selectedStarValue').value = stars;
+            const starSpans = document.querySelectorAll('#starRatingSelector span');
+            starSpans.forEach((span, idx) => {
+                if (idx < stars) {
+                    span.style.color = '#d97706';
+                } else {
+                    span.style.color = '#cbd5e1';
+                }
+            });
+        }
+
+        function openConnectSellerModal() {
+            if (!currentSellerData) return;
+            const companyName = currentSellerData.companyName || currentSellerData.username || 'Supplier';
+            document.getElementById('connectSellerTitle').innerHTML = `🤝 Connect with ${escapeHtml(companyName)}`;
+            
+            const whatsapp = currentSellerData.whatsAppNumber || '';
+            const email = currentSellerData.alternateEmail || currentSellerData.email || '';
+            
+            const waBtn = document.getElementById('connectWhatsAppBtn');
+            const waText = document.getElementById('connectWhatsAppNumber');
+            if (whatsapp) {
+                const cleanWa = whatsapp.replace(/[^\d+]/g, '');
+                let waLink = cleanWa;
+                if (cleanWa.startsWith('01')) {
+                    waLink = '88' + cleanWa;
+                } else if (cleanWa.startsWith('+8801')) {
+                    waLink = cleanWa.replace('+', '');
+                }
+                waBtn.href = `https://wa.me/${waLink}`;
+                waBtn.style.display = 'inline-flex';
+                waText.textContent = `WhatsApp: ${whatsapp}`;
+                waText.style.display = 'block';
+            } else {
+                waBtn.style.display = 'none';
+                waText.style.display = 'none';
+            }
+            
+            const emailBtn = document.getElementById('connectEmailBtn');
+            const emailText = document.getElementById('connectEmailAddress');
+            if (email) {
+                emailBtn.href = `mailto:${email}?subject=Corporate%20Inquiry`;
+                emailBtn.style.display = 'inline-flex';
+                emailText.textContent = `Email: ${email}`;
+                emailText.style.display = 'block';
+            } else {
+                emailBtn.style.display = 'none';
+                emailText.style.display = 'none';
+            }
+            
+            openModal('connectSellerModal');
+        }
+
+        function renderProductCard(p) {
+            const sym = window.siteSettings.currency_symbol || "৳";
+            const hasDiscount = p.discountPrice && p.discountPrice > 0 && p.discountPrice < p.price;
+            const activePrice = hasDiscount ? p.discountPrice : p.price;
+            const priceText = `${sym}${activePrice.toFixed(2)}`;
+            const originalPriceHtml = hasDiscount ? `<span style="text-decoration: line-through; color: var(--text-muted); font-size: 12px; font-weight: normal; margin-left: 6px;">${sym}${p.price.toFixed(2)}</span>` : '';
+            const discountBadgeHtml = hasDiscount ? `<span style="background: var(--color-danger); color: white; padding: 2px 4px; border-radius: 4px; font-size: 9px; font-weight: bold; margin-left: 6px;">-${Math.round(((p.price - p.discountPrice) / p.price) * 100)}%</span>` : '';
+
+            return `
+                <div class="card">
+                    <div class="card-img" style="background-image: url('${p.imageUrl || '/images/placeholder.png'}')">
+                        ${p.sellerVerified ? '<span class="card-badge">✓ Verified Seller</span>' : ''}
+                    </div>
+                    <div class="card-body">
+                        <span style="font-size:11px; font-weight:600; color:var(--color-secondary); text-transform:uppercase; margin-bottom:4px;">${p.category}</span>
+                        <h3 class="card-title">${escapeHtml(p.name)}</h3>
+                        <p class="card-desc">${escapeHtml(p.description)}</p>
+                        <div class="card-meta">
+                            <div>
+                                <div class="price-tag">${priceText}${originalPriceHtml}${discountBadgeHtml}</div>
+                            </div>
+                            <a href="/product.html?id=${p.id}" class="btn btn-secondary" style="padding: 6px 12px; font-size:12px; text-decoration: none; display: inline-flex; align-items: center;">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
